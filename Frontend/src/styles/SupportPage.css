@@ -1,0 +1,62 @@
+.support-page {
+  max-width: 600px;
+  margin: 50px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.support-page h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.support-form div {
+  margin-bottom: 15px;
+}
+
+.support-form label {
+  display: block;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+.support-form input,
+.support-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
+
+.support-form button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  background-color: #8D7B31;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.support-form button:hover {
+  background-color: #645722;
+}
+
+.support-form .error {
+  color: red;
+  margin-bottom: 10px;
+}
+
+.support-form .success {
+  color: green;
+  margin-bottom: 10px;
+}

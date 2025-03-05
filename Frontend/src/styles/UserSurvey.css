@@ -1,0 +1,51 @@
+.user-survey {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-survey h3 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.user-survey .rating,
+.user-survey .comment {
+    margin-bottom: 15px;
+}
+
+.user-survey label {
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.user-survey select,
+.user-survey textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
+
+.user-survey button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    background-color: #8D7B31;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.user-survey button:hover {
+    background-color: #645722;
+}

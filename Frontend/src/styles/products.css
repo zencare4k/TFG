@@ -1,0 +1,319 @@
+.content-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 20px;
+  padding: 20px;
+  margin-bottom: 120px; /* Añade un margen inferior para evitar que choque con el footer */
+}
+
+.product-card {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 20px;
+  width: 250px; /* Ajusta el tamaño de las tarjetas */
+  height: auto; /* Ajusta la altura de las tarjetas automáticamente */
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  color: #8D7B31;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  flex-direction: column;
+  justify-content: flex-start; /* Asegura que el contenido y el botón no se superpongan */
+}
+
+.product-image {
+  width: 100%;
+  height: 200px; /* Ajusta la altura de la imagen */
+  border-radius: 5px;
+  transition: transform 0.3s ease; /* Añade la transición para la animación */
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.1); /* Escala la imagen al pasar el cursor */
+}
+
+.product-name {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+.product-description {
+  font-size: 0.9em;
+  color: #666;
+  flex-grow: 1; /* Permite que la descripción ocupe el espacio disponible */
+}
+
+.product-price {
+  font-size: 1em;
+  margin: 10px 0;
+}
+
+.wishlist-button {
+  padding: 10px 20px;
+  background-color: #8D7B31;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.wishlist-button:hover {
+  background-color: #645722;
+}
+
+.wishlist-button.in-wishlist {
+  background-color: #ff4d4d;
+}
+
+.wishlist-button.in-wishlist:hover {
+  background-color: #ff1a1a;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 10px;
+}
+
+.discounted-price {
+  color: #8D7B31;
+  font-weight: bold;
+}
+
+.buy-button {
+  background-color: #8D7B31; /* Color especificado */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px; /* Añade un margen superior */
+  cursor: pointer;
+  border-radius: 50px; /* Botones redondos */
+}
+
+.buy-button:hover {
+  background-color: #7A6A2A; /* Color más oscuro para el hover */
+}
+
+/* Estilos para CartPreview */
+.cart-preview {
+  margin-right: 70px;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  width: 300px;
+  background-color: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 1000;
+}
+
+.cart-preview h3 {
+  margin-top: 0;
+}
+
+.cart-preview ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cart-preview li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cart-item-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+.cart-item-details {
+  flex-grow: 1;
+}
+
+.cart-item-name {
+  font-size: 1em;
+  margin: 0;
+}
+
+.cart-item-price {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.cart-item-quantity {
+  font-size: 0.9em;
+  color: #666;
+}
+
+.view-cart-button {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  background-color: #8D7B31;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.view-cart-button:hover {
+  background-color: #7A6A2A;
+}
+
+/* Estilos para ProductFilter */
+.product-filter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.product-filter input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.slider-container {
+  width: 100%;
+  max-width: 300px;
+  text-align: center;
+}
+
+.horizontal-slider {
+  width: 100%;
+  height: 25px;
+  margin: 10px 0;
+}
+
+.thumb {
+  height: 30px;
+  width: 60px;
+  background-color: #7A6A2A;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.track {
+  top: 50%;
+  height: 5px;
+  background: #ddd;
+}
+
+.price-range {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+}
+
+.product-filter button {
+  padding: 10px 20px;
+  background-color: #7A6A2A;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.product-filter button:hover {
+  background-color: #5e5120;
+}
+
+/* Adaptación móvil */
+@media (max-width: 768px) {
+  .content-list {
+      flex-direction: column;
+      align-items: center;
+  }
+
+  .cart-preview {
+      width: 90%;
+      right: 5%;
+  }
+}
+
+.product-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+.product-card h2 {
+  margin: 10px 0;
+}
+
+.product-card p {
+  font-size: 14px;
+  color: #555;
+}
+
+.content-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.content-list .product-card {
+  flex: 1 1 250px; /* Ajusta el tamaño de las tarjetas */
+  margin: 10px;
+}
+
+.compare-button {
+  background-color: #8D7B31;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 50px;
+}
+
+.compare-button:hover {
+  background-color: #7A6A2A;
+}
+
+.product-comparison {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.comparison-row {
+  display: flex;
+}
+
+.comparison-cell {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
