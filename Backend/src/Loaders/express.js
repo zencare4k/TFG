@@ -1,9 +1,9 @@
 import express from "express";
 import cors from "cors";
-import routes from "../routes/index.js";
+import routes from "../Routes/index.js";
 
 export default (expressApp) => {
-  expressApp.use(cors());
+  expressApp.use(cors()); // Configurar CORS
   expressApp.use(express.json());
   expressApp.use(express.urlencoded({ extended: true }));
 

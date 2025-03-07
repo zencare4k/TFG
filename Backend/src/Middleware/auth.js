@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import config from "../config.js";
+import config from "../../config.js";
 
 const authMiddleware = (req, res, next) => {
   const token = req.header("Authorization");
@@ -14,4 +14,11 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-export default authMiddleware;
+const adminMiddleware = (req, res, next) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ error: "Acceso denegado: solo administradores" });
+  }
+  next();
+};
+
+export { authMiddleware, adminMiddleware };

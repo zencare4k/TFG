@@ -1,22 +1,29 @@
 import { MongoClient } from "mongodb";
-import logger from "../Utils/logger.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-let dbInstance;
+let dbInstanceUsers;
+let dbInstanceProducts;
 
 const connectDB = async () => {
-  if (dbInstance) return dbInstance;
+  if (dbInstanceUsers && dbInstanceProducts) return { dbInstanceUsers, dbInstanceProducts };
 
   try {
-    const client = new MongoClient(process.env.MONGO_URI);
-    await client.connect();
-    dbInstance = client.db();
-    logger.info("MongoDB conectado");
-    return dbInstance;
+    const clientUsers = new MongoClient(process.env.MONGO_URI_USERS);
+    const clientProducts = new MongoClient(process.env.MONGO_URI_PRODUCTS);
+
+    await clientUsers.connect();
+    await clientProducts.connect();
+
+    dbInstanceUsers = clientUsers.db();
+    dbInstanceProducts = clientProducts.db();
+
+    console.log("MongoDB conectado a las bases de datos de usuarios y productos");
+    return { dbInstanceUsers, dbInstanceProducts };
   } catch (error) {
-    logger.error("Error conectando a MongoDB", error);
+    console.error("Error conectando a MongoDB", error);
     process.exit(1);
   }
 };
 
 export { connectDB };
-export default connectDB;

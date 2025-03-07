@@ -1,7 +1,8 @@
 import { connectDB } from "../Models/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import config from "../config.js";
+import config from "../../config.js";
+import { ObjectId } from "mongodb";  // Importar ObjectId
 
 export const registerUser = async ({ name, email, password }) => {
   const db = await connectDB();
@@ -22,4 +23,13 @@ export const loginUser = async (email, password) => {
 
   const token = jwt.sign({ id: user._id }, config.jwtSecret, { expiresIn: "1h" });
   return { user, token };
+};
+
+export const getUserById = async (id) => {
+  const db = await connectDB();
+  const user = await db.collection("users").findOne({ _id: new ObjectId(id) });
+  if (!user) {
+    throw new Error("Usuario no encontrado");
+  }
+  return user;
 };
