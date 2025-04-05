@@ -40,11 +40,10 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
 ## Endpoints
 
 ### Autenticación
-- `GET /api/users`: Obtiene todos los usuarios.
-- `GET /api/users/:id`: Obtiene un usuario por ID.
-- `POST /api/users`: Crea un nuevo usuario.
-- `PUT /api/users/:id`: Actualiza un usuario por ID.
-- `DELETE /api/users/:id`: Elimina un usuario por ID.
+
+- `POST /api/auth/register`: Registra un nuevo usuario.
+- `POST /api/auth/login`: Inicia sesión y obtiene un token JWT.
+
 ### Usuarios
 
 - `GET /api/users`: Obtiene todos los usuarios.
