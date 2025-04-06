@@ -1,4 +1,9 @@
+
+//TODO: camibiar el mockup por una API real.
+
 const mockProducts = [
+
+
     {
         id: 1,
         name: "Camiseta Naruto",

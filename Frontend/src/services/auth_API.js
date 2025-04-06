@@ -1,3 +1,6 @@
+
+//TODO: camibiar el mockup por una API real.
+
 const getUsersFromLocalStorage = () => {
     const users = localStorage.getItem('users');
     return users ? JSON.parse(users) : [];

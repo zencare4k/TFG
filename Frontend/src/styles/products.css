@@ -30,7 +30,7 @@
 }
 
 .product-card:hover .product-image {
-  transform: scale(1.1); /* Escala la imagen al pasar el cursor */
+  transform: none; /* Elimina la animación de escala */
 }
 
 .product-name {
