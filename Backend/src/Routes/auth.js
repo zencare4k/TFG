@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { registerUser, loginUser, getUserById } from "../Controllers/auth.js";
-import { authMiddleware } from "../Middleware/auth.js"; // Importar el middleware de autenticación
+import { registerUser, loginUser } from "../Controllers/auth.js";
 
 const router = Router();
 
 /**
  * @swagger
- * /auth/registerUser:
+ * /auth/register:
  *   post:
  *     summary: Registra un nuevo usuario
  *     tags: [Auth]
@@ -17,32 +16,24 @@ const router = Router();
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               username:
  *                 type: string
  *               email:
  *                 type: string
  *               password:
  *                 type: string
- *               isAdmin:
- *                 type: boolean
- *               adminPassword:
- *                 type: string
- *                 description: Contraseña de administrador (requerida si isAdmin es true)
  *     responses:
  *       201:
  *         description: Usuario registrado exitosamente
  *       400:
  *         description: Error en la solicitud
- *       403:
- *         description: Contraseña de administrador incorrecta
  */
-router.post("/registerUser", registerUser);
-
+router.post("/register", registerUser);
 /**
  * @swagger
- * /auth/loginUser:
+ * /auth/login:
  *   post:
- *     summary: Inicia sesión
+ *     summary: Inicia sesión con un usuario existente
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -51,7 +42,7 @@ router.post("/registerUser", registerUser);
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               username:
  *                 type: string
  *               password:
  *                 type: string
@@ -61,29 +52,6 @@ router.post("/registerUser", registerUser);
  *       401:
  *         description: Credenciales inválidas
  */
-router.post("/loginUser", loginUser);
-
-/**
- * @swagger
- * /auth/user/{id}:
- *   get:
- *     summary: Obtiene un usuario por ID
- *     tags: [Auth]
- *     parameters:
- *       - in: path
- *         name: id
- *         schema:
- *           type: string
- *         required: true
- *         description: ID del usuario
- *     responses:
- *       200:
- *         description: Usuario encontrado
- *       404:
- *         description: Usuario no encontrado
- *     security:
- *       - bearerAuth: []
- */
-router.get("/user/:id", authMiddleware, getUserById); // Proteger el endpoint con el middleware de autenticación
+router.post("/login", loginUser); // Ruta para iniciar sesión
 
 export default router;

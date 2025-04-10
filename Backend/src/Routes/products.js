@@ -1,6 +1,12 @@
 import { Router } from "express";
-import { getAllProducts, getProductById, createProduct, updateProduct, deleteProduct } from "../Controllers/products.js";
-import { authMiddleware, adminMiddleware } from "../Middleware/auth.js"; // Importar los middlewares de autenticación y administrador
+import {
+  getAllProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "../Controllers/products.js";
+import { authMiddleware, adminMiddleware } from "../Middleware/auth.js"; // Importar middlewares de autenticación y administrador
 
 const router = Router();
 
@@ -14,7 +20,7 @@ const router = Router();
  *       200:
  *         description: Lista de productos
  */
-router.get("/products", getAllProducts);
+router.get("/", getAllProducts);
 
 /**
  * @swagger
@@ -25,9 +31,9 @@ router.get("/products", getAllProducts);
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
  *         description: ID del producto
  *     responses:
  *       200:
@@ -35,13 +41,13 @@ router.get("/products", getAllProducts);
  *       404:
  *         description: Producto no encontrado
  */
-router.get("/products/:id", getProductById);
+router.get("/:id", getProductById);
 
 /**
  * @swagger
  * /products:
  *   post:
- *     summary: Añadir un nuevo producto
+ *     summary: Crea un nuevo producto
  *     tags: [Products]
  *     requestBody:
  *       required: true
@@ -55,22 +61,22 @@ router.get("/products/:id", getProductById);
  *               description:
  *                 type: string
  *               price:
- *                 type: string
+ *                 type: number
  *               originalPrice:
- *                 type: string
+ *                 type: number
  *               discount:
- *                 type: string
+ *                 type: number
  *               image:
  *                 type: string
  *               category:
  *                 type: string
+ *               stock:
+ *                 type: integer
  *     responses:
  *       201:
- *         description: Producto añadido exitosamente
- *       400:
- *         description: Error en la solicitud
+ *         description: Producto creado exitosamente
  */
-router.post("/products", createProduct); // Eliminar authMiddleware y adminMiddleware
+router.post("/", createProduct); // Elimina los middlewares de autenticación
 
 /**
  * @swagger
@@ -81,9 +87,9 @@ router.post("/products", createProduct); // Eliminar authMiddleware y adminMiddl
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
  *         description: ID del producto
  *     requestBody:
  *       required: true
@@ -91,22 +97,11 @@ router.post("/products", createProduct); // Eliminar authMiddleware y adminMiddl
  *         application/json:
  *           schema:
  *             type: object
- *             properties:
- *               name:
- *                 type: string
- *               price:
- *                 type: number
- *               description:
- *                 type: string
  *     responses:
  *       200:
  *         description: Producto actualizado exitosamente
- *       404:
- *         description: Producto no encontrado
- *     security:
- *       - bearerAuth: []
  */
-router.put("/products/:id", authMiddleware, adminMiddleware, updateProduct);
+router.put("/:id", authMiddleware, adminMiddleware, updateProduct); // Protege la ruta con middlewares
 
 /**
  * @swagger
@@ -117,18 +112,14 @@ router.put("/products/:id", authMiddleware, adminMiddleware, updateProduct);
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: string
- *         required: true
  *         description: ID del producto
  *     responses:
  *       200:
  *         description: Producto eliminado exitosamente
- *       404:
- *         description: Producto no encontrado
- *     security:
- *       - bearerAuth: []
  */
-router.delete("/products/:id", authMiddleware, adminMiddleware, deleteProduct);
+router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct); // Protege la ruta con middlewares
 
 export default router;

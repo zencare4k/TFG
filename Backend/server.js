@@ -16,3 +16,4 @@ app.use('/api/auth', authRouter); // Usar el router de autenticación en la ruta
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+

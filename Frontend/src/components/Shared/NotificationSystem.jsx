@@ -2,11 +2,8 @@ import React from 'react';
 import '../../styles/notification.css';
 
 const NotificationSystem = ({ message, type }) => {
-  return (
-    <div className={`notification-message ${type}`}>
-      {message}
-    </div>
-  );
+  if (!message) return null; // No renderizar nada si no hay mensaje
+  return <div className={`notification ${type}`}>{message}</div>;
 };
 
 export default NotificationSystem;

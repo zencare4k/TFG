@@ -1,80 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/auth_API';
 import '../../styles/login.css';
 import NotificationSystem from '../Shared/NotificationSystem';
+import { AuthContext } from '../context/AuthContext';
 
 const LoginForm = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [rememberMe, setRememberMe] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] =useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // Usar el contexto de autenticación
 
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (!validateEmail(email)) {
-      setError('Invalid email format');
-      return;
+    try {
+      await login(username, password); // Llamar a la función de login del contexto
+      setSuccess(`Bienvenido, ${username}`);
+      setTimeout(() => {
+        navigate('/'); // Redirigir al inicio
+      }, 2000);
+    } catch (err) {
+      setError(err.message || 'Error al iniciar sesión');
     }
-    if (password === '') {
-      setError('Password cannot be empty');
-      return;
-    }
-    setError('');
-    loginUser(email, password)
-      .then(message => {
-        console.log('Correo verificado exitosamente:', email); // Mensaje en consola
-        setSuccess(message);
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 2000);
-      })
-      .catch(err => setError(err));
   };
 
   return (
     <form onSubmit={handleLogin} className="auth-form">
-      <h2>Login</h2>
+      <h2>Iniciar Sesión</h2>
       <div>
-        <label>Email:</label>
+        <label>Nombre de Usuario:</label>
         <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
       </div>
       <div>
-        <label>Password:</label>
+        <label>Contraseña:</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <div>
-        <label>
-          <input
-            type="checkbox"
-            checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
-          />
-          Remember Me
-        </label>
-      </div>
       {error && <NotificationSystem message={error} type="error" />}
       {success && <NotificationSystem message={success} type="success" />}
-      <button type="submit">Login</button>
-      <button type="button" onClick={() => window.location.href = '/register'}>
-        Register
-      </button>
-      <button type="button" onClick={() => window.location.href = '/forgot-password'}>
-        Forgot Password?
-      </button>
+      <button type="submit">Iniciar Sesión</button>
+      <div className="secondary-actions">
+        <button type="button" onClick={() => navigate('/register')}>
+          Registrarse
+        </button>
+        <button type="button" onClick={() => navigate('/forgot-password')}>
+          ¿Olvidaste tu contraseña?
+        </button>
+      </div>
     </form>
   );
 };

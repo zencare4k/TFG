@@ -1,49 +1,62 @@
 import React, { useEffect, useState } from "react";
-import '../../styles/home.css';
+import { fetchProducts } from "../../services/product_API";
+import "../../styles/home.css";
 
-const Herosection = () => {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const slides = [
-        { src: "/assets/products/image1.jpg", alt: "Slide 1", text: `Camiseta Naruto 50% 2̶0̶.̶9̶9̶€̶  10.99€` },
-        { src: "/assets/products/image2.jpg", alt: "Slide 2", text: "Camiseta de Linkin park 10% 2̶0̶.̶9̶9̶€̶   18.89€" },
-        { src: "/assets/products/image3.jpg", alt: "Slide 3", text: "Camiseta de Limp Bizkit 35% 2̶0̶.̶9̶9̶€̶  13.64€" },
-        { src: "/assets/products/image4.jpg", alt: "Slide 4", text: "Camiseta de Dragon Ball z 95% 2̶0̶.̶9̶9̶€̶  1.05€" },
-    ];
+const HeroSection = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [slides, setSlides] = useState([]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
-        }, 5000); // Cambia cada 5 segundos
-
-        return () => clearInterval(interval); // Limpia el intervalo al desmontar
-    }, [slides.length]);
-
-    const prevSlide = () => {
-        setActiveIndex((prevIndex) => (prevIndex - 1 + slides.length) % slides.length);
+  useEffect(() => {
+    const loadCarouselImages = async () => {
+      try {
+        const data = await fetchProducts(); // Obtén los productos desde la base de datos
+        const carouselSlides = data.map((product) => ({
+          src: product.image,
+          alt: product.name,
+          text: `${product.name} - ${product.price}€`,
+        }));
+        setSlides(carouselSlides);
+      } catch (error) {
+        console.error("Error al cargar las imágenes del carrusel:", error);
+      }
     };
 
-    const nextSlide = () => {
-        setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
-    };
+    loadCarouselImages();
+  }, []);
 
-    return (
-        <div id="sideshow-example" data-component="slideshow">
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;700&display=swap" />
- v           <div role="list">
-                {slides.map((slide, index) => (
-                    <div
-                        key={index}
-                        className={`slide ${index === activeIndex ? "active" : ""}`}
-                    >
-                        <img src={slide.src} alt={slide.alt} />
-                        <div className="text-overlay">{slide.text}</div>
-                    </div>
-                ))}
-            </div>
-            <button className="prev" onClick={prevSlide}>&#10094;</button>
-            <button className="next" onClick={nextSlide}>&#10095;</button>
-        </div>
-    );
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % slides.length);
+    }, 5000); // Cambia cada 5 segundos
+
+    return () => clearInterval(interval);
+  }, [slides.length]);
+
+  if (slides.length === 0) {
+    return <p>Cargando carrusel...</p>;
+  }
+
+  return (
+    <div id="sideshow-example" data-component="slideshow">
+      <div role="list">
+        {slides.map((slide, index) => (
+          <div
+            key={index}
+            className={`slide ${index === activeIndex ? "active" : ""}`}
+          >
+            <img src={slide.src} alt={slide.alt} />
+            <div className="text-overlay">{slide.text}</div>
+          </div>
+        ))}
+      </div>
+      <button className="prev" onClick={() => setActiveIndex((activeIndex - 1 + slides.length) % slides.length)}>
+        &#10094;
+      </button>
+      <button className="next" onClick={() => setActiveIndex((activeIndex + 1) % slides.length)}>
+        &#10095;
+      </button>
+    </div>
+  );
 };
 
-export default Herosection;
+export default HeroSection;

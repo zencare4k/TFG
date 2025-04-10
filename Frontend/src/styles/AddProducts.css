@@ -1,0 +1,76 @@
+/* Estilos generales para la página de añadir productos */
+.add-product-page {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  }
+  
+  .add-product-page h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .add-product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .add-product-form label {
+    font-size: 1em;
+    color: #555;
+  }
+  
+  .add-product-form input,
+  .add-product-form textarea,
+  .add-product-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+    font-size: 1em;
+  }
+  
+  .add-product-form textarea {
+    resize: vertical;
+  }
+  
+  .add-product-form button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8D7B31; /* Color principal */
+    color: white;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .add-product-form button:hover {
+    background-color: #645722; /* Color más oscuro para el hover */
+  }
+  
+  .add-product-form .error {
+    color: red;
+    font-size: 0.9em;
+  }
+  
+  .add-product-form .success {
+    color: green;
+    font-size: 0.9em;
+  }
+  
+  /* Adaptación móvil */
+  @media (max-width: 768px) {
+    .add-product-page {
+      width: 90%;
+      margin: 20px auto;
+    }
+  }

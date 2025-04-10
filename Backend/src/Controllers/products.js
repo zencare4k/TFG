@@ -1,6 +1,7 @@
 import { connectProductDB } from "../Models/products.js";
 import { ObjectId } from "mongodb";
 
+// Obtener todos los productos
 export const getAllProducts = async (req, res) => {
   try {
     const dbInstance = await connectProductDB();
@@ -11,6 +12,7 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
+// Obtener un producto por ID
 export const getProductById = async (req, res) => {
   try {
     const dbInstance = await connectProductDB();
@@ -26,55 +28,66 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, originalPrice, discount, image, category } = req.body;
+    const { name, description, price, category, stock, image } = req.body;
+
+    if (!name || !description || !price || !category || stock === undefined || !image) {
+      return res.status(400).json({ error: "Todos los campos son obligatorios" });
+    }
+
     const dbInstance = await connectProductDB();
     const newProduct = {
       name,
       description,
-      price,
-      originalPrice,
-      discount,
-      image,
-      likes: 0,
-      hasLiked: false,
+      price: parseFloat(price),
       category,
-      ratings: [],
-      comments: [],
-      inWishlist: false,
+      stock: parseInt(stock, 10),
+      image,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
+
     await dbInstance.collection("products").insertOne(newProduct);
     res.status(201).json(newProduct);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
-
+// Actualizar un producto por ID
 export const updateProduct = async (req, res) => {
   try {
-    const dbInstance = await connectProductDB();
+    const { id } = req.params;
     const updatedProduct = req.body;
+
+    const dbInstance = await connectProductDB();
     const result = await dbInstance.collection("products").updateOne(
-      { _id: new ObjectId(req.params.id) },
+      { _id: new ObjectId(id) },
       { $set: updatedProduct }
     );
+
     if (result.matchedCount === 0) {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
-    res.status(200).json(updatedProduct);
+
+    res.status(200).json({ message: "Producto actualizado exitosamente" });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
+// Eliminar un producto por ID
 export const deleteProduct = async (req, res) => {
   try {
+    const { id } = req.params;
+
     const dbInstance = await connectProductDB();
-    const result = await dbInstance.collection("products").deleteOne({ _id: new ObjectId(req.params.id) });
+    const result = await dbInstance.collection("products").deleteOne({ _id: new ObjectId(id) });
+
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
+
     res.status(200).json({ message: "Producto eliminado exitosamente" });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };

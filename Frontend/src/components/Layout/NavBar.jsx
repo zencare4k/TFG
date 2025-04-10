@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import '../../styles/layout.css';
-import CartPreview from '../Home/CartPreview';
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "../../styles/layout.css";
+import { AuthContext } from "../context/AuthContext";
 
-const Header = ({ cartItems }) => {
-  const [showCartPreview, setShowCartPreview] = useState(false);
+const Header = () => {
+  const { user, logout } = useContext(AuthContext); // Obtener el usuario autenticado y la función de logout
+  const [menuOpen, setMenuOpen] = useState(false); // Estado para el menú desplegable
+  const navigate = useNavigate();
 
-  const handleCartIconClick = () => {
-    setShowCartPreview(!showCartPreview);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
   };
 
   return (
     <header className="header">
       <div className="logo">
         <Link to="/">
-          <img 
-            src="/assets/icons/Logo.svg" 
-            alt="Logo de la aplicación" 
-            className="logo-image"
-          />
+          <img src="/assets/icons/Logo.svg" alt="Logo de la aplicación" className="logo-image" />
         </Link>
       </div>
       <nav className="nav">
@@ -28,31 +26,54 @@ const Header = ({ cartItems }) => {
           <li><Link to="/404" className="nav-item">Camisetas Mujer</Link></li>
           <li><Link to="/404" className="nav-item">Camisetas Niño</Link></li>
           <li><Link to="/404" className="nav-item">Camisetas Niña</Link></li>
-          <li><Link to="/support" className="nav-item">Contacto</Link></li> {/* Actualizado */}
-          {/* Eliminar la siguiente línea */}
-          {/* <li><Link to="/weather" className="nav-item">Weather</Link></li> */}
+          <li><Link to="/support" className="nav-item">Contacto</Link></li>
+          {/* Mostrar las secciones de administración si el usuario es administrador */}
+          {user?.isAdmin && (
+            <>
+              <li>
+                <Link to="/add-product" className="nav-item admin-item">
+                  Añadir Productos
+                </Link>
+              </li>
+              <li>
+                <Link to="/manage-products" className="nav-item admin-item">
+                  Gestionar Productos
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </nav>
-      <div className="cart-container">
-        <img 
-          src="/assets/icons/Carrito.svg" 
-          alt="Carrito de compras" 
-          className="cart-icon"
-          onClick={handleCartIconClick}
-        />
-        {showCartPreview && <CartPreview cartItems={cartItems} setShowCartPreview={setShowCartPreview} />}
+      <div className="user-container">
+        {/* Ícono del carrito siempre visible */}
+        <div className="cart-icon-container" onClick={() => navigate("/cart")}>
+          <img src="/assets/icons/Carrito.svg" alt="Carrito" className="cart-icon" />
+        </div>
+        {user ? (
+          <div className="user-info">
+            <div className="user-profile login-button" onClick={toggleMenu}>
+              <img
+                src={user.profileImage || "/assets/icons/iniciado.png"}
+                alt="Usuario"
+                className="user-image"
+              />
+              <span className="user-name">{user.username}</span>
+            </div>
+            {menuOpen && (
+              <div className="dropdown-menu">
+                <button onClick={logout}>Cerrar Sesión</button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <button
+            className="login-button"
+            onClick={() => navigate("/login")}
+          >
+            <img src="/assets/icons/IniciarSesion.svg" alt="Login" className="login-icon" />
+          </button>
+        )}
       </div>
-     
-      <button 
-        className="login-button" 
-        onClick={() => window.location.href = '/login'}
-      >
-        <img 
-          src="/assets/icons/IniciarSesion.svg" 
-          alt="Login" 
-          className="login-icon"
-        />
-      </button>
     </header>
   );
 };

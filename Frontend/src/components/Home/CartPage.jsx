@@ -1,38 +1,42 @@
 import React, { useState, useEffect } from "react";
 import '../../styles/CartPage.css';
-import { getMockupCart, getProductsByCategory } from '../../services/product_API';
-import UserSurvey from './UserSurvey';
+import { fetchCartItems, fetchRecommendations } from '../../services/cart_API'; // Servicios para obtener datos del carrito y recomendaciones
 
 const CartPage = () => {
-    const [cart, setCart] = useState([]);
-    const [recommendations, setRecommendations] = useState([]);
+    const [cart, setCart] = useState([]); // Productos en el carrito
+    const [recommendations, setRecommendations] = useState([]); // Recomendaciones basadas en el carrito
 
     useEffect(() => {
-        const cartItems = getMockupCart();
-        setCart(cartItems);
+        const loadCartData = async () => {
+            try {
+                // Obtén los datos del carrito desde la base de datos
+                const cartItems = await fetchCartItems();
+                setCart(cartItems);
 
-        if (cartItems.length > 0) {
-            const category = cartItems[0].category; // Asume que todos los productos en el carrito son de la misma categoría
-            const recommendedProducts = getProductsByCategory(category);
-            setRecommendations(recommendedProducts);
-        }
+                // Si hay productos en el carrito, obtén recomendaciones
+                if (cartItems.length > 0) {
+                    const category = cartItems[0].category; // Usa la categoría del primer producto
+                    const recommendedProducts = await fetchRecommendations(category);
+                    setRecommendations(recommendedProducts);
+                }
+            } catch (error) {
+                console.error("Error al cargar los datos del carrito:", error);
+            }
+        };
+
+        loadCartData();
     }, []);
 
     // Agrupar productos por id y contar la cantidad
     const groupedItems = cart.reduce((acc, item) => {
-        const existingItem = acc.find(i => i.id === item.id && i.color === item.color && i.tamaño === item.tamaño);
+        const existingItem = acc.find(i => i.id === item.id && i.color === item.color && i.size === item.size);
         if (existingItem) {
-            existingItem.quantity += item.cantidad;
+            existingItem.quantity += item.quantity;
         } else {
-            acc.push({ ...item, quantity: item.cantidad });
+            acc.push({ ...item });
         }
         return acc;
     }, []);
-
-    const handleSurveySubmit = (surveyData) => {
-        console.log('Encuesta enviada:', surveyData);
-        // Aquí puedes manejar el envío de la encuesta, por ejemplo, enviándola a un servidor
-    };
 
     return (
         <div className="cart-page">
@@ -46,15 +50,14 @@ const CartPage = () => {
                             <img src={item.image} alt={item.name} className="cart-item-image" />
                             <div className="cart-item-details">
                                 <p className="cart-item-name">{item.name}</p>
-                                <p className="cart-item-price">{item.price}</p>
+                                <p className="cart-item-price">{item.price}€</p>
                                 <p className="cart-item-quantity">Cantidad: {item.quantity}</p>
-                                <p className="cart-item-config">Color: {item.color}, Tamaño: {item.tamaño}</p>
+                                <p className="cart-item-config">Color: {item.color}, Tamaño: {item.size}</p>
                             </div>
                         </li>
                     ))}
                 </ul>
             )}
-            <UserSurvey onSubmit={handleSurveySubmit} />
             {recommendations.length > 0 && (
                 <div className="recommendations">
                     <h3>Recomendaciones</h3>
@@ -64,7 +67,7 @@ const CartPage = () => {
                                 <img src={item.image} alt={item.name} className="cart-item-image" />
                                 <div className="cart-item-details">
                                     <p className="cart-item-name">{item.name}</p>
-                                    <p className="cart-item-price">{item.price}</p>
+                                    <p className="cart-item-price">{item.price}€</p>
                                 </div>
                             </li>
                         ))}

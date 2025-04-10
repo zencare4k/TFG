@@ -21,38 +21,38 @@ const RegisterForm = () => {
     return re.test(password);
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
-      setError('Invalid email format');
+      setError('El formato del correo electrónico no es válido');
       return;
     }
     if (!validatePassword(password)) {
-      setError('Password must be at least 8 characters long, include an uppercase letter, a number, and a symbol');
+      setError('La contraseña debe tener al menos 8 caracteres, incluir una letra mayúscula, un número y un símbolo');
       return;
     }
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Las contraseñas no coinciden');
       return;
     }
     setError('');
-    registerUser({ username, email, password })
-      .then(message => {
-        console.log('Correo registrado exitosamente:', email); // Mensaje en consola
-
-        setSuccess(message);
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 2000);
-      })
-      .catch(err => setError(err));
+    try {
+      const message = await registerUser({ username, email, password }); // No enviar isAdmin
+      console.log('Usuario registrado exitosamente:', email);
+      setSuccess(message);
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 2000);
+    } catch (err) {
+      setError(err.message || 'Error al registrar el usuario');
+    }
   };
 
   return (
     <form onSubmit={handleRegister} className="auth-form">
-      <h2>Register</h2>
+      <h2>Registrarse</h2>
       <div>
-        <label>Username:</label>
+        <label>Nombre de Usuario:</label>
         <input
           type="text"
           value={username}
@@ -60,7 +60,7 @@ const RegisterForm = () => {
         />
       </div>
       <div>
-        <label>Email:</label>
+        <label>Correo Electrónico:</label>
         <input
           type="email"
           value={email}
@@ -68,7 +68,7 @@ const RegisterForm = () => {
         />
       </div>
       <div>
-        <label>Password:</label>
+        <label>Contraseña:</label>
         <input
           type="password"
           value={password}
@@ -76,7 +76,7 @@ const RegisterForm = () => {
         />
       </div>
       <div>
-        <label>Confirm Password:</label>
+        <label>Confirmar contraseña:</label>
         <input
           type="password"
           value={confirmPassword}
@@ -85,9 +85,9 @@ const RegisterForm = () => {
       </div>
       {error && <NotificationSystem message={error} type="error" />}
       {success && <NotificationSystem message={success} type="success" />}
-      <button type="submit">Register</button>
+      <button type="submit">Registrarse</button>
       <button type="button" onClick={() => window.location.href = '/login'}>
-        Already have an account? Login
+        ¿Tienes una cuenta? Inicia sesión
       </button>
     </form>
   );

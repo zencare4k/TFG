@@ -1,61 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import ProductCard from './ProductCard';
-import ProductComparison from './ProductComparison';
+import React, { useEffect, useState } from "react";
+import { fetchProducts } from "../../services/product_API";
+import ProductCard from "./ProductCard"; // Componente para mostrar cada producto
 
-const ProductList = ({ products, onAddToCart, onAddToWishlist }) => {
-    const [sortedProducts, setSortedProducts] = useState([]);
-    const [selectedProducts, setSelectedProducts] = useState([]);
+const ProductList = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const sorted = [...products].sort((a, b) => b.likes - a.likes);
-        setSortedProducts(sorted);
-    }, [products]);
-
-    const handleLikeUpdate = (updatedProduct) => {
-        setSortedProducts(prevProducts => {
-            const updatedProducts = prevProducts.map(product =>
-                product.id === updatedProduct.id ? updatedProduct : product
-            );
-            const sorted = [...updatedProducts].sort((a, b) => b.likes - a.likes);
-            return sorted;
-        });
-
-        setSelectedProducts(prevSelected => {
-            return prevSelected.map(product =>
-                product.id === updatedProduct.id ? updatedProduct : product
-            );
-        });
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await fetchProducts(); // Llama al servicio para obtener productos
+        setProducts(data);
+      } catch (error) {
+        console.error("Error al cargar los productos:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const handleSelectForComparison = (product) => {
-        setSelectedProducts(prevSelected => {
-            if (prevSelected.length < 2) {
-                return [...prevSelected, product];
-            } else {
-                return [prevSelected[1], product];
-            }
-        });
-    };
+    loadProducts();
+  }, []);
 
-    return (
-        <div>
-            <div className="content-list">
-                {sortedProducts.map((product, index) => (
-                    <ProductCard
-                        key={product.id}
-                        product={{ ...product, position: index + 1 }}
-                        onAddToCart={onAddToCart}
-                        onLikeUpdate={handleLikeUpdate}
-                        onSelectForComparison={handleSelectForComparison}
-                        onAddToWishlist={onAddToWishlist}
-                    />
-                ))}
-            </div>
-            {selectedProducts.length === 2 && (
-                <ProductComparison products={selectedProducts} />
-            )}
-        </div>
-    );
+  if (loading) {
+    return <p>Cargando productos...</p>;
+  }
+
+  if (!products || products.length === 0) {
+    return <p>No hay productos disponibles.</p>;
+  }
+
+  return (
+    <div className="product-list">
+      {products.map((product) => (
+        <ProductCard key={product._id} product={product} />
+      ))}
+    </div>
+  );
 };
 
 export default ProductList;

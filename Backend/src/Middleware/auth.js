@@ -6,19 +6,20 @@ const authMiddleware = (req, res, next) => {
   if (!token) return res.status(401).json({ error: "Acceso denegado" });
 
   try {
-    const decoded = jwt.verify(token.replace("Bearer ", ""), config.jwtSecret);
-    req.user = decoded;
+    const decoded = jwt.verify(token.replace("Bearer ", ""), config.JWT_SECRET);
+    req.user = decoded; // Decodifica el token y lo asigna al usuario
     next();
   } catch (error) {
     res.status(401).json({ error: "Token inválido" });
   }
 };
 
-const adminMiddleware = (req, res, next) => {
-  if (!req.user.isAdmin) {
+
+export const adminMiddleware = (req, res, next) => {
+  if (!req.user?.isAdmin) { // Verifica si el usuario tiene permisos de administrador
     return res.status(403).json({ error: "Acceso denegado: solo administradores" });
   }
   next();
 };
 
-export { authMiddleware, adminMiddleware };
+export { authMiddleware };
