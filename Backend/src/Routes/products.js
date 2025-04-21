@@ -6,7 +6,8 @@ import {
   updateProduct,
   deleteProduct,
 } from "../Controllers/products.js";
-import { authMiddleware, adminMiddleware } from "../Middleware/auth.js"; // Importar middlewares de autenticación y administrador
+import { authMiddleware, adminMiddleware } from "../Middleware/auth.js"; // Middlewares de autenticación y autorización
+import upload from "../Middleware/upload.js"; // Middleware para manejar la subida de imágenes
 
 const router = Router();
 
@@ -52,7 +53,7 @@ router.get("/:id", getProductById);
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
@@ -62,21 +63,18 @@ router.get("/:id", getProductById);
  *                 type: string
  *               price:
  *                 type: number
- *               originalPrice:
- *                 type: number
- *               discount:
- *                 type: number
- *               image:
- *                 type: string
  *               category:
  *                 type: string
  *               stock:
  *                 type: integer
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       201:
  *         description: Producto creado exitosamente
  */
-router.post("/", createProduct); // Elimina los middlewares de autenticación
+router.post("/", authMiddleware, adminMiddleware, upload.single("image"), createProduct);
 
 /**
  * @swagger
@@ -94,14 +92,28 @@ router.post("/", createProduct); // Elimina los middlewares de autenticación
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               category:
+ *                 type: string
+ *               stock:
+ *                 type: integer
+ *               image:
+ *                 type: string
+ *                 format: binary
  *     responses:
  *       200:
  *         description: Producto actualizado exitosamente
  */
-router.put("/:id", authMiddleware, adminMiddleware, updateProduct); // Protege la ruta con middlewares
+router.put("/:id", authMiddleware, adminMiddleware, upload.single("image"), updateProduct);
 
 /**
  * @swagger
@@ -120,6 +132,6 @@ router.put("/:id", authMiddleware, adminMiddleware, updateProduct); // Protege l
  *       200:
  *         description: Producto eliminado exitosamente
  */
-router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct); // Protege la ruta con middlewares
+router.delete("/:id", authMiddleware, adminMiddleware, deleteProduct);
 
 export default router;

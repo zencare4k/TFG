@@ -22,6 +22,10 @@ const router = Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               role:
+ *                 type: string
+ *                 enum: [user, systemAdmin, productAdmin]
+ *                 default: user
  *     responses:
  *       201:
  *         description: Usuario registrado exitosamente
@@ -29,6 +33,7 @@ const router = Router();
  *         description: Error en la solicitud
  */
 router.post("/register", registerUser);
+
 /**
  * @swagger
  * /auth/login:
@@ -49,6 +54,15 @@ router.post("/register", registerUser);
  *     responses:
  *       200:
  *         description: Inicio de sesión exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 role:
+ *                   type: string
  *       401:
  *         description: Credenciales inválidas
  */

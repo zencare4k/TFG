@@ -1,30 +1,40 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import "../../styles/AddProducts.css";
-import { createProduct } from "../../services/product_API";
+import api from "../../services/api";
+import { AuthContext } from "../context/AuthContext";
 
 const AddProductPage = () => {
+  const { user } = useContext(AuthContext); // Obtener el usuario autenticado
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [image, setImage] = useState(null);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
+  // Restringir acceso solo a productAdmin
+  if (user?.role !== "productAdmin") {
+    return <p className="error">Acceso denegado: solo administradores de productos.</p>;
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (productName && description && price && category && stock && imageUrl) {
+    if (productName && description && price && category && stock && image) {
       try {
-        const productData = {
-          name: productName,
-          description,
-          price: parseFloat(price),
-          category,
-          stock: parseInt(stock, 10),
-          image: imageUrl,
-        };
-        await createProduct(productData); // Enviar los datos al backend
+        const formData = new FormData();
+        formData.append("name", productName);
+        formData.append("description", description);
+        formData.append("price", price);
+        formData.append("category", category);
+        formData.append("stock", stock);
+        formData.append("image", image);
+
+        await api.post("/products", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
         setSuccess("Producto añadido correctamente.");
         setError("");
         setProductName("");
@@ -32,9 +42,9 @@ const AddProductPage = () => {
         setPrice("");
         setCategory("");
         setStock("");
-        setImageUrl("");
+        setImage(null);
       } catch (err) {
-        setError(err.message || "Error al añadir el producto.");
+        setError(err.response?.data?.error || "Error al añadir el producto.");
         setSuccess("");
       }
     } else {
@@ -87,11 +97,10 @@ const AddProductPage = () => {
           />
         </label>
         <label>
-          URL de la Imagen:
+          Imagen:
           <input
-            type="text"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
+            type="file"
+            onChange={(e) => setImage(e.target.files[0])}
           />
         </label>
         {error && <p className="error">{error}</p>}

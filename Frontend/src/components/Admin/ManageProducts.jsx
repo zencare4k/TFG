@@ -11,9 +11,10 @@ const ManageProducts = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Restringir acceso solo a productAdmin
   useEffect(() => {
-    if (!user?.isAdmin) {
-      setError("Acceso denegado: solo administradores.");
+    if (user?.role !== "productAdmin") {
+      setError("Acceso denegado: solo administradores de productos.");
       return;
     }
 
@@ -22,7 +23,7 @@ const ManageProducts = () => {
         const data = await fetchProducts();
         setProducts(data);
       } catch (err) {
-        setError("Error al cargar los productos.");
+        setError(err.response?.data?.error || "Error al cargar los productos.");
       }
     };
 
@@ -36,7 +37,17 @@ const ManageProducts = () => {
 
   const handleUpdate = async () => {
     try {
-      await updateProduct(editingProduct, updatedProduct);
+      const formData = new FormData();
+      formData.append("name", updatedProduct.name);
+      formData.append("price", updatedProduct.price);
+      formData.append("category", updatedProduct.category);
+      formData.append("stock", updatedProduct.stock);
+
+      if (updatedProduct.image) {
+        formData.append("image", updatedProduct.image);
+      }
+
+      await updateProduct(editingProduct, formData);
       setProducts((prev) =>
         prev.map((product) =>
           product._id === editingProduct ? { ...updatedProduct, _id: editingProduct } : product
@@ -44,8 +55,9 @@ const ManageProducts = () => {
       );
       setEditingProduct(null);
       setSuccess("Producto actualizado correctamente.");
+      setError("");
     } catch (err) {
-      setError("Error al actualizar el producto.");
+      setError(err.response?.data?.error || "Error al actualizar el producto.");
     }
   };
 
@@ -54,13 +66,14 @@ const ManageProducts = () => {
       await deleteProduct(id);
       setProducts((prev) => prev.filter((product) => product._id !== id));
       setSuccess("Producto eliminado correctamente.");
+      setError("");
     } catch (err) {
-      setError("Error al eliminar el producto.");
+      setError(err.response?.data?.error || "Error al eliminar el producto.");
     }
   };
 
-  if (!user?.isAdmin) {
-    return <p className="error">Acceso denegado: solo administradores.</p>;
+  if (error && user?.role !== "productAdmin") {
+    return <p className="error">{error}</p>;
   }
 
   return (
@@ -116,6 +129,14 @@ const ManageProducts = () => {
                       value={updatedProduct.stock}
                       onChange={(e) =>
                         setUpdatedProduct({ ...updatedProduct, stock: e.target.value })
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="file"
+                      onChange={(e) =>
+                        setUpdatedProduct({ ...updatedProduct, image: e.target.files[0] })
                       }
                     />
                   </td>

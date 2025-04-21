@@ -11,7 +11,7 @@ const HeroSection = () => {
       try {
         const data = await fetchProducts(); // Obtén los productos desde la base de datos
         const carouselSlides = data.map((product) => ({
-          src: product.image,
+          src: product.imageUrl, // Usar el campo imageUrl de la base de datos
           alt: product.name,
           text: `${product.name} - ${product.price}€`,
         }));
@@ -49,10 +49,18 @@ const HeroSection = () => {
           </div>
         ))}
       </div>
-      <button className="prev" onClick={() => setActiveIndex((activeIndex - 1 + slides.length) % slides.length)}>
+      <button
+        className="prev"
+        onClick={() =>
+          setActiveIndex((activeIndex - 1 + slides.length) % slides.length)
+        }
+      >
         &#10094;
       </button>
-      <button className="next" onClick={() => setActiveIndex((activeIndex + 1) % slides.length)}>
+      <button
+        className="next"
+        onClick={() => setActiveIndex((activeIndex + 1) % slides.length)}
+      >
         &#10095;
       </button>
     </div>

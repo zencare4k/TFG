@@ -1,5 +1,7 @@
 import { connectProductDB } from "../Models/products.js";
 import { ObjectId } from "mongodb";
+import cloudinary from "../Utils/cloudinary.js";
+import { uploadToCloudinary } from "../Middleware/upload.js";
 
 // Obtener todos los productos
 export const getAllProducts = async (req, res) => {
@@ -28,11 +30,13 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, stock, image } = req.body;
+    const { name, description, price, category, stock } = req.body;
 
-    if (!name || !description || !price || !category || stock === undefined || !image) {
-      return res.status(400).json({ error: "Todos los campos son obligatorios" });
+    if (!name || !description || !price || !category || stock === undefined || !req.file) {
+      return res.status(400).json({ error: "Todos los campos son obligatorios, incluida la imagen." });
     }
+
+    const imageUrl = await uploadToCloudinary(req.file.path);
 
     const dbInstance = await connectProductDB();
     const newProduct = {
@@ -41,7 +45,7 @@ export const createProduct = async (req, res) => {
       price: parseFloat(price),
       category,
       stock: parseInt(stock, 10),
-      image,
+      imageUrl,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -52,16 +56,22 @@ export const createProduct = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-// Actualizar un producto por ID
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedProduct = req.body;
+    const { name, description, price, category, stock } = req.body;
 
     const dbInstance = await connectProductDB();
+
+    let updatedFields = { name, description, price, category, stock, updatedAt: new Date() };
+    if (req.file) {
+      const imageUrl = await uploadToCloudinary(req.file.path);
+      updatedFields.imageUrl = imageUrl;
+    }
+
     const result = await dbInstance.collection("products").updateOne(
       { _id: new ObjectId(id) },
-      { $set: updatedProduct }
+      { $set: updatedFields }
     );
 
     if (result.matchedCount === 0) {
@@ -73,7 +83,6 @@ export const updateProduct = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 // Eliminar un producto por ID
 export const deleteProduct = async (req, res) => {
   try {

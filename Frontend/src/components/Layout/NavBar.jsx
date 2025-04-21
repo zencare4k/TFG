@@ -4,8 +4,8 @@ import "../../styles/layout.css";
 import { AuthContext } from "../context/AuthContext";
 
 const Header = () => {
-  const { user, logout } = useContext(AuthContext); // Obtener el usuario autenticado y la función de logout
-  const [menuOpen, setMenuOpen] = useState(false); // Estado para el menú desplegable
+  const { user, logout } = useContext(AuthContext);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleMenu = () => {
@@ -27,8 +27,8 @@ const Header = () => {
           <li><Link to="/404" className="nav-item">Camisetas Niño</Link></li>
           <li><Link to="/404" className="nav-item">Camisetas Niña</Link></li>
           <li><Link to="/support" className="nav-item">Contacto</Link></li>
-          {/* Mostrar las secciones de administración si el usuario es administrador */}
-          {user?.isAdmin && (
+          {/* Mostrar enlaces según el rol del usuario */}
+          {user?.role === "productAdmin" && (
             <>
               <li>
                 <Link to="/add-product" className="nav-item admin-item">
@@ -42,10 +42,16 @@ const Header = () => {
               </li>
             </>
           )}
+          {user?.role === "systemAdmin" && (
+            <li>
+              <Link to="/admin/systemadmin" className="nav-item admin-item">
+                Gestión de Usuarios
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
       <div className="user-container">
-        {/* Ícono del carrito siempre visible */}
         <div className="cart-icon-container" onClick={() => navigate("/cart")}>
           <img src="/assets/icons/Carrito.svg" alt="Carrito" className="cart-icon" />
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/auth_API';
+import { LoginUser } from '../../services/auth_API';
 import '../../styles/login.css';
 import NotificationSystem from '../Shared/NotificationSystem';
 import { AuthContext } from '../context/AuthContext';
