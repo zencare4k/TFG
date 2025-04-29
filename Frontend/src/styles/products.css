@@ -320,3 +320,37 @@
   border: 1px solid #ddd;
   text-align: center;
 }
+/* Botones en la tarjeta del producto */
+.product-card-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.add-to-cart-button,
+.buy-now-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-button {
+  background-color: #8D7B31; /* Color para añadir al carrito */
+  color: white;
+}
+
+.add-to-cart-button:hover {
+  background-color: #645722;
+}
+
+.buy-now-button {
+  background-color: #D9534F; /* Color para comprar ahora */
+  color: white;
+}
+
+.buy-now-button:hover {
+  background-color: #B52A27;
+}

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import "../../styles/CartPreview.css"; // Importar los estilos
+import "../../styles/CartPreview.css";
 import { fetchCartItems } from "../../services/fetchCartItems";
 import { useNavigate } from "react-router-dom";
 
-const CartPreview = ({ setShowCartPreview }) => {
+const CartPreview = ({ setShowCartPreview, showCartPreview }) => {
   const [cartItems, setCartItems] = useState([]);
   const cartPreviewRef = useRef(null);
   const navigate = useNavigate();
@@ -35,7 +35,10 @@ const CartPreview = ({ setShowCartPreview }) => {
   }, [setShowCartPreview]);
 
   return (
-    <div className="cart-preview" ref={cartPreviewRef}>
+    <div
+      className={`cart-preview ${showCartPreview ? "open" : ""}`} // Agregar clase dinámica
+      ref={cartPreviewRef}
+    >
       <h3>Carrito de Compras</h3>
       {cartItems.length === 0 ? (
         <p>El carrito está vacío</p>

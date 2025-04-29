@@ -1,9 +1,9 @@
 /* Contenedor principal del CartPreview */
 .cart-preview {
     position: absolute;
-    top: 60px; /* Ajusta según la altura de tu navbar */
+    top: 60px; /* Ajusta según la altura del navbar */
     right: 20px;
-    width: 300px;
+    width: 300px; /* Ajusta el ancho según tus necesidades */
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -11,13 +11,17 @@
     z-index: 1000;
     padding: 15px;
     font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column; /* Permite que el botón quede al final */
+    max-height: 400px; /* Altura máxima inicial */
+    overflow: hidden; /* Ocultar contenido que exceda la altura */
+    transition: max-height 0.3s ease; /* Animación para el cambio de altura */
   }
   
-  /* Título del CartPreview */
-  .cart-preview h3 {
-    font-size: 1.2em;
-    margin-bottom: 10px;
-    color: #333;
+  /* Clase para mostrar el CartPreview con altura dinámica */
+  .cart-preview.open {
+    max-height: 600px; /* Altura máxima cuando está abierto */
+    overflow-y: auto; /* Habilitar scroll si excede la altura */
   }
   
   /* Lista de productos */
@@ -25,54 +29,12 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    max-height: 200px;
-    overflow-y: auto; /* Scroll si hay muchos productos */
-  }
-  
-  /* Elementos de la lista */
-  .cart-preview li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-  }
-  
-  /* Imagen del producto */
-  .cart-item-image {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 5px;
-    margin-right: 10px;
-  }
-  
-  /* Detalles del producto */
-  .cart-item-details {
-    flex: 1;
-  }
-  
-  .cart-item-name {
-    font-size: 0.9em;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
-  }
-  
-  .cart-item-price {
-    font-size: 0.8em;
-    color: #666;
-  }
-  
-  .cart-item-quantity {
-    font-size: 0.8em;
-    color: #999;
+    flex: 1; /* Permite que la lista ocupe el espacio disponible */
+    overflow-y: auto; /* Habilitar scroll si hay muchos productos */
   }
   
   /* Botón para ver el carrito completo */
   .view-cart-button {
-    display: block;
-    width: 100%;
     background-color: #8D7B31;
     color: white;
     text-align: center;
@@ -82,6 +44,7 @@
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-top: 10px; /* Espaciado superior */
   }
   
   .view-cart-button:hover {

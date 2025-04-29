@@ -120,7 +120,7 @@ main {
 }
 
 .cart-icon {
-  transform: translate(-200%, 40%);
+  transform: translate(-200%, 0%);
   height: 30px;
   cursor: pointer;
 }
