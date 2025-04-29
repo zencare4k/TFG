@@ -2,14 +2,20 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/layout.css";
 import { AuthContext } from "../context/AuthContext";
+import CartPreview from "../Home/CartPreview"; // Importar el componente CartPreview
 
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showCartPreview, setShowCartPreview] = useState(false); // Estado para mostrar/ocultar CartPreview
   const navigate = useNavigate();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const toggleCartPreview = () => {
+    setShowCartPreview((prev) => !prev); // Alternar la visibilidad del CartPreview
   };
 
   return (
@@ -27,7 +33,6 @@ const Header = () => {
           <li><Link to="/404" className="nav-item">Camisetas Niño</Link></li>
           <li><Link to="/404" className="nav-item">Camisetas Niña</Link></li>
           <li><Link to="/support" className="nav-item">Contacto</Link></li>
-          {/* Mostrar enlaces según el rol del usuario */}
           {user?.role === "productAdmin" && (
             <>
               <li>
@@ -52,9 +57,12 @@ const Header = () => {
         </ul>
       </nav>
       <div className="user-container">
-        <div className="cart-icon-container" onClick={() => navigate("/cart")}>
+        <div className="cart-icon-container" onClick={toggleCartPreview}>
           <img src="/assets/icons/Carrito.svg" alt="Carrito" className="cart-icon" />
         </div>
+        {showCartPreview && (
+          <CartPreview setShowCartPreview={setShowCartPreview} /> // Mostrar CartPreview si está activo
+        )}
         {user ? (
           <div className="user-info">
             <div className="user-profile login-button" onClick={toggleMenu}>

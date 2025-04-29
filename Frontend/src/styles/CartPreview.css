@@ -1,0 +1,89 @@
+/* Contenedor principal del CartPreview */
+.cart-preview {
+    position: absolute;
+    top: 60px; /* Ajusta según la altura de tu navbar */
+    right: 20px;
+    width: 300px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Título del CartPreview */
+  .cart-preview h3 {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  /* Lista de productos */
+  .cart-preview ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto; /* Scroll si hay muchos productos */
+  }
+  
+  /* Elementos de la lista */
+  .cart-preview li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+  
+  /* Imagen del producto */
+  .cart-item-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  /* Detalles del producto */
+  .cart-item-details {
+    flex: 1;
+  }
+  
+  .cart-item-name {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .cart-item-price {
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  .cart-item-quantity {
+    font-size: 0.8em;
+    color: #999;
+  }
+  
+  /* Botón para ver el carrito completo */
+  .view-cart-button {
+    display: block;
+    width: 100%;
+    background-color: #8D7B31;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .view-cart-button:hover {
+    background-color: #645722;
+  }
