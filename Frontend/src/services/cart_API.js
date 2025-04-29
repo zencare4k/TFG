@@ -23,3 +23,15 @@ export const fetchRecommendations = async (category) => {
         throw error;
     }
 };
+
+
+// Servicio para añadir un producto al carrito
+export const addToCart = async (product) => {
+  try {
+    const response = await axios.post(API_URL, product);
+    return response.data;
+  } catch (error) {
+    console.error("Error al añadir el producto al carrito:", error);
+    throw error;
+  }
+};

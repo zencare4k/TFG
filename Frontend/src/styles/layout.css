@@ -130,6 +130,8 @@ main {
 }
 
 .login-button {
+  transform: translate(-20%, -20%);
+
   background: none;
   border: none;
   cursor: pointer;
