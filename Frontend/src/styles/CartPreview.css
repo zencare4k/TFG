@@ -1,23 +1,22 @@
 /* Contenedor principal del CartPreview */
 .cart-preview {
-    position: absolute;
-    top: 60px; /* Ajusta según la altura del navbar */
-    right: 20px;
-    width: 300px; /* Ajusta el ancho según tus necesidades */
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    padding: 15px;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column; /* Permite que el botón quede al final */
-    max-height: 400px; /* Altura máxima inicial */
-    overflow: hidden; /* Ocultar contenido que exceda la altura */
-    transition: max-height 0.3s ease; /* Animación para el cambio de altura */
-  }
-  
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 15px;
+  display: none; /* Oculto por defecto */
+  flex-direction: column;
+}
+
+.cart-preview.open {
+  display: flex; /* Mostrar cuando esté abierto */
+}
   /* Clase para mostrar el CartPreview con altura dinámica */
   .cart-preview.open {
     max-height: 600px; /* Altura máxima cuando está abierto */
@@ -49,4 +48,39 @@
   
   .view-cart-button:hover {
     background-color: #645722;
+  }
+
+  .cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .cart-item.removing {
+    animation: fadeOut 0.3s ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
   }

@@ -1,25 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../../styles/CartPreview.css";
-import { fetchCartItems } from "../../services/fetchCartItems";
 import { useNavigate } from "react-router-dom";
+import { removeFromCart } from "../../services/cart_API";
 
-const CartPreview = ({ setShowCartPreview, showCartPreview }) => {
-  const [cartItems, setCartItems] = useState([]);
+const CartPreview = ({ cartItems = [], setCartItems, setShowCartPreview, showCartPreview }) => {
   const cartPreviewRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const loadCartItems = async () => {
-      try {
-        const items = await fetchCartItems();
-        setCartItems(items);
-      } catch (error) {
-        console.error("Error al cargar los datos del carrito:", error);
-      }
-    };
-
-    loadCartItems();
-  }, []);
+  const [removingItem, setRemovingItem] = useState(null); // Estado para manejar la animación de eliminación
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,9 +21,22 @@ const CartPreview = ({ setShowCartPreview, showCartPreview }) => {
     };
   }, [setShowCartPreview]);
 
+  const handleRemoveItem = async (productId) => {
+    setRemovingItem(productId); // Activar la animación de eliminación
+    setTimeout(async () => {
+      try {
+        await removeFromCart(productId); // Llamar al servicio para eliminar el producto
+        setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId)); // Actualizar el estado
+        setRemovingItem(null); // Resetear el estado de eliminación
+      } catch (error) {
+        console.error("Error al eliminar el producto del carrito:", error);
+      }
+    }, 300); // Tiempo de la animación
+  };
+
   return (
     <div
-      className={`cart-preview ${showCartPreview ? "open" : ""}`} // Agregar clase dinámica
+      className={`cart-preview ${showCartPreview ? "open" : ""}`} // Mostrar solo si está abierto
       ref={cartPreviewRef}
     >
       <h3>Carrito de Compras</h3>
@@ -45,13 +45,22 @@ const CartPreview = ({ setShowCartPreview, showCartPreview }) => {
       ) : (
         <ul>
           {cartItems.map((item, index) => (
-            <li key={index}>
-              <img src={item.image} alt={item.name} className="cart-item-image" />
+            <li
+              key={index}
+              className={`cart-item ${removingItem === item.productId ? "removing" : ""}`}
+            >
+              <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
               <div className="cart-item-details">
                 <p className="cart-item-name">{item.name}</p>
                 <p className="cart-item-price">{item.price}€</p>
                 <p className="cart-item-quantity">Cantidad: {item.quantity}</p>
               </div>
+              <button
+                className="remove-item-button"
+                onClick={() => handleRemoveItem(item.productId)}
+              >
+                Eliminar
+              </button>
             </li>
           ))}
         </ul>

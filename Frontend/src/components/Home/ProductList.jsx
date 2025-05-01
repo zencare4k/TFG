@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { fetchProducts } from "../../services/product_API";
-import { addToCart } from "../../services/cart_API"; // Importar el servicio para añadir al carrito
+import { addToCart } from "../../services/cart_API"; // Servicio para añadir al carrito
 import ProductCard from "./ProductCard";
+import CartPreview from "./CartPreview"; // Importar el componente de preview del carrito
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [cart, setCart] = useState([]); // Estado para el carrito
   const [loading, setLoading] = useState(true);
+  const [cartPreviewItems, setCartPreviewItems] = useState([]); // Estado para el preview del carrito
+  const [showCartPreview, setShowCartPreview] = useState(false); // Estado para mostrar el preview del carrito
 
   useEffect(() => {
     const loadProducts = async () => {
@@ -25,19 +27,20 @@ const ProductList = () => {
 
   const handleAddToCart = async (product) => {
     try {
-      const cartItem = await addToCart({
+      await addToCart({
         productId: product._id,
         name: product.name,
         price: product.price,
         imageUrl: product.imageUrl,
       });
-      setCart((prevCart) => [...prevCart, cartItem]);
-      console.log("Producto añadido al carrito:", cartItem);
+  
+      // Añadir el producto al preview del carrito
+      setCartPreviewItems((prevItems) => [...prevItems, product]);
+      setShowCartPreview(true); // Mostrar el preview del carrito
     } catch (error) {
       console.error("Error al añadir el producto al carrito:", error);
     }
   };
-
   if (loading) {
     return <p>Cargando productos...</p>;
   }
@@ -51,24 +54,11 @@ const ProductList = () => {
       {products.map((product) => (
         <ProductCard key={product._id} product={product} onAddToCart={handleAddToCart} />
       ))}
-      <div className="cart-summary">
-        <h3>Carrito</h3>
-        {cart.length === 0 ? (
-          <p>El carrito está vacío.</p>
-        ) : (
-          <ul>
-            {cart.map((item, index) => (
-              <li key={index} className="cart-item">
-                <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
-                <div className="cart-item-details">
-                  <p className="cart-item-name">{item.name}</p>
-                  <p className="cart-item-price">{item.price}€</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <CartPreview
+        cartItems={cartPreviewItems} // Pasar los productos al preview
+        showCartPreview={showCartPreview}
+        setShowCartPreview={setShowCartPreview}
+      />
     </div>
   );
 };

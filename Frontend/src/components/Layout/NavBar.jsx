@@ -2,20 +2,42 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/layout.css";
 import { AuthContext } from "../context/AuthContext";
-import CartPreview from "../Home/CartPreview"; // Importar el componente CartPreview
+import CartPreview from "../Home/CartPreview";
+import { addToCart, fetchCartItems } from "../../services/cart_API"; // Importar servicios del carrito
 
 const Header = () => {
   const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [showCartPreview, setShowCartPreview] = useState(false); // Estado para mostrar/ocultar CartPreview
+  const [showCartPreview, setShowCartPreview] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const navigate = useNavigate();
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const toggleCartPreview = () => {
-    setShowCartPreview((prev) => !prev); // Alternar la visibilidad del CartPreview
+  const toggleCartPreview = async () => {
+    setShowCartPreview((prev) => !prev);
+
+    // Cargar los productos del carrito desde la base de datos
+    if (!showCartPreview) {
+      try {
+        const items = await fetchCartItems();
+        setCartItems(items);
+      } catch (error) {
+        console.error("Error al cargar los productos del carrito:", error);
+      }
+    }
+  };
+
+  const handleAddToCart = async (product) => {
+    try {
+      await addToCart(product); // Añadir el producto al carrito en la base de datos
+      const updatedCart = await fetchCartItems(); // Obtener el carrito actualizado
+      setCartItems(updatedCart); // Actualizar el estado del carrito
+    } catch (error) {
+      console.error("Error al añadir el producto al carrito:", error);
+    }
   };
 
   return (
@@ -57,12 +79,21 @@ const Header = () => {
         </ul>
       </nav>
       <div className="user-container">
+        {/* Ícono del carrito */}
         <div className="cart-icon-container" onClick={toggleCartPreview}>
           <img src="/assets/icons/Carrito.svg" alt="Carrito" className="cart-icon" />
         </div>
+
+        {/* Mostrar CartPreview si está activo */}
         {showCartPreview && (
-          <CartPreview setShowCartPreview={setShowCartPreview} /> // Mostrar CartPreview si está activo
+          <CartPreview
+            cartItems={cartItems} // Pasar los productos del carrito
+            setShowCartPreview={setShowCartPreview}
+            showCartPreview={showCartPreview}
+          />
         )}
+
+        {/* Información del usuario */}
         {user ? (
           <div className="user-info">
             <div className="user-profile login-button" onClick={toggleMenu}>

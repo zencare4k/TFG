@@ -83,9 +83,8 @@
   .cart-item {
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
+    margin-bottom: 15px;
+    animation: fadeIn 0.3s ease-in-out;
   }
   
   .cart-item-image {
@@ -110,3 +109,113 @@
     font-size: 0.9em;
     color: #666;
   }
+
+  .cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover; /* Asegura que la imagen se ajuste correctamente */
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .remove-item-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .remove-item-button:hover {
+    background-color: #ff1a1a;
+  }
+
+  .cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .cart-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .remove-item-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .remove-item-button:hover {
+    background-color: #ff1a1a;
+  }
+
+  .cart-item.removing {
+    animation: fadeOut 0.3s ease-in-out;
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+  
+  .cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 10px;
+  }
+  
+  .cart-item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .cart-item-quantity input {
+    width: 50px;
+    margin-left: 5px;
+  }
+  
+  .remove-item-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .remove-item-button:hover {
+    background-color: #ff1a1a;
+  }
+
+  
