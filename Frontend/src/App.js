@@ -1,10 +1,7 @@
 import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, AuthContext } from "./components/context/AuthContext";
-import Header from "./components/Layout/NavBar";
-import Footer from "./components/Layout/Footer";
-import HeroSection from "./components/Home/HeroSection";
-import ProductList from "./components/Home/ProductList";
+import HomePage from "./components/MainPages/HomePage";
 import CartPage from "./components/Home/CartPage";
 import RegisterForm from "./components/Auth/RegisterForm";
 import LoginForm from "./components/Auth/LoginForm";
@@ -20,15 +17,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       {/* Página principal */}
-      <Route
-        path="/"
-        element={
-          <>
-            <HeroSection />
-            <ProductList />
-          </>
-        }
-      />
+      <Route path="/" element={<HomePage />} />
 
       {/* Carrito */}
       <Route path="/cart" element={<CartPage />} />
@@ -42,21 +31,13 @@ const AppRoutes = () => {
       <Route
         path="/add-product"
         element={
-          user?.role === "productAdmin" ? (
-            <AddProductPage />
-          ) : (
-            <Navigate to="/login" />
-          )
+          user?.role === "productAdmin" ? <AddProductPage /> : <Navigate to="/login" />
         }
       />
       <Route
         path="/manage-products"
         element={
-          user?.role === "productAdmin" ? (
-            <ManageProducts />
-          ) : (
-            <Navigate to="/login" />
-          )
+          user?.role === "productAdmin" ? <ManageProducts /> : <Navigate to="/login" />
         }
       />
       <Route
@@ -72,24 +53,14 @@ const AppRoutes = () => {
   );
 };
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <div>
-          <header>
-            <Header />
-          </header>
-          <main style={{ paddingTop: "60px", paddingBottom: "60px" }}>
-            <AppRoutes />
-          </main>
-          <footer>
-            <Footer />
-          </footer>
-        </div>
+        <AppRoutes />
       </Router>
     </AuthProvider>
   );
-}
+};
 
 export default App;

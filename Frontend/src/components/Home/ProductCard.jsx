@@ -1,8 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/products.css";
+import "../../styles/Wishlist.css"; // Asegúrate de tener este archivo CSS para los estilos
 
-const ProductCard = ({ product, onAddToCart }) => {
+const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
   const navigate = useNavigate();
 
   const handleBuyClick = () => {
@@ -29,6 +30,17 @@ const ProductCard = ({ product, onAddToCart }) => {
           Comprar Ahora
         </button>
       </div>
+      <button
+        className="wishlist-button"
+        onClick={() => onAddToWishlist(product)}
+        title="Añadir a la lista de deseados"
+      >
+        <img
+          src="/assets/icons/wishlist_card.png"
+          alt="Añadir a la lista de deseados"
+          className="wishlist-icon"
+        />
+      </button>
     </div>
   );
 };

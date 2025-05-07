@@ -1,0 +1,90 @@
+.floating-wishlist-icon {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .floating-wishlist-icon img {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .wishlist {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    z-index: 1000;
+  }
+  
+  .wishlist h3 {
+    margin: 0 0 10px;
+  }
+  
+  .wishlist ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .wishlist li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .wishlist img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .wishlist button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .wishlist button:hover {
+    background-color: #ff1a1a;
+  }
+
+  .wishlist-button {
+    position: absolute; /* Posiciona el botón en la tarjeta */
+    top: 10px; /* Ajusta la posición vertical */
+    right: 10px; /* Ajusta la posición horizontal */
+    background: none; /* Sin fondo */
+    border: none; /* Sin borde */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    padding: 0; /* Elimina el padding */
+    width: 30px; /* Ajusta el ancho del botón */
+  }
+  
+  .wishlist-icon {
+    width: 20px; /* Ajusta el ancho del ícono */
+    height: 20px; /* Ajusta la altura del ícono */
+    transition: transform 0.3s ease; /* Añade una transición para el hover */
+  }
+  
+  .wishlist-button:hover .wishlist-icon {
+    transform: scale(1.2); /* Aumenta ligeramente el tamaño al pasar el cursor */
+  }
