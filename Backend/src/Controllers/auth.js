@@ -79,8 +79,15 @@ export const loginUser = async (req, res) => {
 
     console.log("Token generado:", token);
 
-    res.status(200).json({ token, role: user.role });
-  } catch (error) {
+res.status(200).json({
+  token,
+  user: {
+    _id: user._id,
+    username: user.username,
+    email: user.email,
+    role: user.role
+  }
+});  } catch (error) {
     console.error("Error en loginUser:", error.message);
     res.status(500).json({ message: "Error al iniciar sesión" });
   }

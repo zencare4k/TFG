@@ -11,14 +11,15 @@ export const createProduct = async (productData) => {
     throw new Error(error.response?.data?.error || "Error al crear el producto");
   }
 };
-// Función para obtener productos
+
 export const fetchProducts = async () => {
-  try {
-    const response = await axios.get(API_URL);
-    return response.data;
-  } catch (error) {
-    throw new Error(error.response?.data?.error || 'Error al obtener los productos');
-  }
+    try {
+        const response = await axios.get(API_URL);
+        return response.data; // Asegúrate de que el backend devuelva los productos en el formato esperado
+    } catch (error) {
+        console.error("Error al obtener los productos:", error);
+        throw error;
+    }
 };
 
 export const deleteProduct = async (id) => {

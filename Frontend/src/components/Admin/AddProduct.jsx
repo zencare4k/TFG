@@ -18,41 +18,42 @@ const AddProductPage = () => {
   if (user?.role !== "productAdmin") {
     return <p className="error">Acceso denegado: solo administradores de productos.</p>;
   }
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (productName && description && price && category && stock && image) {
+    try {
+      const formData = new FormData();
+      formData.append("name", productName);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("stock", stock);
+      formData.append("image", image);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (productName && description && price && category && stock && image) {
-      try {
-        const formData = new FormData();
-        formData.append("name", productName);
-        formData.append("description", description);
-        formData.append("price", price);
-        formData.append("category", category);
-        formData.append("stock", stock);
-        formData.append("image", image);
+      await api.post("/products", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
 
-        await api.post("/products", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        setSuccess("Producto añadido correctamente.");
-        setError("");
-        setProductName("");
-        setDescription("");
-        setPrice("");
-        setCategory("");
-        setStock("");
-        setImage(null);
-      } catch (err) {
-        setError(err.response?.data?.error || "Error al añadir el producto.");
-        setSuccess("");
-      }
-    } else {
-      setError("Por favor, completa todos los campos.");
+      setSuccess("Producto añadido correctamente.");
+      setError("");
+      setProductName("");
+      setDescription("");
+      setPrice("");
+      setCategory("");
+      setStock("");
+      setImage(null);
+    } catch (err) {
+      setError(err.response?.data?.error || "Error al añadir el producto.");
       setSuccess("");
     }
-  };
-
+  } else {
+    setError("Por favor, completa todos los campos.");
+    setSuccess("");
+  }
+};
   return (
     <div className="add-product-page">
       <h2>Añadir Producto</h2>

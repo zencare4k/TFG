@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, AuthContext } from "./components/context/AuthContext";
 import HomePage from "./components/MainPages/HomePage";
 import CartPage from "./components/Home/CartPage";
@@ -10,46 +10,59 @@ import AddProductPage from "./components/Admin/AddProduct";
 import ManageProducts from "./components/Admin/ManageProducts";
 import UserManagement from "./components/Admin/systemadmin";
 import NotFound from "./components/Home/NotFound";
+import FloatingWishlistIcon from "./components/Layout/FloatingWishList";
+import Header from "./components/Layout/NavBar";
+import Footer from "./components/Layout/Footer";
+
+const EXCLUDED_WISHLIST_PATHS = [
+  "/add-product",
+  "/manage-products",
+  "/login",
+  "/register"
+];
 
 const AppRoutes = () => {
   const { user } = useContext(AuthContext);
+  const location = useLocation();
+
+  // Determina si se debe mostrar el FloatingWishlistIcon
+  const showWishlistIcon =
+    user &&
+    user._id &&
+    !EXCLUDED_WISHLIST_PATHS.some((path) => location.pathname.startsWith(path));
 
   return (
-    <Routes>
-      {/* Página principal */}
-      <Route path="/" element={<HomePage />} />
-
-      {/* Carrito */}
-      <Route path="/cart" element={<CartPage />} />
-
-      {/* Autenticación */}
-      <Route path="/register" element={<RegisterForm />} />
-      <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
-      <Route path="/forgot-password" element={<ForgotPasswordForm />} />
-
-      {/* Páginas protegidas */}
-      <Route
-        path="/add-product"
-        element={
-          user?.role === "productAdmin" ? <AddProductPage /> : <Navigate to="/login" />
-        }
-      />
-      <Route
-        path="/manage-products"
-        element={
-          user?.role === "productAdmin" ? <ManageProducts /> : <Navigate to="/login" />
-        }
-      />
-      <Route
-        path="/admin/systemadmin"
-        element={
-          user?.role === "systemAdmin" ? <UserManagement /> : <Navigate to="/login" />
-        }
-      />
-
-      {/* Página no encontrada */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <Header />
+      {showWishlistIcon && <FloatingWishlistIcon userId={user._id} />}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/cart" element={<CartPage />} />
+        <Route path="/register" element={<RegisterForm />} />
+        <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
+        <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+        <Route
+          path="/add-product"
+          element={
+            user?.role === "productAdmin" ? <AddProductPage /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/manage-products"
+          element={
+            user?.role === "productAdmin" ? <ManageProducts /> : <Navigate to="/login" />
+          }
+        />
+        <Route
+          path="/admin/systemadmin"
+          element={
+            user?.role === "systemAdmin" ? <UserManagement /> : <Navigate to="/login" />
+          }
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Footer />
+    </>
   );
 };
 

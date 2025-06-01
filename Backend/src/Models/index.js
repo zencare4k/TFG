@@ -3,30 +3,25 @@ import dotenv from "dotenv";
 dotenv.config();
 
 let dbInstanceUsers;
-let dbInstanceProducts;
 
 const connectDB = async () => {
-  if (dbInstanceUsers && dbInstanceProducts) {
-    return { dbInstanceUsers, dbInstanceProducts };
+  if (dbInstanceUsers) {
+    return { dbInstanceUsers };
   }
 
   try {
-    // Conectar a las bases de datos de usuarios y productos
+    // Solo conectar a la base de datos de usuarios (que ahora usas para todo)
     const clientUsers = new MongoClient(process.env.MONGO_URI_USERS);
-    const clientProducts = new MongoClient(process.env.MONGO_URI_PRODUCTS);
-
     await clientUsers.connect();
-    await clientProducts.connect();
 
-    // Especificar los nombres de las bases de datos
-    dbInstanceUsers = clientUsers.db(process.env.DB_NAME_USERS); // Nombre de la base de datos de usuarios
-    dbInstanceProducts = clientProducts.db(process.env.DB_NAME_PRODUCTS); // Nombre de la base de datos de productos
+    // Si tu URI ya incluye el nombre de la base de datos, esto es suficiente:
+    dbInstanceUsers = clientUsers.db();
 
-    console.log("MongoDB conectado a las bases de datos de usuarios y productos");
-    return { dbInstanceUsers, dbInstanceProducts };
+    console.log("MongoDB conectado a la base de datos de usuarios");
+    return { dbInstanceUsers };
   } catch (error) {
     console.error("Error conectando a MongoDB", error);
-    process.exit(1); // Salir del proceso si no se puede conectar
+    process.exit(1);
   }
 };
 

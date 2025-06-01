@@ -20,18 +20,16 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const login = async (username, password) => {
-    try {
-      const { token, role } = await loginUser(username, password);
-      const user = { username, role };
-      setUser(user);
-      localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("token", token);
-    } catch (error) {
-      throw new Error(error.response?.data?.message || "Error al iniciar sesión");
-    }
-  };
-
+ const login = async (username, password) => {
+  try {
+    const { token, user } = await loginUser(username, password); // user completo del backend
+    setUser(user);
+    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("token", token);
+  } catch (error) {
+    throw new Error(error.response?.data?.message || "Error al iniciar sesión");
+  }
+};
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");

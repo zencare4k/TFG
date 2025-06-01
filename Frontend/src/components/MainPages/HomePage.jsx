@@ -1,9 +1,7 @@
-import React from "react";
 import NavBar from "../Layout/NavBar";
 import HeroSection from "../Home/HeroSection";
 import ProductList from "../Home/ProductList";
 import FloatingWishlist from "../Layout/FloatingWishList";
-import Footer from "../Layout/Footer";
 
 const HomePage = () => {
   return (
@@ -20,8 +18,6 @@ const HomePage = () => {
       {/* Wishlist flotante */}
       <FloatingWishlist />
 
-      {/* Pie de página */}
-      <Footer />
     </div>
   );
 };

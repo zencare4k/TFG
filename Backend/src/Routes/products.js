@@ -5,6 +5,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  getProductDetails
 } from "../Controllers/products.js";
 import { authMiddleware, adminMiddleware } from "../Middleware/auth.js"; // Middlewares de autenticación y autorización
 import upload from "../Middleware/upload.js"; // Middleware para manejar la subida de imágenes
@@ -22,6 +23,53 @@ const router = Router();
  *         description: Lista de productos
  */
 router.get("/", getAllProducts);
+
+/**
+ * @swagger
+ * /products/details/{id}:
+ *   get:
+ *     summary: Obtiene los detalles de un producto por ID
+ *     tags: [Products]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del producto
+ *     responses:
+ *       200:
+ *         description: Detalles del producto
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 name:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 price:
+ *                   type: number
+ *                 category:
+ *                   type: string
+ *                 stock:
+ *                   type: integer
+ *                 imageUrl:
+ *                   type: string
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                 updatedAt:
+ *                   type: string
+ *                   format: date-time
+ *       404:
+ *         description: Producto no encontrado
+ */
+router.get("/:id", getProductDetails);
+
 
 /**
  * @swagger
