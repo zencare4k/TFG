@@ -1,0 +1,103 @@
+.checkout-page {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 24px 32px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.checkout-page h2, .checkout-page h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 18px;
+}
+
+.checkout-page ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.checkout-page li {
+  padding: 6px 0;
+  border-bottom: 1px solid #eee;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.checkout-form input {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+
+.checkout-page ul img,
+.checkout-preview-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.checkout-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.checkout-form button[type="submit"] {
+  background: #8D7B31;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 0;
+  transition: background 0.2s;
+}
+
+.checkout-form button[type="submit"]:disabled {
+  background: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.checkout-form button[type="submit"]:hover:not(:disabled) {
+  background: #388e3c;
+}
+
+.cancel-button {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 0;
+  transition: background 0.2s;
+}
+
+.cancel-button:disabled {
+  background: #ffcdd2;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.checkout-success {
+  text-align: center;
+  color: #388e3c;
+  margin-top: 40px;
+}

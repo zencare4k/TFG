@@ -13,6 +13,7 @@ import NotFound from "./components/Home/NotFound";
 import FloatingWishlistIcon from "./components/Layout/FloatingWishList";
 import Header from "./components/Layout/NavBar";
 import Footer from "./components/Layout/Footer";
+import Checkout from "./components/CheckoutFlow/checkout"; // Asegúrate de que la ruta es correcta
 
 const EXCLUDED_WISHLIST_PATHS = [
   "/add-product",
@@ -38,6 +39,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/checkout" element={<Checkout />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />

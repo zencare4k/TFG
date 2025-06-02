@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/CartPage.css";
 import { fetchCartItems, fetchRecommendations, removeFromCart } from "../../services/cart_API";
 
 const CartPage = () => {
-  const [cart, setCart] = useState([]); // Productos en el carrito
-  const [recommendations, setRecommendations] = useState([]); // Recomendaciones basadas en el carrito
-  const [removingItem, setRemovingItem] = useState(null); // Estado para manejar la animación de eliminación
+  const [cart, setCart] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
+  const [removingItem, setRemovingItem] = useState(null);
+  const navigate = useNavigate();
 
-  // Nueva función para cambiar la cantidad
   const handleQuantityChange = (productId, newQuantity) => {
     if (newQuantity < 1) return;
     setCart((prevItems) =>
@@ -20,11 +21,11 @@ const CartPage = () => {
   useEffect(() => {
     const loadCartData = async () => {
       try {
-        const cartItems = await fetchCartItems(); // Obtener productos del carrito
+        const cartItems = await fetchCartItems();
         setCart(cartItems);
 
         if (cartItems.length > 0) {
-          const category = cartItems[0].category; // Obtener recomendaciones basadas en la categoría
+          const category = cartItems[0].category;
           const recommendedProducts = await fetchRecommendations(category);
           setRecommendations(recommendedProducts);
         }
@@ -37,25 +38,25 @@ const CartPage = () => {
   }, []);
 
   const handleRemoveItem = async (productId) => {
-    setRemovingItem(productId); // Activar la animación de eliminación
+    setRemovingItem(productId);
     setTimeout(async () => {
       try {
-        await removeFromCart(productId); // Llamar al servicio para eliminar el producto
-        setCart((prevItems) => prevItems.filter((item) => item.id !== productId)); // Actualizar el estado
-        setRemovingItem(null); // Resetear el estado de eliminación
+        await removeFromCart(productId);
+        setCart((prevItems) => prevItems.filter((item) => item.id !== productId));
+        setRemovingItem(null);
       } catch (error) {
         console.error("Error al eliminar el producto del carrito:", error);
       }
-    }, 300); // Tiempo de la animación
+    }, 300);
   };
 
-  // Calcular subtotal por producto y total del carrito
   const getSubtotal = (item) => item.price * item.quantity;
   const cartTotal = cart.reduce((acc, item) => acc + getSubtotal(item), 0);
 
   const handleCheckout = () => {
-    // Aquí puedes redirigir a la página de checkout o siguiente paso
-    alert("Proceder al pago (implementa la navegación aquí)");
+    // Guarda el carrito en localStorage para que Checkout lo recoja
+    localStorage.setItem("cart", JSON.stringify(cart));
+    navigate("/checkout");
   };
 
   return (
