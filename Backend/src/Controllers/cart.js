@@ -1,4 +1,5 @@
 import { connectProductDB } from "../Models/products.js";
+import { ObjectId } from "mongodb";
 
 // Función para obtener los productos del carrito
 export const getCartItems = async (req, res) => {
@@ -25,21 +26,34 @@ export const clearUserCart = async (req, res) => {
 };
 
 export const addToCart = async (req, res) => {
-  const { productId, name, price, imageUrl } = req.body; // `imageUrl` debe ser la URL de Cloudinary
+  const { productId, name, price, imageUrl } = req.body;
 
   try {
     const dbInstance = await connectProductDB();
+
+    // Busca el producto para obtener su categoría
+    const product = await dbInstance.collection("products").findOne({ _id: productId });
+    if (!product) {
+      return res.status(404).json({ message: "Producto no encontrado" });
+    }
+
     const existingItem = await dbInstance.collection("cart").findOne({ productId });
 
     if (existingItem) {
-      // Incrementar la cantidad si el producto ya está en el carrito
       await dbInstance.collection("cart").updateOne(
         { productId },
         { $inc: { quantity: 1 } }
       );
     } else {
-      // Añadir un nuevo producto al carrito
-      const newCartItem = { productId, name, price, imageUrl, quantity: 1 };
+      // Añade la categoría al nuevo producto del carrito
+      const newCartItem = {
+        productId,
+        name,
+        price,
+        imageUrl,
+        quantity: 1,
+        category: product.category // <-- Añade la categoría aquí
+      };
       await dbInstance.collection("cart").insertOne(newCartItem);
     }
 
@@ -49,13 +63,12 @@ export const addToCart = async (req, res) => {
     res.status(500).json({ error: "Error al añadir el producto al carrito" });
   }
 };
-
 export const removeFromCart = async (req, res) => {
-  const { productId } = req.params;
+  const { productId } = req.params; // Cambia 'id' por 'productId'
 
   try {
     const dbInstance = await connectProductDB();
-    const result = await dbInstance.collection("cart").deleteOne({ productId });
+    const result = await dbInstance.collection("cart").deleteOne({ _id: new ObjectId(productId) });
 
     if (result.deletedCount === 0) {
       return res.status(404).json({ message: "Producto no encontrado en el carrito" });

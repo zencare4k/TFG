@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Checkout.css";
 
 const CheckoutConfirm = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Elimina el carrito del localStorage al mostrar la confirmación
+    localStorage.removeItem("cart");
+  }, []);
 
   return (
     <div className="checkout-page">

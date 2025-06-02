@@ -1,12 +1,17 @@
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
 export const processCheckout = async (req, res) => {
   const { address, cartItems, total } = req.body;
   const user = req.user;
 
+  console.log("Usuario recibido en checkout:", user);
+
   try {
+    if (!user || !user.email || !cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
+      return res.status(400).json({ success: false, message: "Datos de usuario o carrito inválidos" });
+    }
+
     // Crea un PaymentIntent real en Stripe (monto en céntimos)
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(total * 100),
@@ -21,12 +26,12 @@ export const processCheckout = async (req, res) => {
       },
     });
 
-    res.json({
+    return res.json({
       success: true,
       clientSecret: paymentIntent.client_secret,
       message: "PaymentIntent creado correctamente (Stripe)",
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error en el pago", error: error.message });
+    return res.status(500).json({ success: false, message: "Error en el pago", error: error.message });
   }
 };
