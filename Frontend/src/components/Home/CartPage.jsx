@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/CartPage.css";
-import { fetchCartItems, fetchRecommendations, removeFromCart } from "../../services/cart_API";
+import { fetchCartItems, removeFromCart } from "../../services/cart_API";
+import { fetchUserRecommendations } from "../../services/recomendations_API";
+import Recommendations from "../Shared/Recommendations"; // <-- Importa el componente
 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
   const [removingItem, setRemovingItem] = useState(null);
   const navigate = useNavigate();
 
@@ -23,12 +24,6 @@ const CartPage = () => {
       try {
         const cartItems = await fetchCartItems();
         setCart(cartItems);
-
-        if (cartItems.length > 0) {
-          const category = cartItems[0].category;
-          const recommendedProducts = await fetchRecommendations(category);
-          setRecommendations(recommendedProducts);
-        }
       } catch (error) {
         console.error("Error al cargar los datos del carrito:", error);
       }
@@ -111,6 +106,8 @@ const CartPage = () => {
               Proceder al pago
             </button>
           </div>
+          {/* Recomendaciones personalizadas debajo del resumen */}
+          <Recommendations />
         </>
       )}
     </div>

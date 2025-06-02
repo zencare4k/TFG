@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { processCheckout } from "../../services/checkoutService";
-import { clearCart } from "../../services/cart_API"; // <-- Importa el servicio aquí
+import { clearCart } from "../../services/cart_API";
 import "../../styles/Checkout.css";
 import CheckoutConfirm from "./checkoutConfirm";
+import Recommendations from "../Shared/Recommendations"; // <-- Importa el componente
 
 const stripePromise = loadStripe("pk_test_51RVabIGdkgPayLqPnTaoQIvWb7LAGdBx5RxOlzhfDMVpe5ntv4Yp3Op2iyQI2BCsjiG0dCa4sq5k60s5VJg2LhLS00paOIvZx3");
 
@@ -43,7 +44,6 @@ const CheckoutForm = () => {
     setLoading(true);
     setError("");
     try {
-      // 1. Solicita el PaymentIntent al backend
       const response = await processCheckout({
         address,
         cartItems,
@@ -55,7 +55,6 @@ const CheckoutForm = () => {
 
       setClientSecret(data.clientSecret);
 
-      // 2. Confirma el pago con Stripe
       const result = await stripe.confirmCardPayment(data.clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -69,9 +68,8 @@ const CheckoutForm = () => {
         setSuccess(true);
         localStorage.removeItem("cart");
         try {
-          await clearCart(localStorage.getItem("token")); // <-- Vacía el carrito en el backend
+          await clearCart(localStorage.getItem("token"));
         } catch (e) {
-          // Opcional: puedes mostrar un mensaje si falla el vaciado en backend
           console.error("No se pudo vaciar el carrito en el backend", e);
         }
       }
@@ -93,8 +91,8 @@ const CheckoutForm = () => {
     <div className="checkout-page">
       <h2>Resumen del pedido</h2>
       <ul>
-        {cartItems.map((item) => (
-          <li key={item.id} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {cartItems.map((item, idx) => (
+          <li key={`${item.id}-${idx}`} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <img
               src={item.imageUrl}
               alt={item.name}
@@ -107,6 +105,9 @@ const CheckoutForm = () => {
         ))}
       </ul>
       <h3>Total: €{getTotal(cartItems).toFixed(2)}</h3>
+
+      {/* Recomendaciones debajo del resumen */}
+      <Recommendations />
 
       <form className="checkout-form" onSubmit={handleSubmit}>
         <h3>Dirección de envío</h3>
