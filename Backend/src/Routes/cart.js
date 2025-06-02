@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getCartItems, addToCart, removeFromCart } from "../Controllers/cart.js";
-
+import { getCartItems, addToCart, removeFromCart, clearUserCart } from "../Controllers/cart.js";
+import { authMiddleware } from "../Middleware/auth.js";
 const router = Router();
-
+// ...existing code...
+router.post("/clear", authMiddleware, clearUserCart);
 // Endpoint para obtener los productos del carrito
 router.get("/", getCartItems);
 

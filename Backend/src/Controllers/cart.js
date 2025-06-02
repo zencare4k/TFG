@@ -11,6 +11,18 @@ export const getCartItems = async (req, res) => {
     res.status(500).json({ error: "Error al obtener los productos del carrito" });
   }
 };
+export const clearUserCart = async (req, res) => {
+  try {
+    const dbInstance = await connectProductDB();
+    await dbInstance.collection("carts").updateOne(
+      { userId: req.user.id },
+      { $set: { items: [] } }
+    );
+    res.json({ success: true, message: "Carrito vaciado correctamente" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error al vaciar el carrito" });
+  }
+};
 
 export const addToCart = async (req, res) => {
   const { productId, name, price, imageUrl } = req.body; // `imageUrl` debe ser la URL de Cloudinary

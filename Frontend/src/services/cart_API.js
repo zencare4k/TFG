@@ -24,9 +24,27 @@ export const fetchCartItems = async () => {
     throw error;
   }
 };
-
+export const clearCart = async (token) => {
+  try {
+    const response = await fetch("http://localhost:5000/api/cart/clear", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.json();
+  } catch (error) {
+    console.error("Error al vaciar el carrito:", error);
+    throw error;
+  }
+};
 // Servicio para obtener recomendaciones basadas en la categoría
 export const fetchRecommendations = async (category) => {
+  if (!category) {
+    console.warn("fetchRecommendations: categoría no definida");
+    return [];
+  }
   try {
     const response = await axios.get(`${RECOMMENDATIONS_URL}?category=${category}`);
     return response.data;

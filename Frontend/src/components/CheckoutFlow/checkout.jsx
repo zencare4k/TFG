@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { processCheckout } from "../../services/checkoutService";
+import { clearCart } from "../../services/cart_API"; // <-- Importa el servicio aquí
 import "../../styles/Checkout.css";
+import CheckoutConfirm from "./checkoutConfirm";
 
-const stripePromise = loadStripe("pk_test_51RVabIGdkgPayLqPnTaoQIvWb7LAGdBx5RxOlzhfDMVpe5ntv4Yp3Op2iyQI2BCsjiG0dCa4sq5k60s5VJg2LhLS00paOIvZx3"); // tu clave pública de Stripe
+const stripePromise = loadStripe("pk_test_51RVabIGdkgPayLqPnTaoQIvWb7LAGdBx5RxOlzhfDMVpe5ntv4Yp3Op2iyQI2BCsjiG0dCa4sq5k60s5VJg2LhLS00paOIvZx3");
 
 const getTotal = (items) =>
   items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -66,6 +68,12 @@ const CheckoutForm = () => {
       } else if (result.paymentIntent.status === "succeeded") {
         setSuccess(true);
         localStorage.removeItem("cart");
+        try {
+          await clearCart(localStorage.getItem("token")); // <-- Vacía el carrito en el backend
+        } catch (e) {
+          // Opcional: puedes mostrar un mensaje si falla el vaciado en backend
+          console.error("No se pudo vaciar el carrito en el backend", e);
+        }
       }
     } catch (err) {
       setError("Error de conexión o de pago.");
@@ -78,12 +86,7 @@ const CheckoutForm = () => {
   };
 
   if (success) {
-    return (
-      <div className="checkout-success">
-        <h2>¡Pago realizado con éxito!</h2>
-        <p>Gracias por tu compra.</p>
-      </div>
-    );
+    return <CheckoutConfirm />
   }
 
   return (
