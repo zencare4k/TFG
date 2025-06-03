@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+// ...existing imports...
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { processCheckout } from "../../services/checkoutService";
-import { clearCart } from "../../services/cart_API"; // <-- Importa el servicio aquí
+import { clearCart } from "../../services/cart_API";
 import "../../styles/Checkout.css";
 import CheckoutConfirm from "./checkoutConfirm";
-
+import { fetchCartItems } from "../../services/fetchCartItems";
+import { AuthContext } from "../context/AuthContext";
 const stripePromise = loadStripe("pk_test_51RVabIGdkgPayLqPnTaoQIvWb7LAGdBx5RxOlzhfDMVpe5ntv4Yp3Op2iyQI2BCsjiG0dCa4sq5k60s5VJg2LhLS00paOIvZx3");
 
 const getTotal = (items) =>
@@ -24,36 +26,67 @@ const CheckoutForm = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
-  const [setClientSecret] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
   const navigate = useNavigate();
   const stripe = useStripe();
   const elements = useElements();
 
+  const { user } = useContext(AuthContext);
+
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCart);
-  }, []);
+    const cargarCarrito = async () => {
+      try {
+        if (!user?._id) return;
+        const token = localStorage.getItem("token");
+        const items = await fetchCartItems(user._id, token);
+        setCartItems(items);
+      } catch (e) {
+        setCartItems([]);
+      }
+    };
+    cargarCarrito();
+  }, [user]);
 
   const handleAddressChange = (e) => {
     setAddress({ ...address, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      // 1. Solicita el PaymentIntent al backend
-      const response = await processCheckout({
-        address,
-        cartItems,
-        total: getTotal(cartItems),
-        token: localStorage.getItem("token"),
-      });
-      const data = await response.json();
-      if (!data.clientSecret) throw new Error("No se pudo crear el pago");
+  e.preventDefault();
+  setLoading(true);
+  setError("");
 
-      setClientSecret(data.clientSecret);
+  // Mapeo de items para asegurar que tienen productId, name, price, quantity, imageUrl
+  const checkoutCartItems = cartItems.map(item => ({
+    productId: item.productId || item._id, // usa productId o _id
+    name: item.name,
+    price: item.price,
+    quantity: item.quantity,
+    imageUrl: item.imageUrl,
+  }));
+
+  // LOG de depuración: revisa en la consola del navegador estos datos
+  console.log({
+    address,
+    checkoutCartItems,
+    total: getTotal(cartItems),
+    token: localStorage.getItem("token"),
+  });
+
+  try {
+    // 1. Solicita el PaymentIntent al backend
+    const response = await processCheckout({
+      address,
+      cartItems: checkoutCartItems,
+      total: getTotal(cartItems),
+      token: localStorage.getItem("token"),
+    });
+    const data = await response.json();
+    if (!data.clientSecret) throw new Error("No se pudo crear el pago");
+
+    setClientSecret(data.clientSecret);
+
+    // ...resto del código...
 
       // 2. Confirma el pago con Stripe
       const result = await stripe.confirmCardPayment(data.clientSecret, {
@@ -94,7 +127,7 @@ const CheckoutForm = () => {
       <h2>Resumen del pedido</h2>
       <ul>
         {cartItems.map((item) => (
-          <li key={item.id} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <li key={item.productId || item._id} style={{ display: "flex", alignItems: "center", gap: "12px" }}>
             <img
               src={item.imageUrl}
               alt={item.name}

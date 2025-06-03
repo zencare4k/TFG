@@ -13,7 +13,8 @@ import NotFound from "./components/Home/NotFound";
 import FloatingWishlistIcon from "./components/Layout/FloatingWishList";
 import Header from "./components/Layout/NavBar";
 import Footer from "./components/Layout/Footer";
-import Checkout from "./components/CheckoutFlow/checkout"; // Asegúrate de que la ruta es correcta
+import Checkout from "./components/CheckoutFlow/checkout";
+import ProductPage from "./components/ProductPages/ProductPage"; // Importa tu página de productos filtrados
 
 const EXCLUDED_WISHLIST_PATHS = [
   "/add-product",
@@ -38,6 +39,10 @@ const AppRoutes = () => {
       {showWishlistIcon && <FloatingWishlistIcon userId={user._id} />}
       <Routes>
         <Route path="/" element={<HomePage />} />
+        {/* Rutas para productos filtrados por público */}
+        <Route path="/productos/:publico" element={<ProductPage />} />
+        {/* Si quieres que la página de inicio también muestre todos los productos, puedes usar ProductPage en vez de HomePage */}
+        {/* <Route path="/" element={<ProductPage />} /> */}
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/register" element={<RegisterForm />} />

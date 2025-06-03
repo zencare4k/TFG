@@ -16,19 +16,24 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const toggleCartPreview = async () => {
-    setShowCartPreview((prev) => !prev);
+const toggleCartPreview = async () => {
+  setShowCartPreview((prev) => !prev);
 
-    // Cargar los productos del carrito desde la base de datos
-    if (!showCartPreview) {
-      try {
-        const items = await fetchCartItems();
-        setCartItems(items);
-      } catch (error) {
-        console.error("Error al cargar los productos del carrito:", error);
+  // Cargar los productos del carrito desde la base de datos
+  if (!showCartPreview) {
+    try {
+      let items = [];
+      if (user && user._id) {
+        items = await fetchCartItems(user._id); // <-- Pasa el userId si está logueado
+      } else {
+        items = JSON.parse(localStorage.getItem("cart")) || []; // Carrito local para invitados
       }
+      setCartItems(items);
+    } catch (error) {
+      console.error("Error al cargar los productos del carrito:", error);
     }
-  };
+  }
+};
 
   const handleAddToCart = async (product) => {
     try {
@@ -50,10 +55,10 @@ const Header = () => {
       <nav className="nav">
         <ul className="nav-list">
           <li><Link to="/" className="nav-item">Inicio</Link></li>
-          <li><Link to="/404" className="nav-item">Camisetas Hombre</Link></li>
-          <li><Link to="/404" className="nav-item">Camisetas Mujer</Link></li>
-          <li><Link to="/404" className="nav-item">Camisetas Niño</Link></li>
-          <li><Link to="/404" className="nav-item">Camisetas Niña</Link></li>
+          <li><Link to="/productos/hombre" className="nav-item">Camisetas Hombre</Link></li>
+          <li><Link to="/productos/mujer" className="nav-item">Camisetas Mujer</Link></li>
+          <li><Link to="/productos/nino" className="nav-item">Camisetas Niño</Link></li>
+          <li><Link to="/productos/nina" className="nav-item">Camisetas Niña</Link></li>
           <li><Link to="/support" className="nav-item">Contacto</Link></li>
           {user?.role === "productAdmin" && (
             <>

@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/CartPage.css";
 import { fetchCartItems, removeFromCart } from "../../services/cart_API";
 import Recommendations from "../Shared/Recommendations"; // <-- Importa el componente
-
+import { AuthContext } from "../context/AuthContext"; 
 const CartPage = () => {
   const [cart, setCart] = useState([]);
   const [removingItem, setRemovingItem] = useState(null);
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext); // obtiene el usuario
 
 const handleQuantityChange = (productId, newQuantity) => {
   if (newQuantity < 1) return;
@@ -17,10 +18,11 @@ const handleQuantityChange = (productId, newQuantity) => {
     )
   );
 };
-  useEffect(() => {
+   useEffect(() => {
     const loadCartData = async () => {
       try {
-        const cartItems = await fetchCartItems();
+        if (!user || !user._id) return; // espera a tener usuario
+        const cartItems = await fetchCartItems(user._id); // pasa el userId
         setCart(cartItems);
       } catch (error) {
         console.error("Error al cargar los datos del carrito:", error);
@@ -28,21 +30,20 @@ const handleQuantityChange = (productId, newQuantity) => {
     };
 
     loadCartData();
-  }, []);
+  }, [user]);
 
 const handleRemoveItem = async (productId) => {
   setRemovingItem(productId);
   setTimeout(async () => {
     try {
-      await removeFromCart(productId);
-      setCart((prevItems) => prevItems.filter((item) => item._id !== productId));
+      await removeFromCart(String(user._id), String(productId));
+      setCart((prevItems) => prevItems.filter((item) => item.productId !== productId));
       setRemovingItem(null);
     } catch (error) {
       console.error("Error al eliminar el producto del carrito:", error);
     }
   }, 300);
 };
-
   const getSubtotal = (item) => item.price * item.quantity;
   const cartTotal = cart.reduce((acc, item) => acc + getSubtotal(item), 0);
 
@@ -86,12 +87,12 @@ const handleRemoveItem = async (productId) => {
       <p className="cart-item-subtotal">
         Subtotal: {(item.price * item.quantity).toFixed(2)}€
       </p>
-      <button
-        className="remove-item-button"
-        onClick={() => handleRemoveItem(item._id)}
-      >
-        Eliminar
-      </button>
+    <button
+  className="remove-item-button"
+  onClick={() => handleRemoveItem(item.productId)}
+>
+  Eliminar
+</button>
     </div>
   </li>
 ))}

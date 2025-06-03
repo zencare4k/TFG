@@ -1,42 +1,63 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import "../../styles/CartPreview.css";
 import { useNavigate } from "react-router-dom";
-import { removeFromCart } from "../../services/cart_API";
+import { fetchCartItems, removeFromCart } from "../../services/cart_API";
+import { AuthContext } from "../context/AuthContext";
 
-const CartPreview = ({ cartItems = [], setCartItems, setShowCartPreview, showCartPreview }) => {
+const CartPreview = ({ setShowCartPreview, showCartPreview }) => {
   const cartPreviewRef = useRef(null);
   const navigate = useNavigate();
-  const [removingItem, setRemovingItem] = useState(null); // Estado para manejar la animación de eliminación
+  const [cartItems, setCartItems] = useState([]);
+  const [removingItem, setRemovingItem] = useState(null);
+  const { user } = useContext(AuthContext);
 
+  // Cargar carrito al abrir el preview
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (cartPreviewRef.current && !cartPreviewRef.current.contains(event.target)) {
-        setShowCartPreview(false);
+    const loadCart = async () => {
+      if (user && user._id) {
+        // Usuario logueado: cargar del backend
+        const items = await fetchCartItems(user._id);
+        setCartItems(items);
+      } else {
+        // Usuario no logueado: cargar de localStorage
+        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
+        setCartItems(localCart);
       }
     };
+    if (showCartPreview) loadCart();
+  }, [showCartPreview, user]);
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [setShowCartPreview]);
+  // Guardar en localStorage si usuario no logueado y cambia el carrito
+  useEffect(() => {
+    if (!user || !user._id) {
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+    }
+  }, [cartItems, user]);
 
-  const handleRemoveItem = async (productId) => {
-    setRemovingItem(productId); // Activar la animación de eliminación
-    setTimeout(async () => {
-      try {
-        await removeFromCart(productId); // Llamar al servicio para eliminar el producto
-        setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId)); // Actualizar el estado
-        setRemovingItem(null); // Resetear el estado de eliminación
-      } catch (error) {
-        console.error("Error al eliminar el producto del carrito:", error);
+
+const handleRemoveItem = async (productId) => {
+  setRemovingItem(productId);
+  setTimeout(async () => {
+    try {
+      if (user && user._id) {
+        await removeFromCart(String(user._id), String(productId));
+        const items = await fetchCartItems(user._id);
+        setCartItems(items);
+      } else {
+        // Usuario no logueado: eliminar del localStorage
+        const updatedCart = cartItems.filter(item => item.productId !== productId);
+        setCartItems(updatedCart);
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
       }
-    }, 300); // Tiempo de la animación
-  };
-
+      setRemovingItem(null);
+    } catch (error) {
+      console.error("Error al eliminar el producto del carrito:", error);
+    }
+  }, 300);
+};
   return (
     <div
-      className={`cart-preview ${showCartPreview ? "open" : ""}`} // Mostrar solo si está abierto
+      className={`cart-preview ${showCartPreview ? "open" : ""}`}
       ref={cartPreviewRef}
     >
       <h3>Carrito de Compras</h3>
@@ -46,8 +67,8 @@ const CartPreview = ({ cartItems = [], setCartItems, setShowCartPreview, showCar
         <ul>
           {cartItems.map((item, index) => (
             <li
-              key={index}
-              className={`cart-item ${removingItem === item.productId ? "removing" : ""}`}
+              key={item.productId || item._id || index}
+              className={`cart-item ${removingItem === (item.productId || item._id) ? "removing" : ""}`}
             >
               <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
               <div className="cart-item-details">
@@ -57,7 +78,8 @@ const CartPreview = ({ cartItems = [], setCartItems, setShowCartPreview, showCar
               </div>
               <button
                 className="remove-item-button"
-                onClick={() => handleRemoveItem(item.productId)}
+                 onClick={() => handleRemoveItem(item.productId)}
+
               >
                 Eliminar
               </button>

@@ -37,7 +37,39 @@
     box-sizing: border-box;
     font-size: 1em;
   }
-  
+  .products-page {
+  min-height: 80vh;
+  padding: 40px 0 32px 0;
+  background: #f7f6f2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.products-page h2 {
+  font-size: 2.2rem;
+  color: #8D7B31;
+  margin-bottom: 24px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.products-list {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+}
+
+.products-page p {
+  font-size: 1.1rem;
+  color: #555;
+  margin-top: 32px;
+  text-align: center;
+}
   .add-product-form textarea {
     resize: vertical;
   }

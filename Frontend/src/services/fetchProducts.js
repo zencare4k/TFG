@@ -1,13 +1,21 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_URL = "http://localhost:5000/api/products"; // Cambia la URL según tu backend
+const API_BASE_URL = 'http://localhost:5000/api';
 
-export const fetchProducts = async () => {
+// Servicio para obtener los datos del carrito de un usuario autenticado
+export const fetchCartItems = async (userId, token) => {
     try {
-        const response = await axios.get(API_URL);
-        return response.data; // Asegúrate de que el backend devuelva los productos en el formato esperado
+        const response = await axios.get(
+            `${API_BASE_URL}/cart?userId=${userId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return response.data;
     } catch (error) {
-        console.error("Error al obtener los productos:", error);
+        console.error("Error al obtener los datos del carrito:", error);
         throw error;
     }
 };

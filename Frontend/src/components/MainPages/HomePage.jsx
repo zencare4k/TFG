@@ -2,6 +2,7 @@ import NavBar from "../Layout/NavBar";
 import HeroSection from "../Home/HeroSection";
 import ProductList from "../Home/ProductList";
 import FloatingWishlist from "../Layout/FloatingWishList";
+import Recommendations from "../Shared/Recommendations";
 
 const HomePage = () => {
   return (
@@ -14,6 +15,8 @@ const HomePage = () => {
 
       {/* Lista de productos */}
       <ProductList />
+      
+      <Recommendations />
 
       {/* Wishlist flotante */}
       <FloatingWishlist />

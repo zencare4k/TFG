@@ -4,20 +4,23 @@ import config from "../../config.js";
 // Middleware para autenticar usuarios mediante JWT
 export const authMiddleware = (req, res, next) => {
   const authHeader = req.header("Authorization");
+  console.log("Authorization header recibido:", authHeader);
   if (!authHeader) {
     return res.status(401).json({ error: "Acceso denegado: no se proporcionó un token" });
   }
 
-  const token = authHeader.replace("Bearer ", ""); // Elimina "Bearer " del encabezado
+  const token = authHeader.replace("Bearer ", "");
   try {
-    const decoded = jwt.verify(token, config.jwtSecret); // Verifica el token
-    req.user = decoded; // Decodifica el token y lo asigna al usuario
+    const decoded = jwt.verify(token, config.jwtSecret);
+    req.user = decoded;
     next();
   } catch (error) {
+    console.log("Error al verificar token:", error.message);
     res.status(401).json({ error: "Token inválido o expirado" });
   }
 };
 export const adminMiddleware = (req, res, next) => {
+  console.log("Rol del usuario:", req.user?.role);
   if (req.user?.role !== "productAdmin" && req.user?.role !== "systemAdmin") {
     return res.status(403).json({ error: "Acceso denegado: solo administradores" });
   }

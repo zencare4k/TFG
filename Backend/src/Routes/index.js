@@ -16,4 +16,5 @@ router.use("/products", products);
 router.use("/cart", cart);
 router.use("/wishlist", wishlist);
 router.use("/checkout", checkoutRoutes);
+
 export default router;

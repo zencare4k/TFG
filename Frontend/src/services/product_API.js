@@ -22,19 +22,26 @@ export const fetchProducts = async () => {
     }
 };
 
-export const deleteProduct = async (id) => {
+export const deleteProduct = async (id, token) => {
   try {
-    const response = await axios.delete(`${API_URL}/${id}`);
+    const response = await axios.delete(`${API_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || "Error al eliminar el producto");
   }
 };
-
 // Función para actualizar un producto
-export const updateProduct = async (id, productData) => {
+export const updateProduct = async (id, productData, token) => {
   try {
-    const response = await axios.put(`${API_URL}/${id}`, productData);
+    const response = await axios.put(`${API_URL}/${id}`, productData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || "Error al actualizar el producto");

@@ -10,6 +10,8 @@ const AddProductPage = () => {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState("");
+  const [size, setSize] = useState("");
+  const [audience, setAudience] = useState("");
   const [image, setImage] = useState(null);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -18,42 +20,48 @@ const AddProductPage = () => {
   if (user?.role !== "productAdmin") {
     return <p className="error">Acceso denegado: solo administradores de productos.</p>;
   }
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (productName && description && price && category && stock && image) {
-    try {
-      const formData = new FormData();
-      formData.append("name", productName);
-      formData.append("description", description);
-      formData.append("price", price);
-      formData.append("category", category);
-      formData.append("stock", stock);
-      formData.append("image", image);
 
-      await api.post("/products", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (productName && description && price && category && stock && image && size && audience) {
+      try {
+        const formData = new FormData();
+        formData.append("name", productName);
+        formData.append("description", description);
+        formData.append("price", price);
+        formData.append("category", category);
+        formData.append("stock", stock);
+        formData.append("size", size);
+        formData.append("audience", audience);
+        formData.append("image", image);
 
-      setSuccess("Producto añadido correctamente.");
-      setError("");
-      setProductName("");
-      setDescription("");
-      setPrice("");
-      setCategory("");
-      setStock("");
-      setImage(null);
-    } catch (err) {
-      setError(err.response?.data?.error || "Error al añadir el producto.");
+        await api.post("/products", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${user?.token}`,
+          },
+        });
+
+        setSuccess("Producto añadido correctamente.");
+        setError("");
+        setProductName("");
+        setDescription("");
+        setPrice("");
+        setCategory("");
+        setStock("");
+        setSize("");
+        setAudience("");
+        setImage(null);
+      } catch (err) {
+        setError(err.response?.data?.error || "Error al añadir el producto.");
+        setSuccess("");
+      }
+    } else {
+      setError("Por favor, completa todos los campos.");
       setSuccess("");
     }
-  } else {
-    setError("Por favor, completa todos los campos.");
-    setSuccess("");
-  }
-};
+  };
+
   return (
     <div className="add-product-page">
       <h2>Añadir Producto</h2>
@@ -96,6 +104,25 @@ const handleSubmit = async (e) => {
             value={stock}
             onChange={(e) => setStock(e.target.value)}
           />
+        </label>
+        <label>
+          Talla:
+          <input
+            type="text"
+            value={size}
+            onChange={(e) => setSize(e.target.value)}
+            placeholder="Ej: S, M, L, XL"
+          />
+        </label>
+        <label>
+          Público:
+          <select value={audience} onChange={e => setAudience(e.target.value)}>
+            <option value="">Selecciona público</option>
+            <option value="adulto">Adulto</option>
+            <option value="adulta">Adulta</option>
+            <option value="niño">Niño</option>
+            <option value="niña">Niña</option>
+          </select>
         </label>
         <label>
           Imagen:

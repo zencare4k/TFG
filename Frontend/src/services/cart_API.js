@@ -15,14 +15,10 @@ export const addToCart = async (product) => {
 };
 
 // Servicio para obtener los productos del carrito
-export const fetchCartItems = async () => {
-  try {
-    const response = await axios.get(API_URL);
-    return response.data;
-  } catch (error) {
-    console.error("Error al obtener los productos del carrito:", error);
-    throw error;
-  }
+export const fetchCartItems = async (userId) => {
+  if (!userId) throw new Error("userId es requerido");
+  const response = await axios.get(`${API_URL}?userId=${userId}`);
+  return response.data;
 };
 export const clearCart = async (token) => {
   try {
@@ -53,12 +49,11 @@ export const fetchRecommendations = async (category) => {
     throw error;
   }
 };
-export const removeFromCart = async (productId) => {
-  try {
-    const response = await axios.delete(`${API_URL}/${productId}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error al eliminar el producto del carrito:", error);
-    throw error;
-  }
+export const removeFromCart = async (userId, productId) => {
+  if (!userId) throw new Error("userId es requerido");
+  const response = await fetch(`${API_URL}/${userId}/${productId}`, {
+    method: "DELETE",
+  });
+  if (!response.ok) throw new Error("No se pudo eliminar el producto");
+  return response.json();
 };

@@ -30,10 +30,10 @@ export const getProductById = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, category, stock, size, audience } = req.body;
 
-    if (!name || !description || !price || !category || stock === undefined || !req.file) {
-      return res.status(400).json({ error: "Todos los campos son obligatorios, incluida la imagen." });
+    if (!name || !description || !price || !category || stock === undefined || !req.file || !size || !audience) {
+      return res.status(400).json({ error: "Todos los campos son obligatorios, incluida la imagen, talla y público." });
     }
 
     const imageUrl = await uploadToCloudinary(req.file.path);
@@ -45,6 +45,8 @@ export const createProduct = async (req, res) => {
       price: parseFloat(price),
       category,
       stock: parseInt(stock, 10),
+      size,
+      audience,
       imageUrl,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -56,14 +58,15 @@ export const createProduct = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, price, category, stock } = req.body;
+    const { name, description, price, category, stock, size, audience } = req.body;
 
     const dbInstance = await connectProductDB();
 
-    let updatedFields = { name, description, price, category, stock, updatedAt: new Date() };
+    let updatedFields = { name, description, price, category, stock, size, audience, updatedAt: new Date() };
     if (req.file) {
       const imageUrl = await uploadToCloudinary(req.file.path);
       updatedFields.imageUrl = imageUrl;
@@ -87,6 +90,11 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Validar formato de ObjectId
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "ID de producto no válido" });
+    }
 
     const dbInstance = await connectProductDB();
     const result = await dbInstance.collection("products").deleteOne({ _id: new ObjectId(id) });

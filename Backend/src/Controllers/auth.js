@@ -71,12 +71,10 @@ export const loginUser = async (req, res) => {
 
     console.log("Contraseña válida, generando token...");
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
+const token = jwt.sign(
+  { id: user._id, email: user.email, role: user.role },
+  process.env.JWT_SECRET,
+);
     console.log("Token generado:", token);
 
 res.status(200).json({

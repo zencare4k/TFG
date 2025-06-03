@@ -37,17 +37,20 @@ const ManageProducts = () => {
 
   const handleUpdate = async () => {
     try {
+      const token = localStorage.getItem("token");
       const formData = new FormData();
       formData.append("name", updatedProduct.name);
       formData.append("price", updatedProduct.price);
       formData.append("category", updatedProduct.category);
       formData.append("stock", updatedProduct.stock);
+      formData.append("size", updatedProduct.size);
+      formData.append("audience", updatedProduct.audience);
 
       if (updatedProduct.image) {
         formData.append("image", updatedProduct.image);
       }
 
-      await updateProduct(editingProduct, formData);
+      await updateProduct(editingProduct, formData, token);
       setProducts((prev) =>
         prev.map((product) =>
           product._id === editingProduct ? { ...updatedProduct, _id: editingProduct } : product
@@ -63,7 +66,8 @@ const ManageProducts = () => {
 
   const handleDelete = async (id) => {
     try {
-      await deleteProduct(id);
+      const token = localStorage.getItem("token");
+      await deleteProduct(id, token);
       setProducts((prev) => prev.filter((product) => product._id !== id));
       setSuccess("Producto eliminado correctamente.");
       setError("");
@@ -88,6 +92,8 @@ const ManageProducts = () => {
             <th>Precio</th>
             <th>Categoría</th>
             <th>Stock</th>
+            <th>Talla</th>
+            <th>Público</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -134,6 +140,29 @@ const ManageProducts = () => {
                   </td>
                   <td>
                     <input
+                      type="text"
+                      value={updatedProduct.size}
+                      onChange={(e) =>
+                        setUpdatedProduct({ ...updatedProduct, size: e.target.value })
+                      }
+                    />
+                  </td>
+                  <td>
+                    <select
+                      value={updatedProduct.audience}
+                      onChange={e =>
+                        setUpdatedProduct({ ...updatedProduct, audience: e.target.value })
+                      }
+                    >
+                      <option value="">Selecciona público</option>
+                      <option value="adulto">Adulto</option>
+                      <option value="adulta">Adulta</option>
+                      <option value="niño">Niño</option>
+                      <option value="niña">Niña</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
                       type="file"
                       onChange={(e) =>
                         setUpdatedProduct({ ...updatedProduct, image: e.target.files[0] })
@@ -151,6 +180,8 @@ const ManageProducts = () => {
                   <td>{product.price}</td>
                   <td>{product.category}</td>
                   <td>{product.stock}</td>
+                  <td>{product.size}</td>
+                  <td>{product.audience}</td>
                   <td>
                     <button onClick={() => handleEdit(product)}>Editar</button>
                     <button onClick={() => handleDelete(product._id)}>Eliminar</button>

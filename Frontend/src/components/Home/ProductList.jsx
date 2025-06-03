@@ -30,20 +30,25 @@ const ProductList = () => {
     loadProducts();
   }, []);
 
-  const handleAddToCart = async (product) => {
-    try {
-      await addToCart({
-        productId: product._id,
-        name: product.name,
-        price: product.price,
-        imageUrl: product.imageUrl,
-      });
-      setCartPreviewItems((prevItems) => [...prevItems, product]);
-      setShowCartPreview(true);
-    } catch (error) {
-      console.error("Error al añadir el producto al carrito:", error);
-    }
-  };
+const handleAddToCart = async (product) => {
+  if (!user || !user._id) {
+    alert("Debes iniciar sesión para añadir al carrito.");
+    return;
+  }
+  try {
+    await addToCart({
+      userId: user._id, // <-- Añade esto
+      productId: product._id,
+      name: product.name,
+      price: product.price,
+      imageUrl: product.imageUrl,
+    });
+    setCartPreviewItems((prevItems) => [...prevItems, product]);
+    setShowCartPreview(true);
+  } catch (error) {
+    console.error("Error al añadir el producto al carrito:", error);
+  }
+};
 const handleAddToWishlist = async (product) => {
   if (!user || !user._id) {
     alert("Debes iniciar sesión para añadir a la lista de deseos.");
