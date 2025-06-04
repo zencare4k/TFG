@@ -1,21 +1,17 @@
 import jwt from "jsonwebtoken";
 import config from "../../config.js";
 
-// Middleware para autenticar usuarios mediante JWT
 export const authMiddleware = (req, res, next) => {
   const authHeader = req.header("Authorization");
-  console.log("Authorization header recibido:", authHeader);
   if (!authHeader) {
     return res.status(401).json({ error: "Acceso denegado: no se proporcionó un token" });
   }
-
   const token = authHeader.replace("Bearer ", "");
   try {
     const decoded = jwt.verify(token, config.jwtSecret);
     req.user = decoded;
     next();
   } catch (error) {
-    console.log("Error al verificar token:", error.message);
     res.status(401).json({ error: "Token inválido o expirado" });
   }
 };

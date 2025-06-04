@@ -9,18 +9,14 @@ const HomePage = () => {
     <div className="homepage">
       {/* Barra de navegación */}
       <NavBar />
-
       {/* Sección principal con el carrusel */}
       <HeroSection />
-
       {/* Lista de productos */}
       <ProductList />
-      
+      {/* Recomendaciones resaltadas */}
       <Recommendations />
-
       {/* Wishlist flotante */}
       <FloatingWishlist />
-
     </div>
   );
 };

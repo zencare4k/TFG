@@ -1,0 +1,120 @@
+.recommendations-section {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  margin: 2rem auto;
+  max-width: 900px;
+  box-shadow: 0 2px 10px rgba(141, 123, 49, 0.08);
+  transition: box-shadow 0.3s;
+}
+
+.recommendations-section:hover {
+  box-shadow: 0 4px 24px rgba(141, 123, 49, 0.15);
+}
+
+.recommendations-title {
+  color: #8D7B31;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.recommendations-desc {
+  color: #555;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.recommendations-list {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.recommendation-card {
+  background: #faf9f6;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 1rem;
+  width: 210px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(141, 123, 49, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.recommendation-card:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 6px 24px rgba(141, 123, 49, 0.13);
+}
+
+.recommendation-img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 7px;
+  margin-bottom: 0.7rem;
+  border: 1px solid #eee;
+  background: #f7f6f2;
+}
+
+.recommendation-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.recommendation-name {
+  font-weight: 600;
+  color: #8D7B31;
+  font-size: 1.08rem;
+}
+
+.recommendation-price {
+  color: #555;
+  font-size: 1rem;
+}
+
+.recommendation-details-btn {
+  background: #8D7B31;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.4rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+
+.recommendation-details-btn:hover {
+  background: #645722;
+}
+
+.no-recommendations {
+  color: #888;
+  text-align: center;
+  width: 100%;
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .recommendations-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .recommendation-card {
+    width: 95%;
+    max-width: 350px;
+  }
+  .recommendations-section {
+    padding: 1rem 0.5rem;
+  }
+}

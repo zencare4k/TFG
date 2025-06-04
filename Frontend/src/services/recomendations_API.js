@@ -1,14 +1,10 @@
 import axios from "axios";
 
-const RECOMMENDATIONS_URL = "http://localhost:5000/api/recommendations";
-
-export const fetchUserRecommendations = async (userId) => {
-  if (!userId) {
-    console.warn("fetchUserRecommendations: userId no definido");
-    return [];
-  }
+export const fetchUserRecommendations = async (token) => {
   try {
-    const response = await axios.get(`${RECOMMENDATIONS_URL}/${userId}`);
+    const response = await axios.get("http://localhost:5000/api/recommendations", {
+      headers: { Authorization: `Bearer ${token}` }
+    });
     return response.data;
   } catch (error) {
     console.error("Error al obtener recomendaciones:", error);

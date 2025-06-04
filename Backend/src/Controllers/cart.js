@@ -9,7 +9,8 @@ export const getCartItems = async (req, res) => {
   }
   try {
     const dbInstance = await connectProductDB();
-    const cartItems = await dbInstance.collection("cart").find({ userId }).toArray();
+    // Asegura que userId es string
+    const cartItems = await dbInstance.collection("cart").find({ userId: String(userId) }).toArray();
     res.status(200).json(cartItems);
   } catch (error) {
     console.error("Error al obtener los productos del carrito:", error);
@@ -20,7 +21,7 @@ export const getCartItems = async (req, res) => {
 export const clearUserCart = async (req, res) => {
   try {
     const dbInstance = await connectProductDB();
-    await dbInstance.collection("cart").deleteMany({ userId: req.user.id });
+    await dbInstance.collection("cart").deleteMany({ userId: String(req.user.id) });
     res.json({ success: true, message: "Carrito vaciado correctamente" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error al vaciar el carrito" });
@@ -42,17 +43,17 @@ export const addToCart = async (req, res) => {
     }
 
     // Busca si ya existe en el carrito de este usuario
-    const existingItem = await dbInstance.collection("cart").findOne({ userId, productId });
+    const existingItem = await dbInstance.collection("cart").findOne({ userId: String(userId), productId: String(productId) });
 
     if (existingItem) {
       await dbInstance.collection("cart").updateOne(
-        { userId, productId },
+        { userId: String(userId), productId: String(productId) },
         { $inc: { quantity: 1 } }
       );
     } else {
       const newCartItem = {
-        userId,
-        productId,
+        userId: String(userId),
+        productId: String(productId),
         name,
         price,
         imageUrl,
