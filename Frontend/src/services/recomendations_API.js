@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const fetchUserRecommendations = async (token) => {
+  console.log("Token enviado:", token);
   try {
     const response = await axios.get("http://localhost:5000/api/recommendations", {
       headers: { Authorization: `Bearer ${token}` }
