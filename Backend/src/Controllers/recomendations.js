@@ -30,17 +30,22 @@ export const getRecommendations = async (req, res) => {
           .toArray();
         console.log("[RECS] Productos encontrados en wishlist:", products);
 
-        const categories = products.map((p) => p.category).filter(Boolean);
+        const categories = products
+          .flatMap((p) => Array.isArray(p.category) ? p.category : [p.category])
+          .filter(Boolean);
         console.log("[RECS] Categorías encontradas en wishlist:", categories);
 
         if (categories.length > 0) {
           const recommendations = await dbInstance
             .collection("products")
-            .find({ category: { $in: categories } })
+            .find({ category: { $elemMatch: { $in: categories } } })
             .limit(10)
             .toArray();
           console.log("[RECS] Recomendaciones por wishlist:", recommendations);
-          if (recommendations.length > 0) return res.status(200).json(recommendations);
+          if (recommendations.length > 0) {
+            console.log("[RECS] MÉTODO USADO: wishlist");
+            return res.status(200).json(recommendations);
+          }
         }
       }
     }
@@ -67,17 +72,22 @@ export const getRecommendations = async (req, res) => {
           .toArray();
         console.log("[RECS] Productos encontrados en carrito:", products);
 
-        const categories = products.map((p) => p.category).filter(Boolean);
+        const categories = products
+          .flatMap((p) => Array.isArray(p.category) ? p.category : [p.category])
+          .filter(Boolean);
         console.log("[RECS] Categorías encontradas en carrito:", categories);
 
         if (categories.length > 0) {
           const recommendations = await dbInstance
             .collection("products")
-            .find({ category: { $in: categories } })
+            .find({ category: { $elemMatch: { $in: categories } } })
             .limit(10)
             .toArray();
           console.log("[RECS] Recomendaciones por carrito:", recommendations);
-          if (recommendations.length > 0) return res.status(200).json(recommendations);
+          if (recommendations.length > 0) {
+            console.log("[RECS] MÉTODO USADO: carrito");
+            return res.status(200).json(recommendations);
+          }
         }
       }
     }
@@ -100,13 +110,17 @@ export const getRecommendations = async (req, res) => {
       console.log("[RECS] Producto más clickeado encontrado:", product);
 
       if (product && product.category) {
+        const categories = Array.isArray(product.category) ? product.category : [product.category];
         const recommendations = await dbInstance
           .collection("products")
-          .find({ category: product.category })
+          .find({ category: { $elemMatch: { $in: categories } } })
           .limit(10)
           .toArray();
         console.log("[RECS] Recomendaciones por clics:", recommendations);
-        if (recommendations.length > 0) return res.status(200).json(recommendations);
+        if (recommendations.length > 0) {
+          console.log("[RECS] MÉTODO USADO: clics");
+          return res.status(200).json(recommendations);
+        }
       }
     }
 
@@ -120,11 +134,13 @@ export const getRecommendations = async (req, res) => {
     console.log("[RECS] Productos populares:", popularProducts);
 
     if (popularProducts.length > 0) {
+      console.log("[RECS] MÉTODO USADO: popularidad");
       return res.status(200).json(popularProducts);
     }
 
     // 5. Fallback absoluto: producto de ejemplo si no hay nada en la base de datos
     console.log("[RECS] No se encontraron productos, devolviendo producto de ejemplo");
+    console.log("[RECS] MÉTODO USADO: fallback absoluto");
     return res.status(200).json([
       {
         _id: "example",

@@ -1,10 +1,10 @@
 export const processCheckout = async ({ address, cartItems, total, token }) => {
-  return fetch("http://localhost:5000/api/checkout", {
+  return await fetch("/checkout", { // <-- SOLO /checkout
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`, // <-- IMPORTANTE
+      "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify({ address, cartItems, total }),
+    body: JSON.stringify({ address, cartItems, total })
   });
 };

@@ -4,13 +4,13 @@ export const sendSupportEmail = async (templateParams) => {
   return await emailjs.send('service_oxurxxs', 'template_37iampg', templateParams, 'B-kJoB9UDT4MRmInH');
 };
 
-export const sendConfirmationEmail = async (name, email) => {
-  const response = await fetch('https://nodemailer-server-b74j.onrender.com/send-email', {
+export const sendOrderConfirmationEmail = async ({ name, email, orderSummary, cardMasked, products }) => {
+  const response = await fetch('/api/email/order-confirmation', { // <-- /api/email/order-confirmation
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ name, email, message: 'Hemos recibido tu mensaje y nos pondremos en contacto contigo pronto.' })
+    body: JSON.stringify({ name, email, orderSummary, cardMasked, products })
   });
 
   if (!response.ok) {

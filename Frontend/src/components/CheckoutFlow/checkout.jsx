@@ -1,4 +1,3 @@
-// ...existing imports...
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
@@ -9,6 +8,8 @@ import "../../styles/Checkout.css";
 import CheckoutConfirm from "./checkoutConfirm";
 import { fetchCartItems } from "../../services/fetchCartItems";
 import { AuthContext } from "../context/AuthContext";
+import { sendOrderConfirmationEmail } from "../../services/EmailApi";
+
 const stripePromise = loadStripe("pk_test_51RVabIGdkgPayLqPnTaoQIvWb7LAGdBx5RxOlzhfDMVpe5ntv4Yp3Op2iyQI2BCsjiG0dCa4sq5k60s5VJg2LhLS00paOIvZx3");
 
 const getTotal = (items) =>
@@ -52,41 +53,39 @@ const CheckoutForm = () => {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError("");
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-  // Mapeo de items para asegurar que tienen productId, name, price, quantity, imageUrl
-  const checkoutCartItems = cartItems.map(item => ({
-    productId: item.productId || item._id, // usa productId o _id
-    name: item.name,
-    price: item.price,
-    quantity: item.quantity,
-    imageUrl: item.imageUrl,
-  }));
+    // Mapeo de items para asegurar que tienen productId, name, price, quantity, imageUrl
+    const checkoutCartItems = cartItems.map(item => ({
+      productId: item.productId || item._id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      imageUrl: item.imageUrl,
+    }));
 
-  // LOG de depuración: revisa en la consola del navegador estos datos
-  console.log({
-    address,
-    checkoutCartItems,
-    total: getTotal(cartItems),
-    token: localStorage.getItem("token"),
-  });
-
-  try {
-    // 1. Solicita el PaymentIntent al backend
-    const response = await processCheckout({
+    // LOG de depuración: revisa en la consola del navegador estos datos
+    console.log({
       address,
-      cartItems: checkoutCartItems,
+      checkoutCartItems,
       total: getTotal(cartItems),
       token: localStorage.getItem("token"),
     });
-    const data = await response.json();
-    if (!data.clientSecret) throw new Error("No se pudo crear el pago");
 
-    setClientSecret(data.clientSecret);
+    try {
+      // 1. Solicita el PaymentIntent al backend
+      const response = await processCheckout({
+        address,
+        cartItems: checkoutCartItems,
+        total: getTotal(cartItems),
+        token: localStorage.getItem("token"),
+      });
+      const data = await response.json();
+      if (!data.clientSecret) throw new Error("No se pudo crear el pago");
 
-    // ...resto del código...
+      setClientSecret(data.clientSecret);
 
       // 2. Confirma el pago con Stripe
       const result = await stripe.confirmCardPayment(data.clientSecret, {
@@ -102,10 +101,31 @@ const CheckoutForm = () => {
         setSuccess(true);
         localStorage.removeItem("cart");
         try {
-          await clearCart(localStorage.getItem("token")); // <-- Vacía el carrito en el backend
+          await clearCart(localStorage.getItem("token"));
         } catch (e) {
-          // Opcional: puedes mostrar un mensaje si falla el vaciado en backend
           console.error("No se pudo vaciar el carrito en el backend", e);
+        }
+
+        // --- ENVÍA EL CORREO DE CONFIRMACIÓN ---
+        try {
+          // Censura la tarjeta (últimos 4 dígitos)
+          const card = result.paymentIntent.charges?.data?.[0]?.payment_method_details?.card;
+          const cardMasked = card ? `**** **** **** ${card.last4}` : "**** **** **** XXXX";
+
+          // Prepara el resumen del pedido
+          const orderSummary = checkoutCartItems.map(item =>
+            `${item.name} x${item.quantity} - €${(item.price * item.quantity).toFixed(2)}`
+          ).join('\n');
+
+          await sendOrderConfirmationEmail({
+            name: address.name,
+            email: user.email,
+            orderSummary,
+            cardMasked,
+            products: checkoutCartItems // debe tener name, imageUrl, price, quantity
+          });
+        } catch (e) {
+          console.error("No se pudo enviar el correo de confirmación", e);
         }
       }
     } catch (err) {

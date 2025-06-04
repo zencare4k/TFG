@@ -36,6 +36,16 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ error: "Todos los campos son obligatorios, incluida la imagen, talla y público." });
     }
 
+    // Permitir que category sea string o array
+    let categories = [];
+    if (Array.isArray(category)) {
+      categories = category;
+    } else if (typeof category === "string") {
+      categories = category.split(",").map(c => c.trim());
+    } else {
+      return res.status(400).json({ error: "La categoría debe ser un string o un array de strings." });
+    }
+
     const imageUrl = await uploadToCloudinary(req.file.path);
 
     const dbInstance = await connectProductDB();
@@ -43,7 +53,7 @@ export const createProduct = async (req, res) => {
       name,
       description,
       price: parseFloat(price),
-      category,
+      category: categories, // Guardar como array
       stock: parseInt(stock, 10),
       size,
       audience,
@@ -64,9 +74,19 @@ export const updateProduct = async (req, res) => {
     const { id } = req.params;
     const { name, description, price, category, stock, size, audience } = req.body;
 
+    // Permitir que category sea string o array
+    let categories = [];
+    if (Array.isArray(category)) {
+      categories = category;
+    } else if (typeof category === "string") {
+      categories = category.split(",").map(c => c.trim());
+    } else {
+      return res.status(400).json({ error: "La categoría debe ser un string o un array de strings." });
+    }
+
     const dbInstance = await connectProductDB();
 
-    let updatedFields = { name, description, price, category, stock, size, audience, updatedAt: new Date() };
+    let updatedFields = { name, description, price, category: categories, stock, size, audience, updatedAt: new Date() };
     if (req.file) {
       const imageUrl = await uploadToCloudinary(req.file.path);
       updatedFields.imageUrl = imageUrl;
