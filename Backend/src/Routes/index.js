@@ -10,7 +10,7 @@ import recommendationsRoutes from "./recomendations.js"; // <-- Cambiado aquí
 const router = Router();
 router.use("/users", users);
 
-router.use("/api/recommendations", recommendationsRoutes); // <-- Cambiado aquí
+router.use("/recommendations", recommendationsRoutes);
 router.use("/auth", auth);
 router.use("/products", products);
 router.use("/cart", cart);
