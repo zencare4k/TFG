@@ -15,6 +15,8 @@ import Header from "./components/Layout/NavBar";
 import Footer from "./components/Layout/Footer";
 import Checkout from "./components/CheckoutFlow/checkout";
 import ProductPage from "./components/ProductPages/ProductPage"; // Importa tu página de productos filtrados
+import ProductDetail from "./components/Shared/ProductDetails"; // Asegúrate de importar tu componente de detalles
+import SupportPage from "./components/Support/Support.jsx"; // Añade esta línea
 
 const EXCLUDED_WISHLIST_PATHS = [
   "/add-product",
@@ -33,7 +35,7 @@ const AppRoutes = () => {
     user._id &&
     !EXCLUDED_WISHLIST_PATHS.some((path) => location.pathname.startsWith(path));
 
-  return (
+ return (
     <>
       <Header />
       {showWishlistIcon && <FloatingWishlistIcon userId={user._id} />}
@@ -41,8 +43,8 @@ const AppRoutes = () => {
         <Route path="/" element={<HomePage />} />
         {/* Rutas para productos filtrados por público */}
         <Route path="/productos/:publico" element={<ProductPage />} />
-        {/* Si quieres que la página de inicio también muestre todos los productos, puedes usar ProductPage en vez de HomePage */}
-        {/* <Route path="/" element={<ProductPage />} /> */}
+        {/* Ruta para detalle de producto */}
+        <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/register" element={<RegisterForm />} />
@@ -66,13 +68,14 @@ const AppRoutes = () => {
             user?.role === "systemAdmin" ? <UserManagement /> : <Navigate to="/login" />
           }
         />
+        {/* Ruta de soporte */}
+        <Route path="/soporte" element={<SupportPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </>
   );
 };
-
 const App = () => {
   return (
     <AuthProvider>

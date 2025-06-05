@@ -16,18 +16,22 @@ export const getAllProducts = async (req, res) => {
 
 // Obtener un producto por ID
 export const getProductById = async (req, res) => {
-  try {
-    const dbInstance = await connectProductDB();
-    const product = await dbInstance.collection("products").findOne({ _id: new ObjectId(req.params.id) });
-    if (!product) {
-      return res.status(404).json({ message: "Producto no encontrado" });
-    }
-    res.status(200).json(product);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+const { id } = req.params;
+  console.log("ID recibido:", id);
+const dbInstance = await connectProductDB();
+let product = null;
+if (ObjectId.isValid(id)) {
+  product = await dbInstance.collection("products").findOne({ _id: new ObjectId(id) });
+}
+if (!product) {
+  // Intenta buscar por string si no se encontró por ObjectId
+  product = await dbInstance.collection("products").findOne({ _id: id });
+}
+if (!product) {
+  return res.status(404).json({ message: "Producto no encontrado" });
+}
+res.status(200).json(product);
 };
-
 export const createProduct = async (req, res) => {
   try {
     const { name, description, price, category, stock, size, audience } = req.body;

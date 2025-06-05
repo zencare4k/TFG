@@ -26,6 +26,30 @@
   transition: transform 0.3s ease; /* Añade la transición para la animación */
 }
 
+.view-details-button {
+  background-color: #8D7B31;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 18px;
+  font-size: 1em;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+
+.view-details-button:hover {
+  background-color: #7A6A2A;
+}
+
+/* Opcional: separa los botones para mejor visual */
+.product-card-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 10px;
+}
 
 .product-card:hover .product-image {
   transform: none; /* Elimina la animación de escala */

@@ -1,4 +1,4 @@
-.support-page {
+.support {
   max-width: 600px;
   margin: 50px auto;
   padding: 20px;
@@ -9,14 +9,10 @@
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 
-.support-page h2 {
+.support h2 {
   text-align: center;
   color: #333;
   margin-bottom: 20px;
-}
-
-.support-form div {
-  margin-bottom: 15px;
 }
 
 .support-form label {
@@ -51,12 +47,12 @@
   background-color: #645722;
 }
 
-.support-form .error {
-  color: red;
+.success-msg {
+  color: green;
   margin-bottom: 10px;
 }
 
-.support-form .success {
-  color: green;
+.error-msg {
+  color: red;
   margin-bottom: 10px;
 }

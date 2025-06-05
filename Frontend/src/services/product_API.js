@@ -21,7 +21,11 @@ export const fetchProducts = async () => {
         throw error;
     }
 };
-
+// filepath: Frontend/src/services/product_API.js
+export const fetchProductById = async (id) => {
+  const res = await axios.get(`${API_URL}/${id}`);
+  return res.data;
+};
 export const deleteProduct = async (id, token) => {
   try {
     const response = await axios.delete(`${API_URL}/${id}`, {
@@ -34,6 +38,22 @@ export const deleteProduct = async (id, token) => {
     throw new Error(error.response?.data?.error || "Error al eliminar el producto");
   }
 };
+
+export const fetchProductReviews = async (id) => {
+  const res = await axios.get(`${API_URL}/${id}/reviews`);
+  return res.data;
+};
+
+export const submitReview = async (id, review) => {
+  const token = localStorage.getItem("token");
+  const res = await axios.post(
+    `${API_URL}/${id}/reviews`,
+    review,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return res.data;
+};
+
 // Función para actualizar un producto
 export const updateProduct = async (id, productData, token) => {
   try {

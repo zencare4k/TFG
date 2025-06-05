@@ -5,11 +5,13 @@ import products from "./products.js";
 import cart from "./cart.js";
 import wishlist from "./whishlist.js";
 import checkoutRoutes from "./checkout.js";
-import recommendationsRoutes from "./recomendations.js"; // <-- Cambiado aquí
+import recommendationsRoutes from "./recomendations.js";
 import emailRoutes from "./Nodemailer.js";
+import reviewsRoutes from "./reviews.js"; // <-- Añade esta línea
+
 const router = Router();
 router.use("/users", users);
-router.use("/api/email", emailRoutes);
+router.use("/email", emailRoutes);
 
 router.use("/recommendations", recommendationsRoutes);
 router.use("/auth", auth);

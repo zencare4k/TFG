@@ -7,10 +7,14 @@ import {
   deleteProduct,
   getProductDetails
 } from "../Controllers/products.js";
-import { authMiddleware, adminMiddleware } from "../Middleware/auth.js"; // Middlewares de autenticación y autorización
-import upload from "../Middleware/upload.js"; // Middleware para manejar la subida de imágenes
+import { authMiddleware, adminMiddleware } from "../Middleware/auth.js";
+import upload from "../Middleware/upload.js";
+import reviewsRoutes from "./reviews.js"; // <-- Importa las rutas de reviews
 
 const router = Router();
+
+// Monta las rutas de reviews como subruta de productos
+router.use("/:id/reviews", reviewsRoutes);
 
 /**
  * @swagger
@@ -68,8 +72,7 @@ router.get("/", getAllProducts);
  *       404:
  *         description: Producto no encontrado
  */
-router.get("/:id", getProductDetails);
-
+router.get("/details/:id", getProductDetails);
 
 /**
  * @swagger
@@ -118,11 +121,21 @@ router.get("/:id", getProductById);
  *               image:
  *                 type: string
  *                 format: binary
+ *               size:
+ *                 type: string
+ *               audience:
+ *                 type: string
  *     responses:
  *       201:
  *         description: Producto creado exitosamente
  */
-router.post("/", authMiddleware, adminMiddleware, upload.single("image"), createProduct);
+router.post(
+  "/",
+  authMiddleware,
+  adminMiddleware,
+  upload.single("image"),
+  createProduct
+);
 
 /**
  * @swagger
@@ -157,11 +170,21 @@ router.post("/", authMiddleware, adminMiddleware, upload.single("image"), create
  *               image:
  *                 type: string
  *                 format: binary
+ *               size:
+ *                 type: string
+ *               audience:
+ *                 type: string
  *     responses:
  *       200:
  *         description: Producto actualizado exitosamente
  */
-router.put("/:id", authMiddleware, adminMiddleware, upload.single("image"), updateProduct);
+router.put(
+  "/:id",
+  authMiddleware,
+  adminMiddleware,
+  upload.single("image"),
+  updateProduct
+);
 
 /**
  * @swagger

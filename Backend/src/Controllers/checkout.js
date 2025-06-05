@@ -34,19 +34,22 @@ export const processCheckout = async (req, res) => {
         .json({ success: false, message: "Datos de usuario o carrito inválidos" });
     }
 
-    // Crea un PaymentIntent real en Stripe (monto en céntimos)
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(total * 100),
-      currency: "eur",
-      payment_method_types: ["card"],
-      description: `Compra de ${user.email}`,
-      receipt_email: user.email,
-      metadata: {
-        userId: user.id,
-        address: JSON.stringify(address),
-        cart: JSON.stringify(cartItems),
-      },
-    });
+ const productIds = cartItems.map(item => item.productId || item._id).join(',');
+const productSummary = cartItems.map(item => `${item.name}x${item.quantity}`).join(', ');
+
+const paymentIntent = await stripe.paymentIntents.create({
+  amount: Math.round(total * 100),
+  currency: "eur",
+  payment_method_types: ["card"],
+  description: `Compra de ${user.email}`,
+  receipt_email: user.email,
+  metadata: {
+    userId: user.id,
+    address: `${address.street}, ${address.city}`,
+    productIds, // Ejemplo: "id1,id2,id3"
+    productSummary // Ejemplo: "Camiseta x2, Pantalón x1"
+  },
+});
 
     return res.json({
       success: true,

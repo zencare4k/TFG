@@ -11,50 +11,53 @@ const CartPreview = ({ setShowCartPreview, showCartPreview }) => {
   const [removingItem, setRemovingItem] = useState(null);
   const { user } = useContext(AuthContext);
 
-  // Cargar carrito al abrir el preview
+  // Cargar carrito solo del backend
   useEffect(() => {
     const loadCart = async () => {
       if (user && user._id) {
-        // Usuario logueado: cargar del backend
         const items = await fetchCartItems(user._id);
-        setCartItems(items);
+        // Filtrar duplicados por productId (por si acaso)
+        const uniqueItems = [];
+        const seen = new Set();
+        for (const item of items) {
+          if (!seen.has(item.productId)) {
+            uniqueItems.push(item);
+            seen.add(item.productId);
+          }
+        }
+        setCartItems(uniqueItems);
       } else {
-        // Usuario no logueado: cargar de localStorage
-        const localCart = JSON.parse(localStorage.getItem("cart")) || [];
-        setCartItems(localCart);
+        setCartItems([]); // Si no hay usuario, el carrito está vacío
       }
     };
     if (showCartPreview) loadCart();
   }, [showCartPreview, user]);
 
-  // Guardar en localStorage si usuario no logueado y cambia el carrito
-  useEffect(() => {
-    if (!user || !user._id) {
-      localStorage.setItem("cart", JSON.stringify(cartItems));
-    }
-  }, [cartItems, user]);
-
-
-const handleRemoveItem = async (productId) => {
-  setRemovingItem(productId);
-  setTimeout(async () => {
-    try {
-      if (user && user._id) {
-        await removeFromCart(String(user._id), String(productId));
-        const items = await fetchCartItems(user._id);
-        setCartItems(items);
-      } else {
-        // Usuario no logueado: eliminar del localStorage
-        const updatedCart = cartItems.filter(item => item.productId !== productId);
-        setCartItems(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
+  const handleRemoveItem = async (productId) => {
+    setRemovingItem(productId);
+    setTimeout(async () => {
+      try {
+        if (user && user._id) {
+          await removeFromCart(String(user._id), String(productId));
+          const items = await fetchCartItems(user._id);
+          // Filtrar duplicados por productId (por si acaso)
+          const uniqueItems = [];
+          const seen = new Set();
+          for (const item of items) {
+            if (!seen.has(item.productId)) {
+              uniqueItems.push(item);
+              seen.add(item.productId);
+            }
+          }
+          setCartItems(uniqueItems);
+        }
+        setRemovingItem(null);
+      } catch (error) {
+        console.error("Error al eliminar el producto del carrito:", error);
       }
-      setRemovingItem(null);
-    } catch (error) {
-      console.error("Error al eliminar el producto del carrito:", error);
-    }
-  }, 300);
-};
+    }, 300);
+  };
+
   return (
     <div
       className={`cart-preview ${showCartPreview ? "open" : ""}`}
@@ -78,8 +81,7 @@ const handleRemoveItem = async (productId) => {
               </div>
               <button
                 className="remove-item-button"
-                 onClick={() => handleRemoveItem(item.productId)}
-
+                onClick={() => handleRemoveItem(item.productId)}
               >
                 Eliminar
               </button>

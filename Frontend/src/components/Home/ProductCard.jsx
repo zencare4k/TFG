@@ -7,7 +7,11 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
   const navigate = useNavigate();
 
   const handleBuyClick = () => {
-    navigate(`/product/${product._id}`); // Redirige a la página de detalles del producto
+    navigate(`/product/${product._id}`);
+  };
+
+  const handleViewDetails = () => {
+    navigate(`/product/${product._id}`);
   };
 
   return (
@@ -19,6 +23,8 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
         onError={(e) => {
           e.target.src = "/assets/images/default-product.png";
         }}
+        onClick={handleViewDetails}
+        style={{ cursor: "pointer" }}
       />
       <h2>{product.name}</h2>
       <p>{product.price}€</p>
@@ -40,6 +46,9 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
           alt="Añadir a la lista de deseados"
           className="wishlist-icon"
         />
+      </button>
+      <button className="view-details-button" onClick={handleViewDetails}>
+        Ver detalles
       </button>
     </div>
   );

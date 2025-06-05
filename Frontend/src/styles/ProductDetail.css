@@ -1,0 +1,137 @@
+.product-detail-page {
+  max-width: 1000px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 32px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.product-detail-main {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.product-detail-img {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  background: #f7f6f2;
+}
+
+.product-detail-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.product-detail-price {
+  color: #8D7B31;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.product-detail-desc {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.buy-button, .add-to-cart-button {
+  background-color: #8D7B31;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 24px;
+  font-size: 1.1em;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.buy-button:hover, .add-to-cart-button:hover {
+  background-color: #645722;
+}
+
+.product-detail-extra {
+  margin-top: 40px;
+}
+
+.product-detail-rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.product-detail-avg-rating {
+  font-size: 2rem;
+  color: #8D7B31;
+  font-weight: bold;
+}
+
+.product-detail-stars, .review-stars, .review-stars-input {
+  color: #8D7B31;
+  font-size: 1.3em;
+}
+
+.star {
+  cursor: pointer;
+  color: #ccc;
+  font-size: 1.3em;
+  transition: color 0.2s;
+}
+
+.star.filled {
+  color: #8D7B31;
+}
+
+.product-detail-reviews {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px 0;
+}
+
+.product-detail-reviews li {
+  border-bottom: 1px solid #eee;
+  padding: 12px 0;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+}
+
+.review-user {
+  color: #8D7B31;
+}
+
+.review-comment {
+  color: #333;
+  margin-top: 4px;
+}
+
+.product-detail-review-form {
+  margin-top: 24px;
+  background: #f7f6f2;
+  border-radius: 8px;
+  padding: 18px;
+  border: 1px solid #eee;
+}
+
+.product-detail-review-form textarea {
+  width: 100%;
+  min-height: 60px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin: 10px 0;
+  padding: 8px;
+  font-size: 1em;
+  resize: vertical;
+}

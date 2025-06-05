@@ -59,7 +59,7 @@ const toggleCartPreview = async () => {
           <li><Link to="/productos/mujer" className="nav-item">Camisetas Mujer</Link></li>
           <li><Link to="/productos/nino" className="nav-item">Camisetas Niño</Link></li>
           <li><Link to="/productos/nina" className="nav-item">Camisetas Niña</Link></li>
-          <li><Link to="/support" className="nav-item">Contacto</Link></li>
+          <li><Link to="/soporte" className="nav-item">Contacto</Link></li>
           {user?.role === "productAdmin" && (
             <>
               <li>

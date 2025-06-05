@@ -1,5 +1,5 @@
 export const processCheckout = async ({ address, cartItems, total, token }) => {
-  return await fetch("/checkout", { // <-- SOLO /checkout
+  return await fetch("http://localhost:5000/api/checkout", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
