@@ -39,21 +39,59 @@
     margin: 20px auto;
   }
 }
-
 @media (max-width: 600px) {
   /* Móviles */
-  .main-container, .support, .auth-form, .add-product-page, .manage-products-page, .systemadmin-page, .checkout-page, .cart-page, .configuration-page {
-    max-width: 100%;
-    padding: 5px;
-    margin: 10px auto;
-    border-radius: 0;
-    box-shadow: none;
+  .floating-wishlist-icon {
+    top: unset !important;
+    left: unset !important;
+    right: 16px !important;
+    bottom: 16px !important;
+    width: 48px !important;
+    height: 48px !important;
+    z-index: 1200;
+    display: flex !important;
   }
-  h2, h3 {
-    font-size: 1.2em;
+  .floating-wishlist-icon img {
+    width: 28px !important;
+    height: 28px !important;
   }
-  input, textarea, select, button {
+  .wishlist {
+    top: unset !important;
+    left: 2vw !important;
+    right: 2vw !important;
+    bottom: 70px !important;
+    width: 96vw !important;
+    max-width: 98vw !important;
+    min-width: unset !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 8px #0002 !important;
+  }
+  .wishlist h3 {
+    font-size: 1.1em !important;
+  }
+  .wishlist li {
+    flex-direction: row !important;
+    align-items: center !important;
+    margin-bottom: 8px !important;
+  }
+  .wishlist-item-image {
+    width: 40px !important;
+    height: 40px !important;
+    margin-right: 8px !important;
+  }
+  .wishlist-item-name {
+    font-size: 1em !important;
+  }
+  .wishlist-item-price {
+    font-size: 0.9em !important;
+  }
+  .remove-item-button,
+  .close-wishlist-button {
+    width: 100%;
     font-size: 1em;
+    margin-top: 8px;
+    padding: 8px 0;
   }
 }
 .wishlist h3 {
