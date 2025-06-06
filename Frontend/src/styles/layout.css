@@ -263,47 +263,108 @@ footer {
   transition: 0.3s;
 }
 
-/* Responsive NavBar */
 @media (max-width: 900px) {
-  .hamburger {
-    display: flex;
-  }
-  .nav {
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100vw;
-    background: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
-    z-index: 1000;
-  }
-  .nav.open {
-    display: block;
-  }
-  .nav-list {
-    flex-direction: column;
-    gap: 0;
-    width: 100%;
-    padding: 0;
-  }
-  .nav-list li {
-    border-bottom: 1px solid #eee;
-    width: 100%;
-    text-align: left;
-    padding: 1rem;
-  }
-  .nav-item {
-    width: 100%;
-    display: block;
-    padding: 1rem 0;
-  }
   .header {
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     padding: 1rem;
     position: fixed;
     width: 100vw;
     z-index: 1200;
   }
+  .logo {
+    order: 1;
+  }
+  .hamburger {
+    order: 2;
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .nav {
+    order: 3;
+  }
+  .user-container {
+    order: 4;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: static;
+  }
+  .cart-icon-container {
+    margin-right: 0;
+    margin-left: 10px;
+    z-index: 1201; /* Asegura que el carrito esté por encima del nav */
+  }
 }
+
+/* Si quieres el carrito a la derecha y la hamburguesa a la izquierda: */
+@media (max-width: 900px) {
+  .logo { order: 1; }
+  .hamburger { order: 2; }
+  .nav { order: 3; }
+  .user-container { order: 4; }
+}
+
+/* Si quieres la hamburguesa a la derecha y el carrito a la izquierda, intercambia los order: */
+@media (max-width: 900px) {
+  /* .hamburger { order: 4; }
+     .user-container { order: 2; } */
+}
+/* ...existing code... */
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.5rem;
+    position: fixed;
+    width: 100vw;
+    z-index: 1200;
+    min-height: 56px;
+  }
+  .logo {
+    order: 1;
+  }
+  .hamburger {
+    display: flex !important;
+    order: 2;
+    margin-left: 0;
+    margin-right: 0;
+    z-index: 1202;
+  }
+  .cart-icon-container {
+    order: 3;
+    margin-left: 10px;
+    margin-right: 0;
+    z-index: 1203;
+    position: relative;
+  }
+  .user-container {
+    order: 4;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: static;
+    z-index: 1204;
+  }
+  .nav {
+    order: 5;
+    position: absolute;
+    top: 56px;
+    left: 0;
+    width: 100vw;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    z-index: 1201;
+    display: none;
+  }
+  .nav.open {
+    display: block;
+  }
+  /* ...resto de estilos responsive... */
+}
+/* ...existing code... */
