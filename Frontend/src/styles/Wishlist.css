@@ -31,7 +31,26 @@
     width: 300px;
     z-index: 1000;
   }
-  
+  @media (max-width: 600px) {
+  .floating-wishlist-icon,
+  .costumer-chat {
+    bottom: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+  }
+  .floating-wishlist-icon img,
+  .costumer-chat img {
+    width: 24px;
+    height: 24px;
+  }
+  .wishlist, .chat-window {
+    width: 95vw !important;
+    left: 2.5vw !important;
+    right: unset !important;
+    padding: 8px !important;
+  }
+}
   .wishlist h3 {
     margin: 0 0 10px;
   }

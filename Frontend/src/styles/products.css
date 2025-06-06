@@ -50,7 +50,31 @@
   gap: 8px;
   margin-top: 10px;
 }
+@media (max-width: 900px) {
+  /* Tablets */
+  .main-container, .support, .auth-form, .add-product-page, .manage-products-page, .systemadmin-page, .checkout-page, .cart-page, .configuration-page {
+    max-width: 95%;
+    padding: 10px;
+    margin: 20px auto;
+  }
+}
 
+@media (max-width: 600px) {
+  /* Móviles */
+  .main-container, .support, .auth-form, .add-product-page, .manage-products-page, .systemadmin-page, .checkout-page, .cart-page, .configuration-page {
+    max-width: 100%;
+    padding: 5px;
+    margin: 10px auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  h2, h3 {
+    font-size: 1.2em;
+  }
+  input, textarea, select, button {
+    font-size: 1em;
+  }
+}
 .product-card:hover .product-image {
   transform: none; /* Elimina la animación de escala */
 }
