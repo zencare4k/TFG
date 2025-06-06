@@ -1,5 +1,5 @@
 export const processCheckout = async ({ address, cartItems, total, token }) => {
-  return await fetch("http://localhost:5000/api/checkout", {
+  return await fetch("https://tfg-5q0w.onrender.com/api/checkout", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

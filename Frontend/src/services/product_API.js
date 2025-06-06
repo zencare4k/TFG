@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/products"; // Cambia la URL según tu backend
+const API_URL = "https://tfg-5q0w.onrender.com/api/products"; // Cambia la URL según tu backend
 
 // Función para crear un producto
 export const createProduct = async (productData) => {

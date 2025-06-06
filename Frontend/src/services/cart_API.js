@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/cart"; // Cambia la URL según tu backend
-const RECOMMENDATIONS_URL = "http://localhost:5000/api/recommendations"; // Endpoint para recomendaciones
+const API_URL = "https://tfg-5q0w.onrender.com/api/cart"; // Cambia la URL según tu backend
+const RECOMMENDATIONS_URL = "https://tfg-5q0w.onrender.com/api/recommendations"; // Endpoint para recomendaciones
 
 // Servicio para añadir un producto al carrito
 export const addToCart = async (product) => {
@@ -22,7 +22,7 @@ export const fetchCartItems = async (userId) => {
 };
 export const clearCart = async (token) => {
   try {
-    const response = await fetch("http://localhost:5000/api/cart/clear", {
+    const response = await fetch("https://tfg-5q0w.onrender.com/api/cart/clear", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

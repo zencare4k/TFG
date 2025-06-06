@@ -5,7 +5,7 @@ export const sendSupportEmail = async (templateParams) => {
 };
 
 export const sendOrderConfirmationEmail = async ({ name, email, orderSummary, cardMasked, products }) => {
-  const response = await fetch('http://localhost:5000/api/email/order-confirmation', {
+  const response = await fetch('https://tfg-5q0w.onrender.com/api/email/order-confirmation', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'

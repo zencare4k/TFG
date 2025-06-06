@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/wishlist";
+const API_URL = "https://tfg-5q0w.onrender.com/api/wishlist";
 
 export const addToWishlist = async (userId, product) => {
   if (!userId || !product || !product._id) {

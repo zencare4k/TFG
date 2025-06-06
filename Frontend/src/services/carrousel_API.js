@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/carousel"; 
+const API_URL = " https://tfg-5q0w.onrender.com/api/carousel"; 
 
  export const fetchCarouselImages = async () => {
     try {

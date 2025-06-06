@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = 'https://tfg-5q0w.onrender.com/api';
 
 // Servicio para obtener los datos del carrito de un usuario autenticado
 export const fetchCartItems = async (userId, token) => {
