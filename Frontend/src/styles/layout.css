@@ -241,3 +241,69 @@ footer {
     gap: 0.5rem;
   }
 }
+
+/* Menú hamburguesa */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1100;
+}
+.hamburger-bar {
+  width: 28px;
+  height: 4px;
+  background: #333;
+  margin: 4px 0;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Responsive NavBar */
+@media (max-width: 900px) {
+  .hamburger {
+    display: flex;
+  }
+  .nav {
+    display: none;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100vw;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    z-index: 1000;
+  }
+  .nav.open {
+    display: block;
+  }
+  .nav-list {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 0;
+  }
+  .nav-list li {
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+  }
+  .nav-item {
+    width: 100%;
+    display: block;
+    padding: 1rem 0;
+  }
+  .header {
+    flex-direction: row;
+    align-items: center;
+    padding: 1rem;
+    position: fixed;
+    width: 100vw;
+    z-index: 1200;
+  }
+}
