@@ -143,20 +143,47 @@
     margin: 20px auto;
   }
 }
-
 @media (max-width: 600px) {
-  /* Móviles */
-  .main-container, .support, .auth-form, .add-product-page, .manage-products-page, .systemadmin-page, .checkout-page, .cart-page, .configuration-page {
-    max-width: 100%;
-    padding: 5px;
-    margin: 10px auto;
+  .product-detail-page {
+    max-width: 100vw;
+    margin: 10px 0;
+    padding: 10px;
     border-radius: 0;
     box-shadow: none;
   }
-  h2, h3 {
-    font-size: 1.2em;
+  .product-detail-main {
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
   }
-  input, textarea, select, button {
+  .product-detail-img {
+    width: 90vw;
+    height: 220px;
+    max-width: 98vw;
+    object-fit: contain;
+    margin: 0 auto;
+  }
+  .product-detail-info {
+    gap: 10px;
+    width: 100%;
+  }
+  .product-detail-price {
+    font-size: 1.4rem;
+  }
+  .product-detail-desc {
     font-size: 1em;
+  }
+  .buy-button, .add-to-cart-button {
+    width: 100%;
+    margin: 10px 0 0 0;
+    font-size: 1em;
+    padding: 10px 0;
+  }
+  .product-detail-extra {
+    margin-top: 20px;
+    padding: 10px 0;
+  }
+  .product-detail-review-form {
+    padding: 10px;
   }
 }

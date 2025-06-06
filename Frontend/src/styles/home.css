@@ -90,15 +90,93 @@
   button.prev:hover, button.next:hover {
     background-color: rgba(0, 0, 0, 0.8);
   }
-  
-  /* Adaptación móvil */
-  @media (max-width: 768px) {
-    #sideshow-example {
-      width: 90vw;
-      height: 30vh;
-    }
-  
-    .slide .text-overlay {
-      font-size: 20px;
-    }
+@media (max-width: 600px) {
+  /* Móviles */
+  .main-container, .support, .auth-form, .add-product-page, .manage-products-page, .systemadmin-page, .checkout-page, .cart-page, .configuration-page {
+    max-width: 100%;
+    padding: 5px;
+    margin: 10px auto;
+    border-radius: 0;
+    box-shadow: none;
   }
+  h2, h3 {
+    font-size: 1.2em;
+  }
+  input, textarea, select, button {
+    font-size: 1em;
+  }
+
+  #sideshow-example {
+    height: 30vh;
+    min-height: 180px;
+    max-height: 220px;
+  }
+  .slide .text-overlay {
+    font-size: 1.2em;
+    padding: 6px;
+    bottom: 10px;
+    left: 10px;
+  }
+  .slide img {
+    height: 100%;
+    min-height: 180px;
+    max-height: 220px;
+    object-fit: cover;
+  }
+  button.prev, button.next {
+    padding: 6px;
+    font-size: 1em;
+    top: 45%;
+  }
+  .floating-wishlist-icon {
+    bottom: 10px !important;
+    left: unset !important;
+    right: 10px !important;
+    top: unset !important;
+    width: 40px !important;
+    height: 40px !important;
+    z-index: 1100;
+  }
+  .floating-wishlist-icon img {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .wishlist {
+    width: 95vw !important;
+    left: 2.5vw !important;
+    right: unset !important;
+    top: unset !important;
+    bottom: 60px !important;
+    padding: 8px !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px #0002 !important;
+    max-width: 98vw !important;
+    min-width: unset !important;
+  }
+  .wishlist h3 {
+    font-size: 1.1em !important;
+  }
+  .wishlist li {
+    flex-direction: row !important;
+    align-items: center !important;
+    margin-bottom: 8px !important;
+  }
+  .wishlist-item-image {
+    width: 40px !important;
+    height: 40px !important;
+    margin-right: 8px !important;
+  }
+  .wishlist-item-name {
+    font-size: 1em !important;
+  }
+  .wishlist-item-price {
+    font-size: 0.9em !important;
+  }
+  .remove-item-button,
+  .close-wishlist-button {
+    width: 100%;
+    font-size: 1em;
+    margin-top: 8px;
+    padding: 8px 0;
+  }
+}

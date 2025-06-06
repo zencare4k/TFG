@@ -53,20 +53,42 @@
     margin: 20px auto;
   }
 }
-
 @media (max-width: 600px) {
-  /* Móviles */
-  .main-container, .support, .auth-form, .add-product-page, .manage-products-page, .systemadmin-page, .checkout-page, .cart-page, .configuration-page {
-    max-width: 100%;
-    padding: 5px;
-    margin: 10px auto;
-    border-radius: 0;
-    box-shadow: none;
+  .product-rating {
+    margin-top: 10px;
+    padding: 0 2vw;
   }
-  h2, h3 {
-    font-size: 1.2em;
+  .rating {
+    gap: 2px;
+    font-size: 20px;
   }
-  input, textarea, select, button {
+  .comment-form textarea {
+    width: 98vw;
+    min-width: unset;
+    max-width: 98vw;
+    font-size: 1em;
+  }
+  .comment-form button,
+  .comment-item button,
+  .like-button {
+    width: 100%;
+    font-size: 1em;
+    padding: 10px 0;
+    margin-top: 8px;
+  }
+  .comments-list {
+    padding: 0;
+  }
+  .comment-item,
+  .top-comment {
+    padding: 8px;
+    font-size: 1em;
+  }
+  .comment-rating {
+    gap: 2px;
+    font-size: 18px;
+  }
+  .likes-count {
     font-size: 1em;
   }
 }
