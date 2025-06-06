@@ -36,6 +36,22 @@
 }
 
 @media (max-width: 600px) {
+    /* Móviles */
+  #sideshow-example {
+    height: 45vh;
+    min-height: 240px;
+    max-height: 320px;
+  }
+  .slide img {
+    min-height: 240px;
+    max-height: 320px;
+  }
+  .slide .text-overlay {
+    font-size: 1.4em;
+    padding: 10px;
+    bottom: 18px;
+    left: 14px;
+  }
   /* Móviles */
   .main-container, .support, .auth-form, .add-product-page, .manage-products-page, .systemadmin-page, .checkout-page, .cart-page, .configuration-page {
     max-width: 100%;
