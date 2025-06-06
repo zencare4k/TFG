@@ -307,14 +307,10 @@ footer {
   .user-container { order: 4; }
 }
 
-/* Si quieres la hamburguesa a la derecha y el carrito a la izquierda, intercambia los order: */
-@media (max-width: 900px) {
-  /* .hamburger { order: 4; }
-     .user-container { order: 2; } */
-}
-/* ...existing code... */
+ 
 
 @media (max-width: 600px) {
+  /* Layout principal header */
   .header {
     flex-direction: row;
     align-items: center;
@@ -324,16 +320,21 @@ footer {
     width: 100vw;
     z-index: 1200;
     min-height: 56px;
+    box-sizing: border-box;
   }
   .logo {
     order: 1;
+    flex: 0 0 auto;
   }
-  .hamburger {
-    display: flex !important;
+  .user-container {
     order: 2;
-    margin-left: 0;
-    margin-right: 0;
-    z-index: 1202;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: static;
+    z-index: 1204;
+    flex: 0 0 auto;
   }
   .cart-icon-container {
     order: 3;
@@ -341,15 +342,15 @@ footer {
     margin-right: 0;
     z-index: 1203;
     position: relative;
+    flex: 0 0 auto;
   }
-  .user-container {
+  .hamburger {
+    display: flex !important;
     order: 4;
     margin-left: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    position: static;
-    z-index: 1204;
+    margin-right: 0;
+    z-index: 1202;
+    flex: 0 0 auto;
   }
   .nav {
     order: 5;
@@ -365,6 +366,62 @@ footer {
   .nav.open {
     display: block;
   }
-  /* ...resto de estilos responsive... */
+  .nav-list {
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 0;
+  }
+  .nav-list li {
+    border-bottom: 1px solid #eee;
+    width: 100%;
+    text-align: left;
+    padding: 1rem;
+  }
+  .nav-item {
+    width: 100%;
+    display: block;
+    padding: 1rem 0;
+    font-size: 1.1em;
+  }
+  .cart-icon {
+    height: 28px;
+    width: 28px;
+    transform: none;
+  }
+  .login-button {
+    margin-left: 0;
+    margin-top: 0;
+    transform: none;
+    font-size: 1em;
+  }
+  .user-image {
+    width: 28px;
+    height: 28px;
+    transform: none;
+  }
+  .dropdown-menu {
+    top: 48px;
+    right: 0;
+    left: auto;
+    min-width: 120px;
+    z-index: 1300;
+  }
+  /* Ajuste para el footer en móvil */
+  .footer {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+  }
+  .nav-list-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  /* Ajuste para el main para que no quede tapado por el header fijo */
+  main {
+    padding-top: 70px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
 }
-/* ...existing code... */
