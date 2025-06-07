@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { findUserByEmail, findUserByUsername, comparePassword, createUser } from "../Models/users.js";
 import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 export const registerUser = async (req, res) => {
   const { username, email, password, role = "user" } = req.body; // Asignar "user" como valor predeterminado para el rol
