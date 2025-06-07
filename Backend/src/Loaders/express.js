@@ -3,13 +3,13 @@ import cors from "cors";
 import routes from "../Routes/index.js";
 
 export default (expressApp) => {
-  expressApp.use(cors({
-    origin: [
-      "https://tfg-git-main-zencare4ks-projects.vercel.app", // tu frontend en Vercel
-      "http://localhost:3000" // para desarrollo local
-    ],
-    credentials: true
-  }));
+  app.use(cors({
+  origin: [
+    "https://tfg-git-main-zencare4ks-projects.vercel.app",
+    "http://localhost:3000"
+  ],
+  credentials: true
+}));
   expressApp.use(express.json());
   expressApp.use(express.urlencoded({ extended: true }));
 

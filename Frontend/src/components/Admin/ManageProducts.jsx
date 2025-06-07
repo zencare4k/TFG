@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { fetchProducts, deleteProduct, updateProduct } from "../../services/product_API";
 import { AuthContext } from "../context/AuthContext";
 import "../../styles/ManageProducts.css";
+import NotificationSystem from "../Shared/NotificationSystem";
 
 const ManageProducts = () => {
   const { user } = useContext(AuthContext); // Obtener el usuario autenticado
@@ -23,7 +24,7 @@ const ManageProducts = () => {
         const data = await fetchProducts();
         setProducts(data);
       } catch (err) {
-        setError(err.response?.data?.error || "Error al cargar los productos.");
+        setError(err.response?.data?.error || err.message || "Error al cargar los productos.");
       }
     };
 
@@ -60,7 +61,7 @@ const ManageProducts = () => {
       setSuccess("Producto actualizado correctamente.");
       setError("");
     } catch (err) {
-      setError(err.response?.data?.error || "Error al actualizar el producto.");
+      setError(err.response?.data?.error || err.message || "Error al actualizar el producto.");
     }
   };
 
@@ -72,19 +73,19 @@ const ManageProducts = () => {
       setSuccess("Producto eliminado correctamente.");
       setError("");
     } catch (err) {
-      setError(err.response?.data?.error || "Error al eliminar el producto.");
+      setError(err.response?.data?.error || err.message || "Error al eliminar el producto.");
     }
   };
 
   if (error && user?.role !== "productAdmin") {
-    return <p className="error">{error}</p>;
+    return <NotificationSystem message={error} type="error" />;
   }
 
   return (
     <div className="manage-products-page">
       <h2>Gestión de Productos</h2>
-      {error && <p className="error">{error}</p>}
-      {success && <p className="success">{success}</p>}
+      {error && <NotificationSystem message={error} type="error" />}
+      {success && <NotificationSystem message={success} type="success" />}
       <table className="products-table">
         <thead>
           <tr>

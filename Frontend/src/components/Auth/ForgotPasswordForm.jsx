@@ -29,7 +29,7 @@ const ForgotPasswordForm = () => {
           window.location.href = '/login';
         }, 2000);
       })
-      .catch(err => setError(err));
+      .catch(err => setError(err.message || "Error al enviar el correo de recuperación"));
   };
 
   return (

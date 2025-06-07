@@ -37,7 +37,7 @@ const RegisterForm = () => {
     }
     setError('');
     try {
-      const message = await registerUser({ username, email, password }); // No enviar isAdmin
+      const message = await registerUser({ username, email, password });
       console.log('Usuario registrado exitosamente:', email);
       setSuccess(message);
       setTimeout(() => {

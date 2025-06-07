@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import api from "../../services/api";
 import { AuthContext } from "../context/AuthContext";
 import "../../styles/systemadmin.css";
+import NotificationSystem from "../Shared/NotificationSystem";
 
 const UserManagement = () => {
   const { user } = useContext(AuthContext); // Obtener el usuario del contexto
@@ -20,8 +21,7 @@ const UserManagement = () => {
         const response = await api.get("/users");
         setUsers(response.data);
       } catch (err) {
-        setError("Error al cargar los usuarios");
-        console.error(err.message);
+        setError(err.response?.data?.error || err.message || "Error al cargar los usuarios");
       }
     };
     fetchUsers();
@@ -36,9 +36,9 @@ const UserManagement = () => {
         )
       );
       setSuccess("Rol actualizado exitosamente");
+      setError("");
     } catch (err) {
-      setError("Error al actualizar el rol");
-      console.error(err.message);
+      setError(err.response?.data?.error || err.message || "Error al actualizar el rol");
     }
   };
 
@@ -47,20 +47,21 @@ const UserManagement = () => {
       await api.delete(`/users/${id}`);
       setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
       setSuccess("Usuario eliminado exitosamente");
+      setError("");
     } catch (err) {
-      setError("Error al eliminar el usuario");
-      console.error(err.message);
+      setError(err.response?.data?.error || err.message || "Error al eliminar el usuario");
     }
   };
 
   if (error && user?.role !== "systemAdmin") {
-    return <p className="error">{error}</p>;
+    return <NotificationSystem message={error} type="error" />;
   }
 
   return (
     <div className="systemadmin-page">
       <h2>Gestión de Usuarios</h2>
-      {success && <p className="success">{success}</p>}
+      {error && <NotificationSystem message={error} type="error" />}
+      {success && <NotificationSystem message={success} type="success" />}
       <table>
         <thead>
           <tr>
