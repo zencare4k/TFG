@@ -2,6 +2,7 @@ import { connectDB } from "../Models/index.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { findUserByEmail, findUserByUsername, comparePassword, createUser } from "../Models/users.js";
+import crypto from "crypto";
 
 export const registerUser = async (req, res) => {
   const { username, email, password, role = "user" } = req.body; // Asignar "user" como valor predeterminado para el rol
@@ -147,5 +148,39 @@ res.status(200).json({
 });  } catch (error) {
     console.error("Error en loginUser:", error.message);
     res.status(500).json({ message: "Error al iniciar sesión" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const { token, password } = req.body;
+  if (!token || !password) {
+    return res.status(400).json({ error: "Token y nueva contraseña son obligatorios" });
+  }
+
+  try {
+    const { dbInstanceUsers } = await connectDB();
+    const user = await dbInstanceUsers.collection("users").findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: "Token inválido o expirado" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await dbInstanceUsers.collection("users").updateOne(
+      { _id: user._id },
+      {
+        $set: { password: hashedPassword },
+        $unset: { resetPasswordToken: "", resetPasswordExpires: "" }
+      }
+    );
+
+    res.json({ message: "Contraseña actualizada correctamente" });
+  } catch (error) {
+    console.error("Error en resetPassword:", error.message);
+    res.status(500).json({ error: "Error al restablecer la contraseña" });
   }
 };
