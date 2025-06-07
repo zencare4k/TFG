@@ -4,8 +4,14 @@ import mainRouter from './src/Routes/index.js';
 
 const PORT = process.env.PORT || 5000;
 
-// Configurar CORS
-app.use(cors());
+// Configurar CORS correctamente
+app.use(cors({
+  origin: [
+    "https://tfg-git-main-zencare4ks-projects.vercel.app",
+    "http://localhost:3000"
+  ],
+  credentials: true
+}));
 
 // Montar solo el router principal en /api
 app.use('/api', mainRouter);
