@@ -4,7 +4,7 @@ import axios from "axios";
 export const sendSupportEmail = async (templateParams) => {
   return await emailjs.send('service_oxurxxs', 'template_37iampg', templateParams, 'B-kJoB9UDT4MRmInH');
 };
- 
+
 export const sendOrderConfirmationEmail = async ({ name, email, orderSummary, cardMasked, products }) => {
   const response = await fetch('https://tfg-5q0w.onrender.com/api/email/order-confirmation', {
     method: 'POST',
@@ -18,8 +18,9 @@ export const sendOrderConfirmationEmail = async ({ name, email, orderSummary, ca
     throw new Error('Error al enviar el correo de confirmación');
   }
 };
-//Recuoeracion de contraseña
-const API_URL = 'https://tfg-5q0w.onrender.com/api/auth';
+
+// Recuperación de contraseña
+const API_URL = 'https://tfg-5q0w.onrender.com/api/v1/auth';
 
 export const forgotPassword = async (email) => {
   const response = await axios.post(`${API_URL}/forgot-password`, { email });
