@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15.78% </span>
+                <span class="strong">57.89% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/19</span>
+                <span class='fraction'>11/19</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15.78% </span>
+                <span class="strong">57.89% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/19</span>
+                <span class='fraction'>11/19</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -104,29 +104,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -137,18 +137,18 @@ import jwt from "jsonwebtoken";
 import config from "../../config.js";
 import { ObjectId } from "mongodb";  // Importar ObjectId
 &nbsp;
-export const registerUser = <span class="fstat-no" title="function not covered" >as</span>ync ({ name, email, password }) =&gt; {
-  const db = <span class="cstat-no" title="statement not covered" >await connectDB();</span>
-  const hashedPassword = <span class="cstat-no" title="statement not covered" >await bcrypt.hash(password, 10);</span>
-  const newUser = <span class="cstat-no" title="statement not covered" >{ name, email, password: hashedPassword };</span>
+export const registerUser = async ({ name, email, password }) =&gt; {
+  const db = await connectDB();
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = { name, email, password: hashedPassword };
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  await db.collection("users").insertOne(newUser);</span>
+  await db.collection("users").insertOne(newUser);
 <span class="cstat-no" title="statement not covered" >  return newUser;</span>
 };
 &nbsp;
-export const loginUser = <span class="fstat-no" title="function not covered" >as</span>ync (email, password) =&gt; {
-  const db = <span class="cstat-no" title="statement not covered" >await connectDB();</span>
-  const user = <span class="cstat-no" title="statement not covered" >await db.collection("users").findOne({ email });</span>
+export const loginUser = async (email, password) =&gt; {
+  const db = await connectDB();
+  const user = await db.collection("users").findOne({ email });
   
 <span class="cstat-no" title="statement not covered" >  if (!user || !(await bcrypt.compare(password, user.password))) {</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error("Credenciales inválidas");</span>
@@ -158,9 +158,9 @@ export const loginUser = <span class="fstat-no" title="function not covered" >as
 <span class="cstat-no" title="statement not covered" >  return { user, token };</span>
 };
 &nbsp;
-export const getUserById = <span class="fstat-no" title="function not covered" >as</span>ync (id) =&gt; {
-  const db = <span class="cstat-no" title="statement not covered" >await connectDB();</span>
-  const user = <span class="cstat-no" title="statement not covered" >await db.collection("users").findOne({ _id: new ObjectId(id) });</span>
+export const getUserById = async (id) =&gt; {
+  const db = await connectDB();
+  const user = await db.collection("users").findOne({ _id: new ObjectId(id) });
 <span class="cstat-no" title="statement not covered" >  if (!user) {</span>
 <span class="cstat-no" title="statement not covered" >    throw new Error("Usuario no encontrado");</span>
   }
@@ -172,7 +172,7 @@ export const getUserById = <span class="fstat-no" title="function not covered" >
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-03-07T18:22:22.327Z
+                at 2025-06-08T18:12:00.504Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
