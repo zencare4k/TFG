@@ -116,7 +116,11 @@ main {
 .logo-image {
   height: 40px;
 }
-
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 .nav {
   flex-grow: 1;
   text-align: center;
@@ -176,7 +180,12 @@ footer {
   position: relative;
   bottom: 0;
 }
-
+.user-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 
 #Derechos {
