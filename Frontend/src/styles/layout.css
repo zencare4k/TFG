@@ -155,12 +155,14 @@ main {
 }
 
 .login-button {
-  transform: translate(-20%, -20%);
-
+  /* transform: translate(-20%, -20%); */ /* Elimina o comenta esta línea */
   background: none;
   border: none;
   cursor: pointer;
+  margin: 0;
+  font-size: 1em;
 }
+
 
 .login-icon {
   width: 30px;
@@ -403,15 +405,15 @@ footer {
     transform: none;
     font-size: 1em;
   }
-  .user-profile {
+.user-profile {
   display: flex;
   align-items: center;
   gap: 8px;
 }
+
 .user-image {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
   object-fit: cover;
   /* Elimina cualquier transform aquí */
 }
