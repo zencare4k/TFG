@@ -69,15 +69,12 @@ main {
   gap: 10px;
 }
 
-.user-image {
-  transform: translate(0%, 40%);
-  width: 30px;
-  border-radius: 50%;
-}
+ 
 
 .user-name {
   font-size: 14px;
   color: #333;
+  margin-left: 6px;
 }
 
 .logout-button {
@@ -162,7 +159,9 @@ main {
 }
 
 .login-icon {
-  width: 100px;
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
   cursor: pointer;
 }
 
@@ -395,11 +394,18 @@ footer {
     transform: none;
     font-size: 1em;
   }
-  .user-image {
-    width: 28px;
-    height: 28px;
-    transform: none;
-  }
+  .user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.user-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  /* Elimina cualquier transform aquí */
+}
   .dropdown-menu {
     top: 48px;
     right: 0;

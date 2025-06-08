@@ -105,12 +105,12 @@ const Header = () => {
         {user ? (
           <div className="user-info">
             <div className="user-profile login-button" onClick={toggleMenu}>
-             <img
-  src={user.profileImage || "/assets/icons/iniciado.png"}
-  alt="Usuario"
-  className="user-image"
-  onError={e => { e.target.onerror = null; e.target.src = "/assets/icons/iniciado.png"; }}
-/>
+              <img
+                src={user.profileImage || "/assets/icons/iniciado.png"}
+                alt="Usuario"
+                className="user-image"
+                onError={e => { e.target.onerror = null; e.target.src = "/assets/icons/iniciado.png"; }}
+              />
               <span className="user-name">{user.username}</span>
             </div>
             {menuOpen && (
@@ -120,12 +120,16 @@ const Header = () => {
             )}
           </div>
         ) : (
-          <button
-            className="login-button"
-            onClick={() => { closeMenu(); navigate("/login"); }}
-          >
-            <img src="/assets/icons/iniciado.png" alt="Login" className="login-icon" />
-          </button>
+          <div className="user-info">
+            <div
+              className="user-profile login-button"
+              onClick={() => { closeMenu(); navigate("/login"); }}
+              style={{ cursor: "pointer" }}
+            >
+              <img src="/assets/icons/iniciado.png" alt="Login" className="user-image" />
+              <span className="user-name">Iniciar sesión</span>
+            </div>
+          </div>
         )}
       </div>
     </header>
