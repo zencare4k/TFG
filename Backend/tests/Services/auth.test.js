@@ -10,6 +10,15 @@ describe('Auth Service', () => {
     userId = user._id || user.insertedId;
   });
 
+  it('registerUser lanza error si falta el email', async () => {
+    await expect(authService.registerUser({ name: 'NoEmail', email: '', password: '123456' })).rejects.toThrow();
+  });
+
+  it('registerUser lanza error si el usuario ya existe', async () => {
+    await authService.registerUser({ name: 'DupUser', email: 'dup@example.com', password: '123456' });
+    await expect(authService.registerUser({ name: 'DupUser', email: 'dup@example.com', password: '123456' })).rejects.toThrow();
+  });
+
   it('loginUser debe devolver usuario y token', async () => {
     const { user, token } = await authService.loginUser('testuser@example.com', '123456');
     expect(user).toBeDefined();
@@ -22,6 +31,10 @@ describe('Auth Service', () => {
 
   it('loginUser lanza error con contraseña incorrecta', async () => {
     await expect(authService.loginUser('testuser@example.com', 'contramal')).rejects.toThrow('Credenciales inválidas');
+  });
+
+  it('loginUser lanza error si falta el email', async () => {
+    await expect(authService.loginUser('', '123456')).rejects.toThrow();
   });
 
   it('getUserById debe devolver el usuario', async () => {

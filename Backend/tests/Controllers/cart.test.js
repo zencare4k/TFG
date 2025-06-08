@@ -1,5 +1,7 @@
 import request from 'supertest';
 import app from '../../app';
+import { jest } from '@jest/globals';
+ 
 
 describe('Cart Controller', () => {
   it('GET /api/cart debe devolver productos del carrito', async () => {

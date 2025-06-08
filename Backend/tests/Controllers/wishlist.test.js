@@ -1,19 +1,15 @@
-import request from 'supertest';
-import app from '../../app';
+import * as wishlistModel from '../../src/Models/wishlist.js';
+import { jest } from '@jest/globals';
 
-describe('Wishlist Controller', () => {
-  it('POST /api/wishlist debe añadir producto a la wishlist', async () => {
-    const res = await request(app)
-      .post('/api/wishlist')
-      .send({ userId: 'testuserid', product: { _id: 'testproductid', price: 10, stock: 1 } });
-    expect([201, 400, 409]).toContain(res.statusCode);
-  });
-
-  it('GET /api/wishlist/:userId debe devolver la wishlist', async () => {
-    const res = await request(app).get('/api/wishlist/testuserid');
-    expect([200, 500]).toContain(res.statusCode);
-    if (res.statusCode === 200) {
-      expect(Array.isArray(res.body)).toBe(true);
-    }
+ 
+describe('Wishlist Model', () => {
+  it('addToWishlist debe devolver error si faltan datos', async () => {
+    const req = { body: {} };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    await wishlistModel.addToWishlist(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
   });
 });

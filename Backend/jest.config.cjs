@@ -1,9 +1,12 @@
 module.exports = {
   testEnvironment: "node",
-  collectCoverage: true, // Habilita la cobertura
+  collectCoverage: true,
   coverageDirectory: "coverage",
   transform: {
     '^.+\\.js$': 'babel-jest',
   },
-  testMatch: ["**/tests/**/*.test.js"], // Asegúrate de que Jest busque en la carpeta correcta
+  testMatch: ["**/tests/**/*.test.js"],
+  collectCoverageFrom: [
+    "src/**/*.js"
+  ]
 };

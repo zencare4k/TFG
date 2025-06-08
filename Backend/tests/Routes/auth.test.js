@@ -12,7 +12,14 @@ describe('Auth Routes', () => {
   it('POST /api/auth/login loguea un usuario', async () => {
     const res = await request(app)
       .post('/api/auth/login')
-      .send({ username: 'nuevo', password: '123456' });
+      .send({ email: 'nuevo@example.com', password: '123456' });
     expect([200, 401, 400]).toContain(res.statusCode);
+  });
+
+  it('POST /api/auth/login error credenciales', async () => {
+    const res = await request(app)
+      .post('/api/auth/login')
+      .send({ email: 'noexiste@example.com', password: 'mal' });
+    expect([401, 400]).toContain(res.statusCode);
   });
 });

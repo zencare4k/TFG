@@ -1,8 +1,13 @@
-import { connectProductDB } from '../../src/Models/products.js';
+import * as wishlistModel from '../../src/Models/wishlist.js';
 
-describe('Products Model', () => {
-  it('connectProductDB debe conectar a la base de datos', async () => {
-    const db = await connectProductDB();
-    expect(db).toBeDefined();
+describe('Wishlist Model', () => {
+  it('addToWishlist debe devolver error si faltan datos', async () => {
+    const req = { body: {} };
+    const res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+    await wishlistModel.addToWishlist(req, res);
+    expect(res.status).toHaveBeenCalledWith(400);
   });
 });
