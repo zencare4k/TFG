@@ -123,7 +123,7 @@ const Header = () => {
             className="login-button"
             onClick={() => { closeMenu(); navigate("/login"); }}
           >
-            <img src="/a/assets/icons/iniciado.png" alt="Login" className="login-icon" />
+            <img src="/assets/icons/iniciado.png" alt="Login" className="login-icon" />
           </button>
         )}
       </div>
