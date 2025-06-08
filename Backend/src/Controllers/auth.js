@@ -171,13 +171,16 @@ export const resetPassword = async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await dbInstanceUsers.collection("users").updateOne(
-      { _id: user._id },
-      {
-        $set: { password: hashedPassword },
-        $unset: { resetPasswordToken: "", resetPasswordExpires: "" }
-      }
-    );
+  await dbInstanceUsers.collection("users").updateOne(
+  { _id: user._id },
+  {
+    $set: { password: hashedPassword },
+    $unset: { resetPasswordToken: "", resetPasswordExpires: "" }
+  }
+);
+
+const userAfter = await dbInstanceUsers.collection("users").findOne({ _id: user._id });
+console.log("Después del update:", userAfter);
 
     res.json({ message: "Contraseña actualizada correctamente" });
   } catch (error) {
