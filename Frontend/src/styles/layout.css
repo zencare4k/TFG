@@ -183,10 +183,7 @@ footer {
   bottom: 0;
 }
 .user-image {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  object-fit: cover;
+  width: 100%;
 }
 
 
@@ -412,9 +409,8 @@ footer {
 }
 
 .user-image {
-  width: 30px;
-  height: 30px;
-  object-fit: cover;
+   width: 100%;
+
   /* Elimina cualquier transform aquí */
 }
   .dropdown-menu {
