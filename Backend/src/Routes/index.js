@@ -9,6 +9,29 @@ import recommendationsRoutes from "./recomendations.js";
 import emailRoutes from "./Nodemailer.js";
 import reviewsRoutes from "./reviews.js"; // <-- Añade esta línea
 
+/**
+ * @swagger
+ * tags:
+ *   - name: Users
+ *     description: Operaciones de usuarios
+ *   - name: Auth
+ *     description: Autenticación y registro
+ *   - name: Products
+ *     description: Gestión de productos
+ *   - name: Cart
+ *     description: Operaciones del carrito de compras
+ *   - name: Wishlist
+ *     description: Lista de deseos de usuarios
+ *   - name: Checkout
+ *     description: Operaciones de pago y checkout
+ *   - name: Recommendations
+ *     description: Recomendaciones de productos
+ *   - name: Email
+ *     description: Envío de correos electrónicos
+ *   - name: Reviews
+ *     description: Reseñas de productos
+ */
+
 const router = Router();
 router.use("/users", users);
 router.use("/email", emailRoutes);

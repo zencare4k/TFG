@@ -5,6 +5,136 @@ import { systemAdminMiddleware } from "../Middleware/role.js";
 
 const router = Router();
 
+/**
+ * @swagger
+ * tags:
+ *   - name: SystemAdmin
+ *     description: Operaciones administrativas de usuarios (solo para administradores del sistema)
+ */
+
+/**
+ * @swagger
+ * /api/admin/users:
+ *   get:
+ *     summary: Obtener todos los usuarios (solo admin)
+ *     tags: [SystemAdmin]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de usuarios obtenida correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       500:
+ *         description: Error al obtener los usuarios
+ *   post:
+ *     summary: Crear un nuevo usuario (solo admin)
+ *     tags: [SystemAdmin]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *             required:
+ *               - username
+ *               - email
+ *               - password
+ *               - role
+ *     responses:
+ *       201:
+ *         description: Usuario creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 userId:
+ *                   type: string
+ *       400:
+ *         description: Error de validación o datos inválidos
+ */
+
+/**
+ * @swagger
+ * /api/admin/users/{id}:
+ *   put:
+ *     summary: Actualizar usuario por ID (solo admin)
+ *     tags: [SystemAdmin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del usuario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *     responses:
+ *       200:
+ *         description: Usuario actualizado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al actualizar el usuario
+ *   delete:
+ *     summary: Eliminar usuario por ID (solo admin)
+ *     tags: [SystemAdmin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Usuario eliminado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Usuario no encontrado
+ *       500:
+ *         description: Error al eliminar el usuario
+ */
+
 router.get("/", authMiddleware, systemAdminMiddleware, async (req, res) => {
   try {
     const users = await getAllUsers();

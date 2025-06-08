@@ -1,0 +1,166 @@
+{
+  "info": {
+    "name": "TFG API - Todas las rutas",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colección Postman con todos los endpoints principales del backend"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Registrar usuario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:5000/api/auth/register", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"usuario\",\n  \"email\": \"usuario@example.com\",\n  \"password\": \"123456\",\n  \"isAdmin\": false\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:5000/api/auth/login", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"usuario@example.com\",\n  \"password\": \"123456\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Obtener todos los usuarios",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/users", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Crear usuario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:5000/api/users", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "users"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"nuevo\",\n  \"email\": \"nuevo@example.com\",\n  \"password\": \"123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:5000/api/users/{{userId}}", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "users", "{{userId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"actualizado\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar usuario",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "http://localhost:5000/api/users/{{userId}}", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "users", "{{userId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Obtener todos los productos",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/products", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "products"] }
+          }
+        },
+        {
+          "name": "Obtener producto por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/products/{{productId}}", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "products", "{{productId}}"] }
+          }
+        },
+        {
+          "name": "Crear producto",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:5000/api/products", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "products"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Producto\",\n  \"description\": \"Descripción\",\n  \"price\": 10.5,\n  \"category\": \"General\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar producto",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:5000/api/products/{{productId}}", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "products", "{{productId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Producto actualizado\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar producto",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "http://localhost:5000/api/products/{{productId}}", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "products", "{{productId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wishlist",
+      "item": [
+        {
+          "name": "Añadir a wishlist",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "http://localhost:5000/api/wishlist", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "wishlist"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"productId\": \"{{productId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Obtener wishlist",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "http://localhost:5000/api/wishlist/{{userId}}", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "wishlist", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Eliminar de wishlist",
+          "request": {
+            "method": "DELETE",
+            "url": { "raw": "http://localhost:5000/api/wishlist/{{userId}}/{{productId}}", "protocol": "http", "host": ["localhost"], "port": "5000", "path": ["api", "wishlist", "{{userId}}", "{{productId}}"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "userId", "value": "" },
+    { "key": "productId", "value": "" }
+  ]
+}

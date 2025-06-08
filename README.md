@@ -108,3 +108,115 @@
    - **Descripción**: Enviar un mensaje de atención al cliente y esperar una respuesta. Verificar que el sistema notifica al usuario cuando se recibe una respuesta y que la respuesta se muestra en el correo electrónico del usuario.
    - **Resultado Esperado**: El sistema notifica al usuario cuando se recibe una respuesta y la respuesta se muestra en el correo electrónico del usuario.
    - **GIF**: ![Caso de prueba 3](path/to/your/gif9.gif)
+
+---
+
+## Documentación de la API con Postman
+
+Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints principales del backend. A continuación se detallan los endpoints y ejemplos de uso para facilitar las pruebas.
+
+### Auth
+
+- **Registrar usuario**
+  - **POST** `/api/auth/register`
+  - **Body (JSON):**
+    ```json
+    {
+      "name": "usuario",
+      "email": "usuario@example.com",
+      "password": "123456",
+      "isAdmin": false
+    }
+    ```
+- **Login**
+  - **POST** `/api/auth/login`
+  - **Body (JSON):**
+    ```json
+    {
+      "email": "usuario@example.com",
+      "password": "123456"
+    }
+    ```
+
+### Users
+
+- **Obtener todos los usuarios**
+  - **GET** `/api/users`
+- **Crear usuario**
+  - **POST** `/api/users`
+  - **Body (JSON):**
+    ```json
+    {
+      "name": "nuevo",
+      "email": "nuevo@example.com",
+      "password": "123456"
+    }
+    ```
+- **Actualizar usuario**
+  - **PUT** `/api/users/{{userId}}`
+  - **Body (JSON):**
+    ```json
+    {
+      "name": "actualizado"
+    }
+    ```
+- **Eliminar usuario**
+  - **DELETE** `/api/users/{{userId}}`
+
+### Products
+
+- **Obtener todos los productos**
+  - **GET** `/api/products`
+- **Obtener producto por ID**
+  - **GET** `/api/products/{{productId}}`
+- **Crear producto**
+  - **POST** `/api/products`
+  - **Body (JSON):**
+    ```json
+    {
+      "name": "Producto",
+      "description": "Descripción",
+      "price": 10.5,
+      "category": "General"
+    }
+    ```
+- **Actualizar producto**
+  - **PUT** `/api/products/{{productId}}`
+  - **Body (JSON):**
+    ```json
+    {
+      "name": "Producto actualizado"
+    }
+    ```
+- **Eliminar producto**
+  - **DELETE** `/api/products/{{productId}}`
+
+### Wishlist
+
+- **Añadir a wishlist**
+  - **POST** `/api/wishlist`
+  - **Body (JSON):**
+    ```json
+    {
+      "userId": "{{userId}}",
+      "productId": "{{productId}}"
+    }
+    ```
+- **Obtener wishlist**
+  - **GET** `/api/wishlist/{{userId}}`
+- **Eliminar de wishlist**
+  - **DELETE** `/api/wishlist/{{userId}}/{{productId}}`
+
+### Variables de entorno en Postman
+
+- `userId`: ID del usuario (rellenar tras crear/obtener un usuario)
+- `productId`: ID del producto (rellenar tras crear/obtener un producto)
+
+### Instrucciones de uso
+
+1. Abre Postman.
+2. Importa el archivo `TFGBackend.json` desde la raíz del backend.
+3. Rellena las variables `userId` y `productId` según corresponda.
+4. Realiza peticiones a los endpoints según la documentación anterior.
+
+---

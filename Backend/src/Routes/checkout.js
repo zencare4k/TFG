@@ -1,13 +1,20 @@
 import { Router } from "express";
 import { processCheckout } from "../Controllers/checkout.js";
 import { authMiddleware } from "../Middleware/auth.js";
+
+/**
+ * @swagger
+ * tags:
+ *   - name: Checkout
+ *     description: Operaciones de pago y checkout
+ */
+
 /**
  * @swagger
  * /api/checkout:
  *   post:
  *     summary: Procesar el checkout y crear un PaymentIntent de Stripe
- *     tags:
- *       - Checkout
+ *     tags: [Checkout]
  *     security:
  *       - bearerAuth: []
  *     requestBody:

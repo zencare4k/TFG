@@ -72,6 +72,27 @@ La cobertura de código se genera automáticamente después de ejecutar las prue
 ## Documentación de la API
 La documentación de la API se genera automáticamente utilizando Swagger. Puedes acceder a la documentación en http://localhost:5000/api/docs.
 
+## Documentación y Pruebas con Postman
+
+Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints principales del backend para facilitar las pruebas y exploración de la API.
+
+### ¿Cómo usar la colección de Postman?
+
+1. Abre Postman.
+2. Haz clic en "Importar" y selecciona el archivo `TFGBackend.json` que se encuentra en la raíz del proyecto (`Backend/TFGBackend.json`).
+3. Una vez importada, tendrás acceso a todas las rutas agrupadas por funcionalidad: Auth, Users, Products y Wishlist.
+4. Puedes configurar variables como `userId` y `productId` en el entorno de Postman para facilitar las pruebas de endpoints que requieren identificadores.
+5. Asegúrate de que el servidor esté en ejecución (`npm start`) antes de realizar peticiones.
+
+### Estructura de la colección
+
+- **Auth**: Registro y login de usuarios.
+- **Users**: CRUD de usuarios.
+- **Products**: CRUD de productos.
+- **Wishlist**: Añadir, consultar y eliminar productos de la wishlist de un usuario.
+
+> Consulta los ejemplos de cuerpo de petición y variables en cada endpoint dentro de la colección.
+
 ------------------------------------
  Proyecto desarrollado como parte de la asignatura de Entorno Servidor.
 
