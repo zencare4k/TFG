@@ -106,7 +106,7 @@ const Header = () => {
           <div className="user-info">
             <div className="user-profile login-button" onClick={toggleMenu}>
               <img
-                src={user.profileImage || "/assets/icons/iniciado.png"}
+                src={user.profileImage || "/assets/icons/Iniciado.png"}
                 alt="Usuario"
                 className="user-image"
                 onError={e => { e.target.onerror = null; e.target.src = "/assets/icons/iniciado.png"; }}
