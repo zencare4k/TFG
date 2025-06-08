@@ -159,28 +159,24 @@ export const resetPassword = async (req, res) => {
 
   try {
     const { dbInstanceUsers } = await connectDB();
-    console.log("Token recibido:", token); // <-- Agrega este log
-
+    // Quita la comprobación de expiración
     const user = await dbInstanceUsers.collection("users").findOne({
       resetPasswordToken: token
     });
-    console.log("Usuario encontrado:", user); // <-- Y este
 
     if (!user) {
       return res.status(400).json({ error: "Token inválido" });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-  await dbInstanceUsers.collection("users").updateOne(
-  { _id: user._id },
-  {
-    $set: { password: hashedPassword },
-    $unset: { resetPasswordToken: "", resetPasswordExpires: "" }
-  }
-);
-
-const userAfter = await dbInstanceUsers.collection("users").findOne({ _id: user._id });
-console.log("Después del update:", userAfter);
+    await dbInstanceUsers.collection("users").updateOne(
+      { _id: user._id },
+      {
+        $set: { password: hashedPassword },
+        $unset: { resetPasswordToken: "", resetPasswordExpires: "" }
+      }
+    );
 
     res.json({ message: "Contraseña actualizada correctamente" });
   } catch (error) {
