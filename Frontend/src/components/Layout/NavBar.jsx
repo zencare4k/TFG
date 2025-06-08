@@ -126,7 +126,7 @@ const Header = () => {
               onClick={() => { closeMenu(); navigate("/login"); }}
               style={{ cursor: "pointer" }}
             >
-              <img src="/assets/icons/iniciado.png" alt="Login" className="user-image" />
+              <img src="/assets/icons/Iniciado.png" alt="Login" className="user-image" />
               <span className="user-name">Iniciar sesión</span>
             </div>
           </div>
