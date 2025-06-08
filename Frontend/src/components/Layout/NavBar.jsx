@@ -105,12 +105,12 @@ const Header = () => {
         {user ? (
           <div className="user-info">
             <div className="user-profile login-button" onClick={toggleMenu}>
-              <img
-                src={user.profileImage || "/assets/icons/Iniciado.png"}
-                alt="Usuario"
-                className="user-image"
-                onError={e => { e.target.onerror = null; e.target.src = "/assets/icons/iniciado.png"; }}
-              />
+             <img
+  src={user.profileImage || "/assets/icons/iniciado.png"}
+  alt="Usuario"
+  className="user-image"
+  onError={e => { e.target.onerror = null; e.target.src = "/assets/icons/iniciado.png"; }}
+/>
               <span className="user-name">{user.username}</span>
             </div>
             {menuOpen && (
