@@ -106,7 +106,7 @@ const Header = () => {
           <div className="user-info">
             <div className="user-profile login-button" onClick={toggleMenu}>
               <img
-                src={user.profileImage || "/assets/icons/Usuario.svg"}
+                src={user.profileImage || "/assets/icons/iniciado.png"}
                 alt="Usuario"
                 className="user-image"
               />
@@ -123,7 +123,7 @@ const Header = () => {
             className="login-button"
             onClick={() => { closeMenu(); navigate("/login"); }}
           >
-            <img src="/assets/icons/IniciarSesion.svg" alt="Login" className="login-icon" />
+            <img src="/a/assets/icons/iniciado.png" alt="Login" className="login-icon" />
           </button>
         )}
       </div>
