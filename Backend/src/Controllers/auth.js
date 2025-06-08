@@ -151,7 +151,6 @@ res.status(200).json({
     res.status(500).json({ message: "Error al iniciar sesión" });
   }
 };
-
 export const resetPassword = async (req, res) => {
   const { token, password } = req.body;
   if (!token || !password) {
@@ -160,13 +159,13 @@ export const resetPassword = async (req, res) => {
 
   try {
     const { dbInstanceUsers } = await connectDB();
+    // Quita la comprobación de expiración
     const user = await dbInstanceUsers.collection("users").findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: { $gt: Date.now() }
+      resetPasswordToken: token
     });
 
     if (!user) {
-      return res.status(400).json({ error: "Token inválido o expirado" });
+      return res.status(400).json({ error: "Token inválido" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
