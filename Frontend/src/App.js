@@ -14,9 +14,10 @@ import FloatingWishlistIcon from "./components/Layout/FloatingWishList";
 import Header from "./components/Layout/NavBar";
 import Footer from "./components/Layout/Footer";
 import Checkout from "./components/CheckoutFlow/checkout";
-import ProductPage from "./components/ProductPages/ProductPage"; // Importa tu página de productos filtrados
-import ProductDetail from "./components/Shared/ProductDetails"; // Asegúrate de importar tu componente de detalles
-import SupportPage from "./components/Support/Support.jsx"; // Añade esta línea
+import ProductPage from "./components/ProductPages/ProductPage";
+import ProductDetail from "./components/Shared/ProductDetails";
+import SupportPage from "./components/Support/Support.jsx";
+import ResetPasswordForm from "./components/Auth/ResetPassword.jsx"; // Importa el componente correcto
 
 const EXCLUDED_WISHLIST_PATHS = [
   "/add-product",
@@ -35,7 +36,7 @@ const AppRoutes = () => {
     user._id &&
     !EXCLUDED_WISHLIST_PATHS.some((path) => location.pathname.startsWith(path));
 
- return (
+  return (
     <>
       <Header />
       {showWishlistIcon && <FloatingWishlistIcon userId={user._id} />}
@@ -50,6 +51,8 @@ const AppRoutes = () => {
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/login" element={user ? <Navigate to="/" /> : <LoginForm />} />
         <Route path="/forgot-password" element={<ForgotPasswordForm />} />
+        {/* Ruta para resetear contraseña */}
+        <Route path="/reset-password/:token" element={<ResetPasswordForm />} />
         <Route
           path="/add-product"
           element={
@@ -76,6 +79,7 @@ const AppRoutes = () => {
     </>
   );
 };
+
 const App = () => {
   return (
     <AuthProvider>
