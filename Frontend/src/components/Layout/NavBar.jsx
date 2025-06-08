@@ -106,7 +106,7 @@ const Header = () => {
           <div className="user-info">
             <div className="user-profile login-button" onClick={toggleMenu}>
               <img
-                src={user.profileImage || "/assets/icons/iniciado.png"}
+                src={user.profileImage || "/assets/icons/Usuario.svg"}
                 alt="Usuario"
                 className="user-image"
               />
