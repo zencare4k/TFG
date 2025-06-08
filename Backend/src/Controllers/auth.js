@@ -159,15 +159,16 @@ export const resetPassword = async (req, res) => {
 
   try {
     const { dbInstanceUsers } = await connectDB();
-    // Quita la comprobación de expiración
+    console.log("Token recibido:", token); // <-- Agrega este log
+
     const user = await dbInstanceUsers.collection("users").findOne({
       resetPasswordToken: token
     });
+    console.log("Usuario encontrado:", user); // <-- Y este
 
     if (!user) {
       return res.status(400).json({ error: "Token inválido" });
     }
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await dbInstanceUsers.collection("users").updateOne(
