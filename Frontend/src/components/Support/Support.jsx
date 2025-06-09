@@ -21,11 +21,10 @@ const handleSubmit = async (e) => {
   setError("");
   setSent(false);
 
-  if (!form.name || !form.email || !form.message) {
-    setError("Todos los campos son obligatorios.");
-    return;
-  }
-
+if (!form.name || !form.email || !form.message) {
+  setError("Todos los campos son obligatorios.");
+  return;
+}
   setLoading(true);
   try {
     await sendSupportEmail({

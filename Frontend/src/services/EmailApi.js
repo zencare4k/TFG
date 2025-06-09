@@ -1,8 +1,12 @@
 import emailjs from 'emailjs-com';
 import axios from "axios";
-
 export const sendSupportEmail = async (templateParams) => {
-  return await emailjs.send('service_oxurxxs', 'template_37iampg', templateParams, 'B-kJoB9UDT4MRmInH');
+  return await emailjs.send(
+    'service_oxurxxs',      // ID de servicio
+    '4e352b25-eaf1-40f6-b9bb-86f0f22258bd',     // ID de plantilla
+    templateParams,         // { from_name, reply_to, message }
+    'B-kJoB9UDT4MRmInH'     // User ID
+  );
 };
 
 export const sendOrderConfirmationEmail = async ({ name, email, orderSummary, cardMasked, products }) => {
