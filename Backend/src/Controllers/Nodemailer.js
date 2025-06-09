@@ -10,10 +10,11 @@ export const sendOrderConfirmation = async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
@@ -111,7 +112,7 @@ export const sendOrderConfirmation = async (req, res) => {
     const last4 = cardMasked ? cardMasked.slice(-4) : "****";
 
     await transporter.sendMail({
-      from: `"Tu Tienda" <${process.env.EMAIL_USER}>`,
+      from: `"Tu Tienda" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Confirmación de compra",
       html: `
@@ -157,10 +158,11 @@ export const sendPasswordResetEmail = async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
@@ -208,7 +210,7 @@ export const sendPasswordResetEmail = async (req, res) => {
     `;
 
     await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Recuperación de contraseña",
       html: `
@@ -244,10 +246,11 @@ export const sendSupportMessage = async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
@@ -293,7 +296,7 @@ export const sendSupportMessage = async (req, res) => {
 
     // Correo para el administrador
     await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
       to: "cmarrom@adaits.es",
       subject: "Nuevo mensaje de soporte recibido",
       html: `
@@ -318,7 +321,7 @@ export const sendSupportMessage = async (req, res) => {
 
     // Correo de confirmación para el usuario
     await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Hemos recibido tu mensaje de soporte",
       html: `
