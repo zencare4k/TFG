@@ -1,5 +1,5 @@
 import express from "express";
-import { sendOrderConfirmation } from "../Controllers/Nodemailer.js";
+import { sendOrderConfirmation, sendSupportMessage } from "../Controllers/Nodemailer.js";
 
 const router = express.Router();
 
@@ -76,5 +76,6 @@ const router = express.Router();
  */
 
 router.post("/order-confirmation", sendOrderConfirmation);
+router.post("/support", sendSupportMessage); // <-- Añade esta línea
 
 export default router;

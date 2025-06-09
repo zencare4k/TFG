@@ -1,5 +1,55 @@
 import nodemailer from "nodemailer";
+export const sendSupportMessage = async (req, res) => {
+  const { name, email, message } = req.body;
 
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: "Faltan datos para enviar el correo." });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // Email para el propietario
+    await transporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      to: process.env.EMAIL_USER,
+      subject: "Nuevo mensaje de soporte recibido",
+      html: `
+        <h2>Nuevo mensaje de soporte</h2>
+        <p><b>Nombre:</b> ${name}</p>
+        <p><b>Email:</b> ${email}</p>
+        <p><b>Mensaje:</b></p>
+        <div style="background:#f4f4f4;padding:12px;border-radius:6px;">${message}</div>
+      `,
+    });
+
+    // Email de confirmación al usuario
+    await transporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Hemos recibido tu mensaje de soporte",
+      html: `
+        <h2>¡Gracias por contactar con nuestro soporte!</h2>
+        <p>Hola <b>${name}</b>,</p>
+        <p>Hemos recibido tu mensaje y nuestro equipo lo está revisando. Te responderemos lo antes posible.</p>
+        <hr>
+        <p><b>Tu mensaje:</b></p>
+        <div style="background:#f4f4f4;padding:12px;border-radius:6px;">${message}</div>
+        <p style="color:#888;font-size:0.95em;">No respondas a este correo, es automático.</p>
+      `,
+    });
+
+    res.status(200).json({ message: "Mensaje de soporte enviado correctamente" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al enviar el mensaje de soporte", error: error.message });
+  }
+};
 export const sendOrderConfirmation = async (req, res) => {
   const { email, name, orderSummary, cardMasked, products } = req.body;
 
