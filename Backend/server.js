@@ -3,15 +3,14 @@ import cors from 'cors';
 import mainRouter from './src/Routes/index.js';
 
 const PORT = process.env.PORT || 5000;
-
- app.use(cors({
+app.use(cors({
   origin: [
     "https://tfg-git-main-zencare4ks-projects.vercel.app",
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "https://tfg-dv1q.vercel.app" // <--- Añade este
   ],
   credentials: true
-}));      
-
+}));
 // Montar solo el router principal en /api
 app.use('/api', mainRouter);
 
