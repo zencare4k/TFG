@@ -1,5 +1,5 @@
-import emailjs from 'emailjs-com';
 import axios from "axios";
+
 export const sendSupportEmail = async (formData) => {
   const response = await fetch('https://tfg-5q0w.onrender.com/api/email/support', {
     method: 'POST',
