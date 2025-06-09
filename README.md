@@ -41,23 +41,61 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
 
 ### Autenticación
 
-- `POST /api/auth/register`: Registra un nuevo usuario.
-- `POST /api/auth/login`: Inicia sesión y obtiene un token JWT.
+- **Registrar usuario**
+  - **POST** `/api/auth/register`
+- **Login**
+  - **POST** `/api/auth/login`
 
 ### Usuarios
 
-- `GET /api/users`: Obtiene todos los usuarios.
-- `GET /api/users/:id`: Obtiene un usuario por ID.
-- `PUT /api/users/:id`: Actualiza un usuario por ID.
-- `DELETE /api/users/:id`: Elimina un usuario por ID.
+- **Obtener todos los usuarios**
+  - **GET** `/api/users`
+- **Obtener usuario por ID**
+  - **GET** `/api/users/{userId}`
+- **Crear usuario**
+  - **POST** `/api/users`
+- **Actualizar usuario**
+  - **PUT** `/api/users/{userId}`
+- **Eliminar usuario**
+  - **DELETE** `/api/users/{userId}`
 
 ### Productos
 
-- `GET /api/products`: Obtiene todos los productos.
-- `GET /api/products/:id`: Obtiene un producto por ID.
-- `POST /api/products`: Crea un nuevo producto.
-- `PUT /api/products/:id`: Actualiza un producto por ID.
-- `DELETE /api/products/:id`: Elimina un producto por ID.
+- **Obtener todos los productos**
+  - **GET** `/api/products`
+- **Obtener producto por ID**
+  - **GET** `/api/products/{productId}`
+- **Crear producto**
+  - **POST** `/api/products`
+- **Actualizar producto**
+  - **PUT** `/api/products/{productId}`
+- **Eliminar producto**
+  - **DELETE** `/api/products/{productId}`
+
+### Wishlist
+
+- **Añadir a wishlist**
+  - **POST** `/api/wishlist`
+- **Obtener wishlist**
+  - **GET** `/api/wishlist/{userId}`
+- **Eliminar de wishlist**
+  - **DELETE** `/api/wishlist/{userId}/{productId}`
+
+### Otros 
+
+- **Checkout/Pagos**
+  - **POST** `/api/checkout`
+- **Carrito**
+  - **GET** `/api/cart/{userId}`
+  - **POST** `/api/cart`
+  - **DELETE** `/api/cart/{userId}/{productId}`
+- **Recomendaciones**
+  - **GET** `/api/recommendations/{userId}`
+- **Reseñas**
+  - **GET** `/api/products/{productId}/reviews`
+  - **POST** `/api/products/{productId}/reviews`
+- **Email**
+  - **POST** `/api/email/order-confirmation`
 
 ## Pruebas
 
@@ -182,6 +220,8 @@ Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints
 4. Realiza peticiones a los endpoints según la documentación anterior.
 
 ---
+## Funcionalidades agregadas
+
 
 ## NOTA: .env
 
