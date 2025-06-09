@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+
 export const sendSupportMessage = async (req, res) => {
   const { name, email, message } = req.body;
 
@@ -8,17 +9,18 @@ export const sendSupportMessage = async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
     // Email para el propietario
     await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
+      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
+      to: process.env.SMTP_USER,
       subject: "Nuevo mensaje de soporte recibido",
       html: `
         <h2>Nuevo mensaje de soporte</h2>
@@ -31,7 +33,7 @@ export const sendSupportMessage = async (req, res) => {
 
     // Email de confirmación al usuario
     await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Hemos recibido tu mensaje de soporte",
       html: `
@@ -50,6 +52,7 @@ export const sendSupportMessage = async (req, res) => {
     res.status(500).json({ message: "Error al enviar el mensaje de soporte", error: error.message });
   }
 };
+
 export const sendOrderConfirmation = async (req, res) => {
   const { email, name, orderSummary, cardMasked, products } = req.body;
 
@@ -59,10 +62,11 @@ export const sendOrderConfirmation = async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
@@ -159,39 +163,38 @@ export const sendOrderConfirmation = async (req, res) => {
       `
     ).join("");
 
- const last4 = cardMasked ? cardMasked.slice(-4) : "****";
+    const last4 = cardMasked ? cardMasked.slice(-4) : "****";
 
-// ...resto del código...
-await transporter.sendMail({
-  from: `"Tu Tienda" <${process.env.EMAIL_USER}>`,
-  to: email,
-  subject: "Confirmación de compra",
-  html: `
-    <html>
-      <head>
-        ${emailCss}
-      </head>
-      <body>
-        <div class="email-container">
-          <h2>¡Gracias por tu compra, ${name}!</h2>
-          <div class="order-summary">
-            <ul class="product-list">
-              ${productsHtml}
-            </ul>
-          </div>
-          <div class="order-summary">
-            <b>Resumen:</b>
-            <pre>${orderSummary}</pre>
-            <p>Tarjeta utilizada: <b>**** **** **** ${last4}</b></p>
-          </div>
-          <div class="footer">
-            <p>Gracias por confiar en nuestra tienda.</p>
-          </div>
-        </div>
-      </body>
-    </html>
-  `,
-});
+    await transporter.sendMail({
+      from: `"Tu Tienda" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "Confirmación de compra",
+      html: `
+        <html>
+          <head>
+            ${emailCss}
+          </head>
+          <body>
+            <div class="email-container">
+              <h2>¡Gracias por tu compra, ${name}!</h2>
+              <div class="order-summary">
+                <ul class="product-list">
+                  ${productsHtml}
+                </ul>
+              </div>
+              <div class="order-summary">
+                <b>Resumen:</b>
+                <pre>${orderSummary}</pre>
+                <p>Tarjeta utilizada: <b>**** **** **** ${last4}</b></p>
+              </div>
+              <div class="footer">
+                <p>Gracias por confiar en nuestra tienda.</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `,
+    });
 
     res.status(200).json({ message: "Correo enviado correctamente" });
   } catch (error) {
