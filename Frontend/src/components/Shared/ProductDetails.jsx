@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import "../../styles/ProductDetail.css";
 import { AuthContext } from "../context/AuthContext";
 import { fetchProductById, fetchProductReviews, submitReview } from "../../services/product_API";
+import { addToCart } from "../../services/cart_API"; // Importa el servicio
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -30,11 +31,33 @@ const ProductDetail = () => {
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (!myRating || !myComment) return;
-await submitReview(id, { rating: myRating, comment: myComment, user: user?.username || "Anónimo" });
+    await submitReview(id, { rating: myRating, comment: myComment, user: user?.username || "Anónimo" });
     setMyRating(0);
     setMyComment("");
     const revs = await fetchProductReviews(id);
     setReviews(revs);
+  };
+
+  // --- Añadir al carrito ---
+  const handleAddToCart = async () => {
+    if (!user || !user._id) {
+      alert("Debes iniciar sesión para añadir al carrito.");
+      return;
+    }
+    try {
+      await addToCart({
+        userId: user._id,
+        productId: product._id,
+        name: product.name,
+        price: product.price,
+        imageUrl: product.imageUrl,
+        quantity: 1,
+        category: product.category,
+      });
+      alert("Producto añadido al carrito.");
+    } catch (error) {
+      alert("Error al añadir el producto al carrito.");
+    }
   };
 
   if (loading || !product) return <div className="product-detail-loading">Cargando...</div>;
@@ -52,8 +75,9 @@ await submitReview(id, { rating: myRating, comment: myComment, user: user?.usern
           <h1>{product.name}</h1>
           <p className="product-detail-price">{product.price}€</p>
           <p className="product-detail-desc">{product.description}</p>
-          <button className="buy-button">Comprar ahora</button>
-          <button className="add-to-cart-button">Añadir al carrito</button>
+          <button className="add-to-cart-button" onClick={handleAddToCart}>
+            Añadir al carrito
+          </button>
         </div>
       </div>
       <div className="product-detail-extra">
