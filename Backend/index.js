@@ -4,21 +4,27 @@ import { connectDB } from './src/Models/index.js';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import routes from './src/Routes/index.js';
-import swaggerRouter from './src/Utils/swagger.js'; // Importar el router de Swagger
+import swaggerRouter from './src/Utils/swagger.js';
 
-// Configurar dotenv
 dotenv.config();
 
 const app = express();
 
-// Conectar a la base de datos
 connectDB();
 
-// Middleware
-app.use(bodyParser.json());
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://tfg-hnwj.vercel.app",
+  "https://tfg-61pu.vercel.app"
+];
 
-// Rutas
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
+app.use(bodyParser.json());
 app.use('/api', routes);
-app.use(swaggerRouter); // Usar el router de Swagger
+app.use(swaggerRouter);
 
 export default app;
