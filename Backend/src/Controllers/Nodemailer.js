@@ -1,5 +1,6 @@
 import nodemailer from "nodemailer";
 
+// Enviar mensaje de soporte
 export const sendSupportMessage = async (req, res) => {
   const { name, email, message } = req.body;
 
@@ -17,10 +18,10 @@ export const sendSupportMessage = async (req, res) => {
       },
     });
 
-    // Email para el propietario
-    await transporter.sendMail({
+    // Opciones de correo para el propietario (recibes tú el mensaje)
+    const mailOptionsToOwner = {
       from: `"Soporte Web" <${process.env.SMTP_USER}>`,
-      to: process.env.SMTP_USER,
+      to: process.env.SMTP_USER, // Tu correo de soporte
       subject: "Nuevo mensaje de soporte recibido",
       html: `
         <h2>Nuevo mensaje de soporte</h2>
@@ -29,12 +30,12 @@ export const sendSupportMessage = async (req, res) => {
         <p><b>Mensaje:</b></p>
         <div style="background:#f4f4f4;padding:12px;border-radius:6px;">${message}</div>
       `,
-    });
+    };
 
-    // Email de confirmación al usuario
-    await transporter.sendMail({
+    // Opciones de correo para el usuario (confirmación)
+    const mailOptionsToUser = {
       from: `"Soporte Web" <${process.env.SMTP_USER}>`,
-      to: email,
+      to: email, // El correo que el usuario puso en el formulario
       subject: "Hemos recibido tu mensaje de soporte",
       html: `
         <h2>¡Gracias por contactar con nuestro soporte!</h2>
@@ -45,7 +46,10 @@ export const sendSupportMessage = async (req, res) => {
         <div style="background:#f4f4f4;padding:12px;border-radius:6px;">${message}</div>
         <p style="color:#888;font-size:0.95em;">No respondas a este correo, es automático.</p>
       `,
-    });
+    };
+
+    await transporter.sendMail(mailOptionsToOwner);
+    await transporter.sendMail(mailOptionsToUser);
 
     res.status(200).json({ message: "Mensaje de soporte enviado correctamente" });
   } catch (error) {
@@ -53,6 +57,7 @@ export const sendSupportMessage = async (req, res) => {
   }
 };
 
+// Confirmación de pedido
 export const sendOrderConfirmation = async (req, res) => {
   const { email, name, orderSummary, cardMasked, products } = req.body;
 
