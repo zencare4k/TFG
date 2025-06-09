@@ -11,26 +11,24 @@ const Recommendations = () => {
   const loadedRef = useRef(false);
 
   useEffect(() => {
-    if (loadedRef.current) return;
-    loadedRef.current = true;
-
-    const loadRecommendations = async () => {
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-      try {
-        const recommendedProducts = await fetchUserRecommendations(token);
-        setRecommendations(recommendedProducts);
-      } catch (error) {
-        console.error("[RECS FRONT] Error al cargar recomendaciones:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadRecommendations();
-  }, [token]);
+  let cancelled = false;
+  const loadRecommendations = async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    try {
+      const recommendedProducts = await fetchUserRecommendations(token);
+      if (!cancelled) setRecommendations(recommendedProducts);
+    } catch (error) {
+      if (!cancelled) setRecommendations([]);
+    } finally {
+      if (!cancelled) setLoading(false);
+    }
+  };
+  loadRecommendations();
+  return () => { cancelled = true; };
+}, [token]);
 
   useEffect(() => {
     console.log("[RECS FRONT] Estado recommendations:", recommendations);
