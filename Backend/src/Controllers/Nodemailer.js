@@ -1,122 +1,5 @@
 import nodemailer from "nodemailer";
 
-// Enviar mensaje de soporte
-export const sendSupportMessage = async (req, res) => {
-  const { name, email, message } = req.body;
-
-  if (!name || !email || !message) {
-    return res.status(400).json({ message: "Faltan datos para enviar el correo." });
-  }
-
-  try {
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
-
-    // CSS para ambos correos
-    const supportCss = `
-      <style>
-        body {
-          font-family: 'Segoe UI', Arial, sans-serif;
-          background: #f7f6f2;
-          color: #333;
-          margin: 0;
-          padding: 0;
-        }
-        .email-container {
-          background: #fff;
-          border-radius: 8px;
-          max-width: 500px;
-          margin: 24px auto;
-          padding: 24px 32px;
-          box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-          border: 1px solid #eee;
-        }
-        h2 {
-          color: #8D7B31;
-          margin-top: 0;
-          text-align: center;
-        }
-        .message-block {
-          background: #f4f4f4;
-          padding: 12px;
-          border-radius: 6px;
-          margin: 16px 0;
-          border: 1px solid #eee;
-        }
-        .footer {
-          margin-top: 24px;
-          text-align: center;
-          color: #888;
-          font-size: 0.95em;
-        }
-      </style>
-    `;
-
-    // Opciones de correo para el propietario (recibes tú el mensaje)
-    const mailOptionsToOwner = {
-      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
-      to: "cmarrom@adaits.es", // Tu correo de soporte
-      subject: "Nuevo mensaje de soporte recibido",
-      html: `
-        <html>
-          <head>${supportCss}</head>
-          <body>
-            <div class="email-container">
-              <h2>Nuevo mensaje de soporte</h2>
-              <p><b>Nombre:</b> ${name}</p>
-              <p><b>Email:</b> ${email}</p>
-              <p><b>Mensaje:</b></p>
-              <div class="message-block">${message}</div>
-              <div class="footer">
-                <p>Este mensaje fue enviado desde el formulario de soporte.</p>
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
-    };
-
-    // Opciones de correo para el usuario (confirmación)
-    const mailOptionsToUser = {
-      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
-      to: email, // El correo que el usuario puso en el formulario
-      subject: "Hemos recibido tu mensaje de soporte",
-      html: `
-        <html>
-          <head>${supportCss}</head>
-          <body>
-            <div class="email-container">
-              <h2>¡Gracias por contactar con nuestro soporte!</h2>
-              <p>Hola <b>${name}</b>,</p>
-              <p>Hemos recibido tu mensaje y nuestro equipo lo está revisando. Te responderemos lo antes posible.</p>
-              <hr>
-              <p><b>Tu mensaje:</b></p>
-              <div class="message-block">${message}</div>
-              <div class="footer">
-                <p>No respondas a este correo, es automático.</p>
-                <p>Gracias por confiar en nuestro equipo.</p>
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
-    };
-
-    await transporter.sendMail(mailOptionsToOwner);
-    await transporter.sendMail(mailOptionsToUser);
-
-    res.status(200).json({ message: "Mensaje de soporte enviado correctamente" });
-  } catch (error) {
-    res.status(500).json({ message: "Error al enviar el mensaje de soporte", error: error.message });
-  }
-};
-
 // Confirmación de pedido
 export const sendOrderConfirmation = async (req, res) => {
   const { email, name, orderSummary, cardMasked, products } = req.body;
@@ -127,15 +10,13 @@ export const sendOrderConfirmation = async (req, res) => {
 
   try {
     const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
+      service: "gmail",
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
 
-    // CSS para el correo de confirmación de pedido
     const emailCss = `
       <style>
         body {
@@ -214,7 +95,6 @@ export const sendOrderConfirmation = async (req, res) => {
       </style>
     `;
 
-    // Construye el HTML de los productos con imagen y resumen
     const productsHtml = products.map(
       (p) => `
         <li class="product-item">
@@ -231,7 +111,7 @@ export const sendOrderConfirmation = async (req, res) => {
     const last4 = cardMasked ? cardMasked.slice(-4) : "****";
 
     await transporter.sendMail({
-      from: `"Tu Tienda" <${process.env.SMTP_USER}>`,
+      from: `"Tu Tienda" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Confirmación de compra",
       html: `
@@ -264,5 +144,208 @@ export const sendOrderConfirmation = async (req, res) => {
     res.status(200).json({ message: "Correo enviado correctamente" });
   } catch (error) {
     res.status(500).json({ message: "Error al enviar el correo", error: error.message });
+  }
+};
+
+// Recuperación de contraseña
+export const sendPasswordResetEmail = async (req, res) => {
+  const { email, resetLink } = req.body;
+
+  if (!email || !resetLink) {
+    return res.status(400).json({ message: "Faltan datos para enviar el correo de recuperación." });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const emailCss = `
+      <style>
+        body {
+          font-family: 'Segoe UI', Arial, sans-serif;
+          background: #f7f6f2;
+          color: #333;
+          margin: 0;
+          padding: 0;
+        }
+        .email-container {
+          background: #fff;
+          border-radius: 8px;
+          max-width: 500px;
+          margin: 24px auto;
+          padding: 24px 32px;
+          box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+          border: 1px solid #eee;
+        }
+        h2 {
+          color: #8D7B31;
+          margin-top: 0;
+          text-align: center;
+        }
+        .reset-link {
+          display: inline-block;
+          margin: 18px 0;
+          padding: 12px 24px;
+          background: #8D7B31;
+          color: #fff !important;
+          border-radius: 6px;
+          text-decoration: none;
+          font-weight: bold;
+          font-size: 1.1em;
+        }
+        .footer {
+          margin-top: 24px;
+          text-align: center;
+          color: #888;
+          font-size: 0.95em;
+        }
+      </style>
+    `;
+
+    await transporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Recuperación de contraseña",
+      html: `
+        <html>
+          <head>${emailCss}</head>
+          <body>
+            <div class="email-container">
+              <h2>Recuperación de contraseña</h2>
+              <p>Has solicitado restablecer tu contraseña. Haz clic en el siguiente botón para crear una nueva:</p>
+              <a class="reset-link" href="${resetLink}">Restablecer contraseña</a>
+              <div class="footer">
+                <p>Si no solicitaste este cambio, ignora este correo.</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    res.status(200).json({ message: "Correo de recuperación enviado correctamente" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al enviar el correo de recuperación", error: error.message });
+  }
+};
+
+// Soporte (envía a admin y usuario)
+export const sendSupportMessage = async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ message: "Faltan datos para enviar el correo de soporte." });
+  }
+
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const emailCss = `
+      <style>
+        body {
+          font-family: 'Segoe UI', Arial, sans-serif;
+          background: #f7f6f2;
+          color: #333;
+          margin: 0;
+          padding: 0;
+        }
+        .email-container {
+          background: #fff;
+          border-radius: 8px;
+          max-width: 500px;
+          margin: 24px auto;
+          padding: 24px 32px;
+          box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+          border: 1px solid #eee;
+        }
+        h2 {
+          color: #8D7B31;
+          margin-top: 0;
+          text-align: center;
+        }
+        .message-block {
+          background: #f4f4f4;
+          border-radius: 6px;
+          padding: 16px;
+          margin: 18px 0;
+          border: 1px solid #eee;
+          font-size: 1.05em;
+        }
+        .footer {
+          margin-top: 24px;
+          text-align: center;
+          color: #888;
+          font-size: 0.95em;
+        }
+      </style>
+    `;
+
+    // Correo para el administrador
+    await transporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      to: "cmarrom@adaits.es",
+      subject: "Nuevo mensaje de soporte recibido",
+      html: `
+        <html>
+          <head>
+            ${emailCss}
+          </head>
+          <body>
+            <div class="email-container">
+              <h2>Nuevo mensaje de soporte</h2>
+              <p><b>Nombre:</b> ${name}</p>
+              <p><b>Email:</b> ${email}</p>
+              <div class="message-block">${message}</div>
+              <div class="footer">
+                <p>Revisa y responde al usuario lo antes posible.</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    // Correo de confirmación para el usuario
+    await transporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Hemos recibido tu mensaje de soporte",
+      html: `
+        <html>
+          <head>
+            ${emailCss}
+          </head>
+          <body>
+            <div class="email-container">
+              <h2>¡Gracias por contactar con nuestro soporte!</h2>
+              <p>Hola <b>${name}</b>,</p>
+              <p>Hemos recibido tu mensaje y nuestro equipo lo está revisando. Te responderemos lo antes posible.</p>
+              <hr>
+              <p><b>Tu mensaje:</b></p>
+              <div class="message-block">${message}</div>
+              <div class="footer">
+                <p>No respondas a este correo, es automático.</p>
+                <p>Gracias por confiar en nuestro equipo.</p>
+              </div>
+            </div>
+          </body>
+        </html>
+      `,
+    });
+
+    res.status(200).json({ message: "Mensaje de soporte enviado correctamente" });
+  } catch (error) {
+    res.status(500).json({ message: "Error al enviar el mensaje de soporte", error: error.message });
   }
 };
