@@ -4,9 +4,14 @@ import mainRouter from './src/Routes/index.js';
 
 const PORT = process.env.PORT || 5000;
 
-// Permitir CORS desde cualquier origen (con credenciales)
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://tfg-hnwj.vercel.app",
+  "https://tfg-61pu.vercel.app"
+];
+
 app.use(cors({
-  origin: (origin, callback) => callback(null, origin),
+  origin: allowedOrigins,
   credentials: true
 }));
 
