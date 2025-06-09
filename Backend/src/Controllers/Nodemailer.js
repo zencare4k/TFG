@@ -18,17 +18,67 @@ export const sendSupportMessage = async (req, res) => {
       },
     });
 
+    // CSS para ambos correos
+    const supportCss = `
+      <style>
+        body {
+          font-family: 'Segoe UI', Arial, sans-serif;
+          background: #f7f6f2;
+          color: #333;
+          margin: 0;
+          padding: 0;
+        }
+        .email-container {
+          background: #fff;
+          border-radius: 8px;
+          max-width: 500px;
+          margin: 24px auto;
+          padding: 24px 32px;
+          box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+          border: 1px solid #eee;
+        }
+        h2 {
+          color: #8D7B31;
+          margin-top: 0;
+          text-align: center;
+        }
+        .message-block {
+          background: #f4f4f4;
+          padding: 12px;
+          border-radius: 6px;
+          margin: 16px 0;
+          border: 1px solid #eee;
+        }
+        .footer {
+          margin-top: 24px;
+          text-align: center;
+          color: #888;
+          font-size: 0.95em;
+        }
+      </style>
+    `;
+
     // Opciones de correo para el propietario (recibes tú el mensaje)
     const mailOptionsToOwner = {
       from: `"Soporte Web" <${process.env.SMTP_USER}>`,
       to: "cmarrom@adaits.es", // Tu correo de soporte
       subject: "Nuevo mensaje de soporte recibido",
       html: `
-        <h2>Nuevo mensaje de soporte</h2>
-        <p><b>Nombre:</b> ${name}</p>
-        <p><b>Email:</b> ${email}</p>
-        <p><b>Mensaje:</b></p>
-        <div style="background:#f4f4f4;padding:12px;border-radius:6px;">${message}</div>
+        <html>
+          <head>${supportCss}</head>
+          <body>
+            <div class="email-container">
+              <h2>Nuevo mensaje de soporte</h2>
+              <p><b>Nombre:</b> ${name}</p>
+              <p><b>Email:</b> ${email}</p>
+              <p><b>Mensaje:</b></p>
+              <div class="message-block">${message}</div>
+              <div class="footer">
+                <p>Este mensaje fue enviado desde el formulario de soporte.</p>
+              </div>
+            </div>
+          </body>
+        </html>
       `,
     };
 
@@ -38,13 +88,23 @@ export const sendSupportMessage = async (req, res) => {
       to: email, // El correo que el usuario puso en el formulario
       subject: "Hemos recibido tu mensaje de soporte",
       html: `
-        <h2>¡Gracias por contactar con nuestro soporte!</h2>
-        <p>Hola <b>${name}</b>,</p>
-        <p>Hemos recibido tu mensaje y nuestro equipo lo está revisando. Te responderemos lo antes posible.</p>
-        <hr>
-        <p><b>Tu mensaje:</b></p>
-        <div style="background:#f4f4f4;padding:12px;border-radius:6px;">${message}</div>
-        <p style="color:#888;font-size:0.95em;">No respondas a este correo, es automático.</p>
+        <html>
+          <head>${supportCss}</head>
+          <body>
+            <div class="email-container">
+              <h2>¡Gracias por contactar con nuestro soporte!</h2>
+              <p>Hola <b>${name}</b>,</p>
+              <p>Hemos recibido tu mensaje y nuestro equipo lo está revisando. Te responderemos lo antes posible.</p>
+              <hr>
+              <p><b>Tu mensaje:</b></p>
+              <div class="message-block">${message}</div>
+              <div class="footer">
+                <p>No respondas a este correo, es automático.</p>
+                <p>Gracias por confiar en nuestro equipo.</p>
+              </div>
+            </div>
+          </body>
+        </html>
       `,
     };
 
@@ -75,7 +135,7 @@ export const sendOrderConfirmation = async (req, res) => {
       },
     });
 
-    // CSS para el correo
+    // CSS para el correo de confirmación de pedido
     const emailCss = `
       <style>
         body {
