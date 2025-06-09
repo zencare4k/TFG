@@ -21,7 +21,7 @@ export const sendSupportMessage = async (req, res) => {
     // Opciones de correo para el propietario (recibes tú el mensaje)
     const mailOptionsToOwner = {
       from: `"Soporte Web" <${process.env.SMTP_USER}>`,
-      to: process.env.SMTP_USER, // Tu correo de soporte
+      to: "zencare4k@gmail.com", // Tu correo de soporte
       subject: "Nuevo mensaje de soporte recibido",
       html: `
         <h2>Nuevo mensaje de soporte</h2>
