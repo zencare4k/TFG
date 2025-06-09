@@ -3,10 +3,13 @@ import cors from 'cors';
 import mainRouter from './src/Routes/index.js';
 
 const PORT = process.env.PORT || 5000;
+
+// Permitir CORS para cualquier origen
 app.use(cors({
-  origin: true, // Permite cualquier origen
+  origin: "*", // Permite cualquier origen
   credentials: true
-}))
+}));
+
 // Montar solo el router principal en /api
 app.use('/api', mainRouter);
 
