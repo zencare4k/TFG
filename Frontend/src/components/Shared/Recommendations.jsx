@@ -1,33 +1,36 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/CartPage.css";
 import { fetchUserRecommendations } from "../../services/recomendations_API";
 import "../../styles/Recomendation.css";
-
 const Recommendations = () => {
   const [recommendations, setRecommendations] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-const [token] = useState(() => localStorage.getItem("token"));
+  const [token] = useState(() => localStorage.getItem("token"));
+  const loadedRef = useRef(false);
 
-useEffect(() => {
-  const loadRecommendations = async () => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-    try {
-      const recommendedProducts = await fetchUserRecommendations(token);
-      setRecommendations(recommendedProducts);
-    } catch (error) {
-      console.error("[RECS FRONT] Error al cargar recomendaciones:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    if (loadedRef.current) return;
+    loadedRef.current = true;
 
-  loadRecommendations();
-}, [token]);
+    const loadRecommendations = async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const recommendedProducts = await fetchUserRecommendations(token);
+        setRecommendations(recommendedProducts);
+      } catch (error) {
+        console.error("[RECS FRONT] Error al cargar recomendaciones:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRecommendations();
+  }, [token]);
 
   useEffect(() => {
     console.log("[RECS FRONT] Estado recommendations:", recommendations);
