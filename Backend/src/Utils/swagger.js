@@ -1,6 +1,7 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Router } from 'express';
+import YAML from 'yamljs';
 
 const options = {
   definition: {
@@ -30,12 +31,25 @@ const options = {
       },
     ],
   },
-  apis: ['./src/Routes/*.js', './src/Controllers/*.js'], // Archivos donde se encuentran las rutas y controladores
+  apis: ['./src/Routes/*.js', './src/Controllers/*.js'],
 };
 
 const specs = swaggerJsdoc(options);
 
 const swaggerRouter = Router();
+
+// Rutas de descarga ANTES del middleware de Swagger UI
+swaggerRouter.get('/docs/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(specs);
+});
+
+swaggerRouter.get('/docs/swagger.yaml', (req, res) => {
+  res.setHeader('Content-Type', 'application/x-yaml');
+  res.send(YAML.stringify(specs, 10));
+});
+
+// Swagger UI
 swaggerRouter.use('/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
-export default swaggerRouter; // Exportar por defecto
+export default swaggerRouter;
