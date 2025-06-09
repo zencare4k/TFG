@@ -15,7 +15,6 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
 app.use(bodyParser.json());
 
 // Rutas
