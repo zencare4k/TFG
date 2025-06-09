@@ -183,3 +183,8 @@ Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints
 
 ---
 
+## NOTA: .env
+
+Adjuntado a este proyecto, en su carpeta raiz, se deja un .rar en el cual esta el .env 
+necesario para la ejecucion del backend, debe de ser depositado en la raiz del backend,
+es decir , `/Backend`, el rar no contiene ningun tipo de contraseña.
