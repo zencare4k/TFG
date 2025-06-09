@@ -3,12 +3,8 @@ import cors from 'cors';
 import mainRouter from './src/Routes/index.js';
 
 const PORT = process.env.PORT || 5000;
-
 app.use(cors({
-  origin: [
-    "https://tfg-hnwj.vercel.app", // tu frontend en Vercel
-    "http://localhost:3000"        // para desarrollo local
-  ],
+  origin: (origin, callback) => callback(null, origin),
   credentials: true
 }));
 
