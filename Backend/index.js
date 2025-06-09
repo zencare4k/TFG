@@ -15,7 +15,9 @@ connectDB();
 const allowedOrigins = [
   "http://localhost:3000",
   "https://tfg-hnwj.vercel.app",
-  "https://tfg-61pu.vercel.app"
+  "https://tfg-61pu.vercel.app",
+    "https://tfg-git-main-zencare4ks-projects.vercel.app"  
+
 ];
 
 app.use(cors({
