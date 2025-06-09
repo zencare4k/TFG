@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { sendSupportEmail } from "../../services/EmailApi";
-import "../../styles/SupportPage.css"; // Importa el CSS aquí
+import "../../styles/SupportPage.css";
 
 const SupportPage = () => {
   const [form, setForm] = useState({
@@ -16,29 +16,30 @@ const SupportPage = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setError("");
-  setSent(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSent(false);
 
-if (!form.name || !form.email || !form.message) {
-  setError("Todos los campos son obligatorios.");
-  return;
-}
-  setLoading(true);
-  try {
-    await sendSupportEmail({
-      from_name: form.name,
-      reply_to: form.email,
-      message: form.message
-    });
-    setSent(true);
-    setForm({ name: "", email: "", message: "" });
-  } catch (err) {
-    setError("Error al enviar el mensaje. Inténtalo de nuevo.");
-  }
-  setLoading(false);
-};
+    if (!form.name || !form.email || !form.message) {
+      setError("Todos los campos son obligatorios.");
+      return;
+    }
+    setLoading(true);
+    try {
+      await sendSupportEmail({
+        name: form.name,
+        email: form.email,
+        message: form.message
+      });
+      setSent(true);
+      setForm({ name: "", email: "", message: "" });
+    } catch (err) {
+      setError("Error al enviar el mensaje. Inténtalo de nuevo.");
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="support">
       <h2>Soporte</h2>

@@ -4,7 +4,11 @@ export const sendSupportEmail = async (formData) => {
   const response = await fetch('https://tfg-5q0w.onrender.com/api/email/support', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(formData)
+    body: JSON.stringify({
+      name: formData.name,
+      email: formData.email,
+      message: formData.message
+    })
   });
   if (!response.ok) throw new Error('Error al enviar el mensaje de soporte');
 };
