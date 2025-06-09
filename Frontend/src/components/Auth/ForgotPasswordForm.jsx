@@ -34,7 +34,7 @@ const ForgotPasswordForm = () => {
 
   return (
     <form onSubmit={handleForgotPassword} className="auth-form">
-      <h2>Forgot Password</h2>
+      <h2>Contraseña Olvidada</h2>
       <div>
         <label>Email:</label>
         <input
@@ -45,7 +45,7 @@ const ForgotPasswordForm = () => {
       </div>
       {error && <NotificationSystem message={error} type="error" />}
       {success && <NotificationSystem message={success} type="success" />}
-      <button type="submit">Send Recovery Link</button>
+      <button type="submit">Enviar Link de Recuperacón</button>
     </form>
   );
 };
