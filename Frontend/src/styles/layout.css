@@ -184,8 +184,8 @@ footer {
 }
 .user-image {
   width: 100%;
+  display: block;
 }
-
 
 #Derechos {
   text-align: center;
