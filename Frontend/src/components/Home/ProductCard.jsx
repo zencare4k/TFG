@@ -32,9 +32,7 @@ const ProductCard = ({ product, onAddToCart, onAddToWishlist }) => {
         <button className="add-to-cart-button" onClick={() => onAddToCart(product)}>
           Añadir al Carrito
         </button>
-        <button className="buy-now-button" onClick={handleBuyClick}>
-          Comprar Ahora
-        </button>
+        
       </div>
       <button
         className="wishlist-button"
