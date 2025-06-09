@@ -16,11 +16,17 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://tfg-hnwj.vercel.app",
   "https://tfg-61pu.vercel.app",
-    "https://tfg-git-main-zencare4ks-projects.vercel.app"  
-
+  "https://tfg-git-main-zencare4ks-projects.vercel.app"
 ];
 
+// Middleware CORS para todas las rutas
 app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
+// Manejo explícito de preflight OPTIONS para todas las rutas
+app.options('*', cors({
   origin: allowedOrigins,
   credentials: true
 }));
