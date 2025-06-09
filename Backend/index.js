@@ -19,18 +19,19 @@ const allowedOrigins = [
   "https://tfg-git-main-zencare4ks-projects.vercel.app"
 ];
 
-// Middleware CORS para todas las rutas
+// 1. CORS para todas las rutas
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
 
-// Manejo explícito de preflight OPTIONS para todas las rutas
+// 2. Manejo explícito de preflight OPTIONS para todas las rutas
 app.options('*', cors({
   origin: allowedOrigins,
   credentials: true
 }));
 
+// 3. Body parser y rutas
 app.use(bodyParser.json());
 app.use('/api', routes);
 app.use(swaggerRouter);
