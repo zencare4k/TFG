@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 5000;
 
 // SOLO ESTO, SIN MIDDLEWARE MANUAL
 const allowedOrigins = [
-  "https://tfg-hnwj.vercel.app", // tu frontend en Vercel
+  "https://tfg-61pu.vercel.app", // tu frontend en Vercel
   "http://localhost:3000"
 ];
 
