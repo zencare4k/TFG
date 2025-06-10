@@ -4,6 +4,24 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
 
 ## Estructura del Proyecto
 
+```
+.
+├── Backend/
+│   ├── .env
+│   ├── package.json
+│   ├── index.js
+│   ├── src/
+│   │   ├── Controllers/
+│   │   ├── Models/
+│   │   ├── Routes/
+│   │   └── ...
+│   └── ...
+├── Frontend/
+│   ├── package.json
+│   ├── public/
+│   └── src/
+└── README.md
+```
 
 ## Instalación
 
@@ -25,8 +43,11 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
     PORT=5000
     JWT_SECRET=tu_secreto_jwt
     ADMIN_PASSWORD=tu_contraseña_admin
+    EMAIL_USER=tu_gmail@gmail.com
+    EMAIL_PASS=tu_contraseña_aplicacion_gmail
     NODE_ENV=development
     ```
+    > **Nota:** El archivo `.env` es necesario para la ejecución del backend y debe estar en la carpeta `/Backend`.
 
 ## Uso
 
@@ -45,6 +66,8 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
   - **POST** `/api/auth/register`
 - **Login**
   - **POST** `/api/auth/login`
+- **Recuperar contraseña**
+  - **POST** `/api/auth/forgot-password`
 
 ### Usuarios
 
@@ -89,6 +112,7 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
   - **GET** `/api/cart/{userId}`
   - **POST** `/api/cart`
   - **DELETE** `/api/cart/{userId}/{productId}`
+  - **PUT** `/api/cart/size` (actualizar talla de producto en carrito)
 - **Recomendaciones**
   - **GET** `/api/recommendations/{userId}`
 - **Reseñas**
@@ -96,6 +120,7 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
   - **POST** `/api/products/{productId}/reviews`
 - **Email**
   - **POST** `/api/email/order-confirmation`
+  - **POST** `/api/email/support`
 
 ## Pruebas
 
@@ -135,6 +160,14 @@ Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints
     {
       "email": "usuario@example.com",
       "password": "123456"
+    }
+    ```
+- **Recuperar contraseña**
+  - **POST** `/api/auth/forgot-password`
+  - **Body (JSON):**
+    ```json
+    {
+      "email": "usuario@example.com"
     }
     ```
 
@@ -207,6 +240,36 @@ Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints
 - **Eliminar de wishlist**
   - **DELETE** `/api/wishlist/{{userId}}/{{productId}}`
 
+### Carrito
+
+- **Obtener productos del carrito**
+  - **GET** `/api/cart/{{userId}}`
+- **Añadir producto al carrito**
+  - **POST** `/api/cart`
+  - **Body (JSON):**
+    ```json
+    {
+      "userId": "{{userId}}",
+      "productId": "{{productId}}",
+      "name": "Producto",
+      "price": 10.5,
+      "imageUrl": "url",
+      "size": "M"
+    }
+    ```
+- **Eliminar producto del carrito**
+  - **DELETE** `/api/cart/{{userId}}/{{productId}}`
+- **Actualizar talla de producto en carrito**
+  - **PUT** `/api/cart/size`
+  - **Body (JSON):**
+    ```json
+    {
+      "userId": "{{userId}}",
+      "productId": "{{productId}}",
+      "size": "L"
+    }
+    ```
+
 ### Variables de entorno en Postman
 
 - `userId`: ID del usuario (rellenar tras crear/obtener un usuario)
@@ -222,9 +285,16 @@ Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints
 ---
 ## Funcionalidades agregadas
 
+- Gestión de usuarios y roles.
+- Gestión de productos y stock.
+- Wishlist y carrito de compras (con selección de talla).
+- Checkout y pagos.
+- Sistema de recomendaciones.
+- Envío de emails (soporte, confirmación de pedido, recuperación de contraseña).
+- Documentación Swagger y colección Postman.
 
 ## NOTA: .env
 
-Adjuntado a este proyecto, en su carpeta raiz, se deja un .env el cual es
-necesario para la ejecucion del backend, debe de ser depositado en la raiz del backend,
-es decir , `/Backend`.
+Adjuntado a este proyecto, en su carpeta raíz, se deja un .env el cual es
+necesario para la ejecución del backend, debe de ser depositado en la raíz del backend,
+es decir, `/Backend`.

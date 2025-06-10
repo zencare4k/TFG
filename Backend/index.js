@@ -12,26 +12,48 @@ const app = express();
 
 connectDB();
 
+// Permitir CORS desde localhost y cualquier subdominio de vercel.app
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://tfg-hnwj.vercel.app",
-  "https://tfg-61pu.vercel.app",
-  "https://tfg-git-main-zencare4ks-projects.vercel.app"
+  /\.vercel\.app$/
 ];
 
-// 1. CORS para todas las rutas
+// Middleware CORS para todas las rutas
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true); // Permite peticiones sin origen (Postman, etc.)
+    if (
+      allowedOrigins.some(o =>
+        typeof o === "string"
+          ? o === origin
+          : o instanceof RegExp && o.test(origin)
+      )
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
 
-// 2. Manejo explícito de preflight OPTIONS para todas las rutas
+// Manejo explícito de preflight OPTIONS para todas las rutas
 app.options('*', cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      allowedOrigins.some(o =>
+        typeof o === "string"
+          ? o === origin
+          : o instanceof RegExp && o.test(origin)
+      )
+    ) {
+      return callback(null, true);
+    }
+    return callback(new Error("Not allowed by CORS"));
+  },
   credentials: true
 }));
 
-// 3. Body parser y rutas
 app.use(bodyParser.json());
 app.use('/api', routes);
 app.use(swaggerRouter);
