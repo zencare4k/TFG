@@ -1,4 +1,4 @@
-# Proyecto Final de Entorno Servidor
+# Proyecto Final de Grado
 
 Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y MongoDB. La API permite la gestión de usuarios y productos, incluyendo operaciones CRUD (Crear, Leer, Actualizar, Eliminar). Además, se ha implementado autenticación y autorización utilizando JWT (JSON Web Tokens).
 
@@ -299,7 +299,7 @@ Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints
   [swagger.yaml](./Backend/src/Utils/swagger.yaml)
 
 - 📬 **Colección de Postman:**  
-  [TFGBackend.json](./Backend/TFGBackend.json)
+  [TFGBackend.json](./Backend/src/Utils/TFGBackend.json)
   
 ## NOTA: .env
 
