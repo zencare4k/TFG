@@ -30,7 +30,7 @@ export const sendOrderConfirmationEmail = async ({ name, email, orderSummary, ca
 const API_URL = 'https://tfg-5q0w.onrender.com/api/auth';
 export const forgotPassword = async (email) => {
   const response = await axios.post(`${API_URL}/forgot-password`, { email });
-  return response.data;
+  return response.data.message; // Devuelve solo el mensaje
 };
 
 export const resetPassword = async (token, password) => {

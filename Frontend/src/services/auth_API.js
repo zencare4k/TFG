@@ -21,7 +21,8 @@ export const loginUser = async (username, password) => {
 export const forgotPassword = async (email) => {
   try {
     const response = await axios.post(`${API_URL}/forgot-password`, { email });
-    return response.data;
+    // Devuelve solo el mensaje, no el objeto entero
+    return response.data.message;
   } catch (error) {
     throw new Error(error.response?.data?.error || 'Error al enviar el enlace de recuperación');
   }

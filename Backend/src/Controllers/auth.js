@@ -61,15 +61,14 @@ export const forgotPassword = async (req, res) => {
       { $set: { resetPasswordToken: token, resetPasswordExpires: expires } }
     );
 
-    // Cambia a Mailtrap
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
     const emailCss = `
@@ -82,29 +81,28 @@ export const forgotPassword = async (req, res) => {
       </style>
     `;
 
-    await transporter.sendMail({
-      from: `"Tu Tienda" <${process.env.SMTP_USER}>`,
-      to: email,
-      subject: "Recuperación de contraseña",
-      html: `
-        <html>
-          <head>${emailCss}</head>
-          <body>
-            <div class="email-container">
-              <h2>Recuperación de contraseña</h2>
-              <p>Has solicitado restablecer tu contraseña.</p>
-              <p>Haz clic en el siguiente enlace para cambiarla:</p>
-              <a href="${resetUrl}" class="reset-link">Cambiar contraseña</a>
-              <p>Si no solicitaste este cambio, ignora este correo.</p>
-              <div class="footer">
-                <p>Gracias por confiar en nuestra tienda.</p>
-              </div>
-            </div>
-          </body>
-        </html>
-      `,
-    });
-
+  await transporter.sendMail({
+  from: `"Tu Tienda" <${process.env.EMAIL_USER}>`,
+  to: email,
+  subject: "Recuperación de contraseña",
+  html: `
+    <html>
+      <head>${emailCss}</head>
+      <body>
+        <div class="email-container">
+          <h2>Recuperación de contraseña</h2>
+          <p>Has solicitado restablecer tu contraseña.</p>
+          <p>Haz clic en el siguiente enlace para cambiarla:</p>
+          <a href="${resetUrl}" class="reset-link">Cambiar contraseña</a>
+          <p>Si no solicitaste este cambio, ignora este correo.</p>
+          <div class="footer">
+            <p>Gracias por confiar en nuestra tienda.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `,
+});
     res.json({ message: "Correo de recuperación enviado" });
   } catch (error) {
     console.error("Error en forgotPassword:", error);

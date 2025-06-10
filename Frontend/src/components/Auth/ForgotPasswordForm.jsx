@@ -20,16 +20,14 @@ const ForgotPasswordForm = () => {
       return;
     }
     setError('');
-    forgotPassword(email)
-      .then(message => {
-        console.log('Correo electrónico detectado correctamente:', email);
-
-        setSuccess(message);
-        setTimeout(() => {
-          window.location.href = '/login';
-        }, 2000);
-      })
-      .catch(err => setError(err.message || "Error al enviar el correo de recuperación"));
+forgotPassword(email)
+  .then(message => {
+    setSuccess(message); // Ahora message es un string
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 2000);
+  })
+  .catch(err => setError(err.message || "Error al enviar el correo de recuperación"));
   };
 
   return (
