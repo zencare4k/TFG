@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import "../../styles/ProductDetail.css";
 import { AuthContext } from "../context/AuthContext";
 import { fetchProductById, fetchProductReviews, submitReview } from "../../services/product_API";
-import { addToCart } from "../../services/cart_API"; // Importa el servicio
+import { addToCart } from "../../services/cart_API";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -13,6 +13,7 @@ const ProductDetail = () => {
   const [myRating, setMyRating] = useState(0);
   const [myComment, setMyComment] = useState("");
   const [loading, setLoading] = useState(true);
+  const [selectedSize, setSelectedSize] = useState("M"); // Talla por defecto
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -53,6 +54,7 @@ const ProductDetail = () => {
         imageUrl: product.imageUrl,
         quantity: 1,
         category: product.category,
+        size: selectedSize, // Añade la talla seleccionada
       });
       alert("Producto añadido al carrito.");
     } catch (error) {
@@ -75,6 +77,19 @@ const ProductDetail = () => {
           <h1>{product.name}</h1>
           <p className="product-detail-price">{product.price}€</p>
           <p className="product-detail-desc">{product.description}</p>
+          {/* Selector de talla */}
+          <label htmlFor="size-select">Talla:</label>
+          <select
+            id="size-select"
+            value={selectedSize}
+            onChange={e => setSelectedSize(e.target.value)}
+            style={{ marginLeft: 8, marginBottom: 16 }}
+          >
+            <option value="S">S</option>
+            <option value="M">M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
           <button className="add-to-cart-button" onClick={handleAddToCart}>
             Añadir al carrito
           </button>

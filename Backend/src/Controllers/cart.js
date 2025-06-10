@@ -9,7 +9,6 @@ export const getCartItems = async (req, res) => {
   }
   try {
     const dbInstance = await connectProductDB();
-    // Asegura que userId es string
     const cartItems = await dbInstance.collection("cart").find({ userId: String(userId) }).toArray();
     res.status(200).json(cartItems);
   } catch (error) {
@@ -29,7 +28,7 @@ export const clearUserCart = async (req, res) => {
 };
 
 export const addToCart = async (req, res) => {
-  const { userId, productId, name, price, imageUrl } = req.body;
+  const { userId, productId, name, price, imageUrl, size } = req.body; // <-- Añade size
 
   if (!userId) {
     return res.status(400).json({ success: false, message: "userId es requerido" });
@@ -42,12 +41,16 @@ export const addToCart = async (req, res) => {
       return res.status(404).json({ message: "Producto no encontrado" });
     }
 
-    // Busca si ya existe en el carrito de este usuario
-    const existingItem = await dbInstance.collection("cart").findOne({ userId: String(userId), productId: String(productId) });
+    // Busca si ya existe en el carrito de este usuario y talla
+    const existingItem = await dbInstance.collection("cart").findOne({
+      userId: String(userId),
+      productId: String(productId),
+      size: size || "M" // Considera talla al buscar duplicados
+    });
 
     if (existingItem) {
       await dbInstance.collection("cart").updateOne(
-        { userId: String(userId), productId: String(productId) },
+        { userId: String(userId), productId: String(productId), size: size || "M" },
         { $inc: { quantity: 1 } }
       );
     } else {
@@ -58,7 +61,8 @@ export const addToCart = async (req, res) => {
         price,
         imageUrl,
         quantity: 1,
-        category: product.category
+        category: product.category,
+        size: size || "M" // Guarda la talla, por defecto "M"
       };
       await dbInstance.collection("cart").insertOne(newCartItem);
     }
@@ -74,14 +78,6 @@ export const removeFromCart = async (req, res) => {
   const { userId, productId } = req.params;
   try {
     const dbInstance = await connectProductDB();
-    // LOG para depuración
-    console.log("Intentando eliminar:", { userId: String(userId), productId: String(productId) });
-    const doc = await dbInstance.collection("cart").findOne({
-      userId: String(userId),
-      productId: String(productId)
-    });
-    console.log("Documento encontrado:", doc);
-
     const result = await dbInstance.collection("cart").deleteOne({
       userId: String(userId),
       productId: String(productId)
@@ -95,5 +91,20 @@ export const removeFromCart = async (req, res) => {
   } catch (error) {
     console.error("Error al eliminar el producto del carrito:", error);
     res.status(500).json({ error: "Error al eliminar el producto del carrito" });
+  }
+};
+
+// (Opcional) Endpoint para actualizar la talla de un producto en el carrito
+export const updateCartItemSize = async (req, res) => {
+  const { userId, productId, size } = req.body;
+  try {
+    const dbInstance = await connectProductDB();
+    await dbInstance.collection("cart").updateOne(
+      { userId: String(userId), productId: String(productId) },
+      { $set: { size } }
+    );
+    res.json({ message: "Talla actualizada" });
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar la talla" });
   }
 };
