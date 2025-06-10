@@ -1,0 +1,881 @@
+openapi: 3.0.0
+info:
+    title: 'API Documentation'
+    version: 1.0.0
+    description: 'API documentation for your project'
+servers:
+    -
+        url: 'http://localhost:5000/api'
+components:
+    securitySchemes:
+        bearerAuth:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+security:
+    -
+        bearerAuth: []
+paths:
+    /auth/register:
+        post:
+            summary: 'Registra un nuevo usuario'
+            tags:
+                - Auth
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+                                role:
+                                    type: string
+                                    enum: [user, systemAdmin, productAdmin]
+                                    default: user
+            responses:
+                '201':
+                    description: 'Usuario registrado exitosamente'
+                '400':
+                    description: 'Error en la solicitud'
+    /auth/login:
+        post:
+            summary: 'Inicia sesión con un usuario existente'
+            tags:
+                - Auth
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                password:
+                                    type: string
+            responses:
+                '200':
+                    description: 'Inicio de sesión exitoso'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    token: {type: string}
+                                    role: {type: string}
+                '401':
+                    description: 'Credenciales inválidas'
+    /auth/forgot-password:
+        post:
+            summary: 'Solicita el envío de un correo para restablecer la contraseña'
+            tags:
+                - Auth
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                email:
+                                    type: string
+            responses:
+                '200':
+                    description: 'Correo de recuperación enviado'
+                '404':
+                    description: 'Usuario no encontrado'
+    /auth/reset-password:
+        post:
+            summary: 'Restablece la contraseña usando el token recibido por correo'
+            tags:
+                - Auth
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                token:
+                                    type: string
+                                password:
+                                    type: string
+            responses:
+                '200':
+                    description: 'Contraseña actualizada correctamente'
+                '400':
+                    description: 'Token inválido o expirado'
+    /api/cart/clear:
+        post:
+            summary: 'Vacía el carrito del usuario autenticado'
+            tags:
+                - Cart
+            security:
+                -
+                    bearerAuth: []
+            responses:
+                '200':
+                    description: 'Carrito vaciado correctamente'
+                '401':
+                    description: 'No autorizado'
+    /api/cart:
+        get:
+            summary: 'Obtiene los productos del carrito del usuario autenticado'
+            tags:
+                - Cart
+            responses:
+                '200':
+                    description: 'Lista de productos en el carrito'
+        post:
+            summary: 'Añade un producto al carrito'
+            tags:
+                - Cart
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                userId:
+                                    type: string
+                                productId:
+                                    type: string
+                                quantity:
+                                    type: integer
+                            required:
+                                - userId
+                                - productId
+                                - quantity
+            responses:
+                '201':
+                    description: 'Producto añadido al carrito'
+                '400':
+                    description: 'Datos inválidos'
+    '/api/cart/{userId}/{productId}':
+        delete:
+            summary: 'Elimina un producto específico del carrito de un usuario'
+            tags:
+                - Cart
+            parameters:
+                -
+                    in: path
+                    name: userId
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del usuario'
+                -
+                    in: path
+                    name: productId
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del producto'
+            responses:
+                '200':
+                    description: 'Producto eliminado del carrito'
+                '404':
+                    description: 'Producto o usuario no encontrado'
+    /api/checkout:
+        post:
+            summary: 'Procesar el checkout y crear un PaymentIntent de Stripe'
+            tags:
+                - Checkout
+            security:
+                -
+                    bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                address:
+                                    type: object
+                                    properties: {name: {type: string}, street: {type: string}, city: {type: string}, postal: {type: string}, country: {type: string}}
+                                cartItems:
+                                    type: array
+                                    items: {type: object, properties: {productId: {type: string}, name: {type: string}, price: {type: number}, quantity: {type: integer}, imageUrl: {type: string}}}
+                                total:
+                                    type: number
+                            required:
+                                - address
+                                - cartItems
+                                - total
+            responses:
+                '200':
+                    description: 'PaymentIntent creado correctamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    clientSecret: {type: string}
+                                    message: {type: string}
+                '400':
+                    description: 'Datos de usuario o carrito inválidos'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    message: {type: string}
+                '401':
+                    description: 'Token inválido o expirado'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    error: {type: string}
+                '500':
+                    description: 'Error en el pago'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    message: {type: string}
+                                    error: {type: string}
+    /api/email/order-confirmation:
+        post:
+            summary: 'Enviar correo de confirmación de pedido'
+            tags:
+                - Email
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                to:
+                                    type: string
+                                    description: 'Correo electrónico del destinatario'
+                                subject:
+                                    type: string
+                                    description: 'Asunto del correo'
+                                text:
+                                    type: string
+                                    description: 'Cuerpo del correo en texto plano'
+                                html:
+                                    type: string
+                                    description: 'Cuerpo del correo en HTML'
+                            required:
+                                - to
+                                - subject
+                                - text
+            responses:
+                '200':
+                    description: 'Correo enviado correctamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    message: {type: string}
+                '400':
+                    description: 'Datos inválidos'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    message: {type: string}
+                '500':
+                    description: 'Error al enviar el correo'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    message: {type: string}
+    '/api/products/{id}':
+        get:
+            summary: 'Obtener detalles de un producto por ID'
+            tags:
+                - Products
+            parameters:
+                -
+                    in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del producto'
+            responses:
+                '200':
+                    description: 'Detalles del producto obtenidos correctamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    _id: {type: string}
+                                    name: {type: string}
+                                    description: {type: string}
+                                    price: {type: number}
+                                    category: {type: string}
+                                    imageUrl: {type: string}
+                '404':
+                    description: 'Producto no encontrado'
+    /products:
+        get:
+            summary: 'Obtiene todos los productos'
+            tags:
+                - Products
+            responses:
+                '200':
+                    description: 'Lista de productos'
+        post:
+            summary: 'Crea un nuevo producto'
+            tags:
+                - Products
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                description:
+                                    type: string
+                                price:
+                                    type: number
+                                category:
+                                    type: string
+                                stock:
+                                    type: integer
+                                image:
+                                    type: string
+                                    format: binary
+                                size:
+                                    type: string
+                                audience:
+                                    type: string
+            responses:
+                '201':
+                    description: 'Producto creado exitosamente'
+    '/products/details/{id}':
+        get:
+            summary: 'Obtiene los detalles de un producto por ID'
+            tags:
+                - Products
+            parameters:
+                -
+                    in: path
+                    name: id
+                    required: true
+                    schema:
+                        type: string
+                    description: 'ID del producto'
+            responses:
+                '200':
+                    description: 'Detalles del producto'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    _id: {type: string}
+                                    name: {type: string}
+                                    description: {type: string}
+                                    price: {type: number}
+                                    category: {type: string}
+                                    stock: {type: integer}
+                                    imageUrl: {type: string}
+                                    createdAt: {type: string, format: date-time}
+                                    updatedAt: {type: string, format: date-time}
+                '404':
+                    description: 'Producto no encontrado'
+    '/products/{id}':
+        get:
+            summary: 'Obtiene un producto por ID'
+            tags:
+                - Products
+            parameters:
+                -
+                    in: path
+                    name: id
+                    required: true
+                    schema:
+                        type: string
+                    description: 'ID del producto'
+            responses:
+                '200':
+                    description: 'Producto encontrado'
+                '404':
+                    description: 'Producto no encontrado'
+        put:
+            summary: 'Actualiza un producto por ID'
+            tags:
+                - Products
+            parameters:
+                -
+                    in: path
+                    name: id
+                    required: true
+                    schema:
+                        type: string
+                    description: 'ID del producto'
+            requestBody:
+                required: true
+                content:
+                    multipart/form-data:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                description:
+                                    type: string
+                                price:
+                                    type: number
+                                category:
+                                    type: string
+                                stock:
+                                    type: integer
+                                image:
+                                    type: string
+                                    format: binary
+                                size:
+                                    type: string
+                                audience:
+                                    type: string
+            responses:
+                '200':
+                    description: 'Producto actualizado exitosamente'
+        delete:
+            summary: 'Elimina un producto por ID'
+            tags:
+                - Products
+            parameters:
+                -
+                    in: path
+                    name: id
+                    required: true
+                    schema:
+                        type: string
+                    description: 'ID del producto'
+            responses:
+                '200':
+                    description: 'Producto eliminado exitosamente'
+    /api/recommendations:
+        get:
+            summary: 'Obtener recomendaciones personalizadas para el usuario autenticado'
+            tags:
+                - Recommendations
+            security:
+                -
+                    bearerAuth: []
+            responses:
+                '200':
+                    description: 'Lista de productos recomendados'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties: {productId: {type: string}, name: {type: string}, price: {type: number}, imageUrl: {type: string}}
+                '401':
+                    description: 'No autorizado'
+    '/api/products/{productId}/reviews':
+        get:
+            summary: 'Obtener todas las reseñas de un producto'
+            tags:
+                - Reviews
+            parameters:
+                -
+                    in: path
+                    name: productId
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del producto'
+            responses:
+                '200':
+                    description: 'Lista de reseñas del producto'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties: {_id: {type: string}, user: {type: string}, rating: {type: integer}, comment: {type: string}, createdAt: {type: string, format: date-time}}
+        post:
+            summary: 'Añadir una reseña a un producto'
+            tags:
+                - Reviews
+            parameters:
+                -
+                    in: path
+                    name: productId
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del producto'
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                rating:
+                                    type: integer
+                                comment:
+                                    type: string
+                            required:
+                                - rating
+                                - comment
+            responses:
+                '201':
+                    description: 'Reseña añadida correctamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    review: {type: object}
+                '400':
+                    description: 'Datos inválidos'
+    /api/admin/users:
+        get:
+            summary: 'Obtener todos los usuarios (solo admin)'
+            tags:
+                - SystemAdmin
+            security:
+                -
+                    bearerAuth: []
+            responses:
+                '200':
+                    description: 'Lista de usuarios obtenida correctamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                '500':
+                    description: 'Error al obtener los usuarios'
+        post:
+            summary: 'Crear un nuevo usuario (solo admin)'
+            tags:
+                - SystemAdmin
+            security:
+                -
+                    bearerAuth: []
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+                                role:
+                                    type: string
+                            required:
+                                - username
+                                - email
+                                - password
+                                - role
+            responses:
+                '201':
+                    description: 'Usuario creado exitosamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message: {type: string}
+                                    userId: {type: string}
+                '400':
+                    description: 'Error de validación o datos inválidos'
+    '/api/admin/users/{id}':
+        put:
+            summary: 'Actualizar usuario por ID (solo admin)'
+            tags:
+                - SystemAdmin
+            security:
+                -
+                    bearerAuth: []
+            parameters:
+                -
+                    in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del usuario'
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+            responses:
+                '200':
+                    description: 'Usuario actualizado exitosamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message: {type: string}
+                '404':
+                    description: 'Usuario no encontrado'
+                '500':
+                    description: 'Error al actualizar el usuario'
+        delete:
+            summary: 'Eliminar usuario por ID (solo admin)'
+            tags:
+                - SystemAdmin
+            security:
+                -
+                    bearerAuth: []
+            parameters:
+                -
+                    in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del usuario'
+            responses:
+                '200':
+                    description: 'Usuario eliminado exitosamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    message: {type: string}
+                '404':
+                    description: 'Usuario no encontrado'
+                '500':
+                    description: 'Error al eliminar el usuario'
+    /users:
+        get:
+            summary: 'Obtiene todos los usuarios'
+            tags:
+                - Users
+            responses:
+                '200':
+                    description: 'Lista de usuarios'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                                    properties: {_id: {type: string}, name: {type: string}, email: {type: string}}
+        post:
+            summary: 'Crea un nuevo usuario'
+            tags:
+                - Users
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+            responses:
+                '201':
+                    description: 'Usuario creado exitosamente'
+    '/users/{id}':
+        put:
+            summary: 'Actualiza un usuario por ID'
+            tags:
+                - Users
+            parameters:
+                -
+                    in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del usuario'
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                name:
+                                    type: string
+                                email:
+                                    type: string
+                                password:
+                                    type: string
+            responses:
+                '200':
+                    description: 'Usuario actualizado exitosamente'
+                '404':
+                    description: 'Usuario no encontrado'
+        delete:
+            summary: 'Elimina un usuario por ID'
+            tags:
+                - Users
+            parameters:
+                -
+                    in: path
+                    name: id
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del usuario'
+            responses:
+                '200':
+                    description: 'Usuario eliminado exitosamente'
+                '404':
+                    description: 'Usuario no encontrado'
+    /api/wishlist:
+        post:
+            summary: 'Añadir un producto a la lista de deseos'
+            tags:
+                - Wishlist
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                userId:
+                                    type: string
+                                productId:
+                                    type: string
+                            required:
+                                - userId
+                                - productId
+            responses:
+                '201':
+                    description: 'Producto añadido a la lista de deseos'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    wishlist: {type: array, items: {type: object}}
+                '400':
+                    description: 'Datos inválidos'
+    '/api/wishlist/{userId}':
+        get:
+            summary: 'Obtener la lista de deseos de un usuario'
+            tags:
+                - Wishlist
+            parameters:
+                -
+                    in: path
+                    name: userId
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del usuario'
+            responses:
+                '200':
+                    description: 'Lista de deseos obtenida correctamente'
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    type: object
+                '404':
+                    description: 'Usuario no encontrado o sin lista de deseos'
+    '/api/wishlist/{userId}/{productId}':
+        delete:
+            summary: 'Eliminar un producto de la lista de deseos de un usuario'
+            tags:
+                - Wishlist
+            parameters:
+                -
+                    in: path
+                    name: userId
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del usuario'
+                -
+                    in: path
+                    name: productId
+                    schema:
+                        type: string
+                    required: true
+                    description: 'ID del producto'
+            responses:
+                '200':
+                    description: 'Producto eliminado de la lista de deseos'
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success: {type: boolean}
+                                    wishlist: {type: array, items: {type: object}}
+                '404':
+                    description: 'Producto o usuario no encontrado'
+tags:
+    -
+        name: Cart
+        description: 'Operaciones del carrito de compras'
+    -
+        name: Checkout
+        description: 'Operaciones de pago y checkout'
+    -
+        name: Users
+        description: 'Operaciones de usuarios'
+    -
+        name: Auth
+        description: 'Autenticación y registro'
+    -
+        name: Products
+        description: 'Gestión de productos'
+    -
+        name: Wishlist
+        description: 'Lista de deseos de usuarios'
+    -
+        name: Recommendations
+        description: 'Recomendaciones de productos'
+    -
+        name: Email
+        description: 'Envío de correos electrónicos'
+    -
+        name: Reviews
+        description: 'Reseñas de productos'
+    -
+        name: SystemAdmin
+        description: 'Operaciones administrativas de usuarios (solo para administradores del sistema)'

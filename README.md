@@ -114,7 +114,7 @@ Este proyecto es el desarrollo de una API RESTful utilizando Node.js, Express y 
   - **DELETE** `/api/cart/{userId}/{productId}`
   - **PUT** `/api/cart/size` (actualizar talla de producto en carrito)
 - **Recomendaciones**
-  - **GET** `/api/recommendations/{userId}`
+  - **GET** `/api/recommendations` *(requiere autenticación JWT)*
 - **Reseñas**
   - **GET** `/api/products/{productId}/reviews`
   - **POST** `/api/products/{productId}/reviews`
@@ -293,6 +293,14 @@ Se incluye una colección de Postman (`TFGBackend.json`) con todos los endpoints
 - Envío de emails (soporte, confirmación de pedido, recuperación de contraseña).
 - Documentación Swagger y colección Postman.
 
+## Enlaces de documentación
+
+- 📄 **Documentación Swagger (YAML):**  
+  [swagger.yaml](./Backend/src/Utils/swagger.yaml)
+
+- 📬 **Colección de Postman:**  
+  [TFGBackend.json](./Backend/TFGBackend.json)
+  
 ## NOTA: .env
 
 Adjuntado a este proyecto, en su carpeta raíz, se deja un .env el cual es
