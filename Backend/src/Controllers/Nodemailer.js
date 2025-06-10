@@ -1,5 +1,14 @@
 import nodemailer from "nodemailer";
 
+// Crea el transporter de Gmail una sola vez y reutilízalo
+const gmailTransporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
 // Confirmación de pedido
 export const sendOrderConfirmation = async (req, res) => {
   const { email, name, orderSummary, cardMasked, products } = req.body;
@@ -9,14 +18,6 @@ export const sendOrderConfirmation = async (req, res) => {
   }
 
   try {
- const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
     const emailCss = `
       <style>
         body {
@@ -110,8 +111,8 @@ export const sendOrderConfirmation = async (req, res) => {
 
     const last4 = cardMasked ? cardMasked.slice(-4) : "****";
 
-    await transporter.sendMail({
-      from: `"Tu Tienda" <${process.env.SMTP_USER}>`,
+    await gmailTransporter.sendMail({
+      from: `"Tu Tienda" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Confirmación de compra",
       html: `
@@ -156,14 +157,6 @@ export const sendPasswordResetEmail = async (req, res) => {
   }
 
   try {
-  const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
     const emailCss = `
       <style>
         body {
@@ -207,8 +200,8 @@ export const sendPasswordResetEmail = async (req, res) => {
       </style>
     `;
 
-    await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
+    await gmailTransporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Recuperación de contraseña",
       html: `
@@ -243,14 +236,6 @@ export const sendSupportMessage = async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
     const emailCss = `
       <style>
         body {
@@ -292,8 +277,8 @@ export const sendSupportMessage = async (req, res) => {
     `;
 
     // Correo para el administrador
-    await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
+    await gmailTransporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
       to: "cmarrom@adaits.es",
       subject: "Nuevo mensaje de soporte recibido",
       html: `
@@ -317,8 +302,8 @@ export const sendSupportMessage = async (req, res) => {
     });
 
     // Correo de confirmación para el usuario
-    await transporter.sendMail({
-      from: `"Soporte Web" <${process.env.SMTP_USER}>`,
+    await gmailTransporter.sendMail({
+      from: `"Soporte Web" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: "Hemos recibido tu mensaje de soporte",
       html: `
