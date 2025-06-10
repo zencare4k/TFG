@@ -46,64 +46,70 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// Mejora el email de recuperación con CSS:
 export const forgotPassword = async (req, res) => {
-  const { email } = req.body;
-  const { dbInstanceUsers } = await connectDB();
-  const user = await dbInstanceUsers.collection("users").findOne({ email });
-  if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+  try {
+    const { email } = req.body;
+    const { dbInstanceUsers } = await connectDB();
+    const user = await dbInstanceUsers.collection("users").findOne({ email });
+    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
 
-  const token = crypto.randomBytes(32).toString("hex");
-  const expires = Date.now() + 1000 * 60 * 60; // 1 hora
+    const token = crypto.randomBytes(32).toString("hex");
+    const expires = Date.now() + 1000 * 60 * 60; // 1 hora
 
-  await dbInstanceUsers.collection("users").updateOne(
-    { email },
-    { $set: { resetPasswordToken: token, resetPasswordExpires: expires } }
-  );
+    await dbInstanceUsers.collection("users").updateOne(
+      { email },
+      { $set: { resetPasswordToken: token, resetPasswordExpires: expires } }
+    );
 
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+    // Cambia a Mailtrap
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
 
-  const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
-  const emailCss = `
-    <style>
-      body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f6f2; color: #333; margin: 0; padding: 0; }
-      .email-container { background: #fff; border-radius: 8px; max-width: 400px; margin: 24px auto; padding: 24px 32px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); border: 1px solid #eee; }
-      h2 { color: #8D7B31; margin-top: 0; text-align: center; }
-      .reset-link { display: inline-block; background: #8D7B31; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin: 20px 0; font-weight: bold; }
-      .footer { margin-top: 24px; text-align: center; color: #888; font-size: 0.95em; }
-    </style>
-  `;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+    const emailCss = `
+      <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f7f6f2; color: #333; margin: 0; padding: 0; }
+        .email-container { background: #fff; border-radius: 8px; max-width: 400px; margin: 24px auto; padding: 24px 32px; box-shadow: 0 2px 16px rgba(0,0,0,0.08); border: 1px solid #eee; }
+        h2 { color: #8D7B31; margin-top: 0; text-align: center; }
+        .reset-link { display: inline-block; background: #8D7B31; color: #fff; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin: 20px 0; font-weight: bold; }
+        .footer { margin-top: 24px; text-align: center; color: #888; font-size: 0.95em; }
+      </style>
+    `;
 
-  await transporter.sendMail({
-    from: `"Tu Tienda" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Recuperación de contraseña",
-    html: `
-      <html>
-        <head>${emailCss}</head>
-        <body>
-          <div class="email-container">
-            <h2>Recuperación de contraseña</h2>
-            <p>Has solicitado restablecer tu contraseña.</p>
-            <p>Haz clic en el siguiente enlace para cambiarla:</p>
-            <a href="${resetUrl}" class="reset-link">Cambiar contraseña</a>
-            <p>Si no solicitaste este cambio, ignora este correo.</p>
-            <div class="footer">
-              <p>Gracias por confiar en nuestra tienda.</p>
+    await transporter.sendMail({
+      from: `"Tu Tienda" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: "Recuperación de contraseña",
+      html: `
+        <html>
+          <head>${emailCss}</head>
+          <body>
+            <div class="email-container">
+              <h2>Recuperación de contraseña</h2>
+              <p>Has solicitado restablecer tu contraseña.</p>
+              <p>Haz clic en el siguiente enlace para cambiarla:</p>
+              <a href="${resetUrl}" class="reset-link">Cambiar contraseña</a>
+              <p>Si no solicitaste este cambio, ignora este correo.</p>
+              <div class="footer">
+                <p>Gracias por confiar en nuestra tienda.</p>
+              </div>
             </div>
-          </div>
-        </body>
-      </html>
-    `,
-  });
+          </body>
+        </html>
+      `,
+    });
 
-  res.json({ message: "Correo de recuperación enviado" });
+    res.json({ message: "Correo de recuperación enviado" });
+  } catch (error) {
+    console.error("Error en forgotPassword:", error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
 };
 export const loginUser = async (req, res) => {
   const { username, password } = req.body;
